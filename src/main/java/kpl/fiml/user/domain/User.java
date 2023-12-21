@@ -1,6 +1,7 @@
 package kpl.fiml.user.domain;
 
 import jakarta.persistence.*;
+import kpl.fiml.global.common.BaseEntity;
 import kpl.fiml.user.vo.ContactVo;
 import kpl.fiml.user.vo.EmailVo;
 import kpl.fiml.user.vo.PasswordVo;
@@ -13,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "users")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User {
+public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,8 +43,8 @@ public class User {
         this.name = name;
         this.bio = bio;
         this.profileImage = profileImage;
-        this.email = new EmailVo(email).getEmail();
-        this.password = new PasswordVo(password).getPassword();
-        this.contact = new ContactVo(contact).getContact();
+        this.email = new EmailVo(email).email();
+        this.password = new PasswordVo(password).password();
+        this.contact = new ContactVo(contact).contact();
     }
 }
