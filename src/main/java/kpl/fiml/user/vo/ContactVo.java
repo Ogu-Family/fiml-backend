@@ -5,6 +5,8 @@ import lombok.Getter;
 @Getter
 public class ContactVo {
     private String contact;
+    private static final String SPECIAL_CHARACTERS_REGEX = ".*[!@#$%^&*()].*";
+    private static final String DIGITS_ONLY_REGEX = "\\d+";
 
     public ContactVo(String contact) {
         if (!isValidContact(contact)) {
@@ -14,6 +16,6 @@ public class ContactVo {
     }
 
     private boolean isValidContact(String contact) {
-        return contact.matches("\\d+") && !contact.matches(".*[!@#$%^&*()].*");
+        return contact.matches(DIGITS_ONLY_REGEX) && !contact.matches(SPECIAL_CHARACTERS_REGEX);
     }
 }

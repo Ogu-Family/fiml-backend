@@ -6,6 +6,8 @@ import lombok.Getter;
 public class PasswordVo {
 
     private String password;
+    private static final int PASSWORD_LENGTH = 8;
+    private static final String SPECIAL_CHARACTERS_REGEX = ".*[!@#$%^&*()].*";
 
     public PasswordVo(String password) {
         if (!isValidPassword(password)) {
@@ -15,6 +17,6 @@ public class PasswordVo {
     }
 
     private boolean isValidPassword(String password) {
-        return password.length() >= 8 && password.matches(".*[!@#$%^&*()].*");
+        return password.length() >= 8 && password.matches(SPECIAL_CHARACTERS_REGEX);
     }
 }
