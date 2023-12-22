@@ -2,10 +2,7 @@ package kpl.fiml.notice.application;
 
 import kpl.fiml.notice.domain.Notice;
 import kpl.fiml.notice.domain.NoticeRepository;
-import kpl.fiml.notice.dto.NoticeCreateRequest;
-import kpl.fiml.notice.dto.NoticeCreateResponse;
-import kpl.fiml.notice.dto.NoticeUpdateRequest;
-import kpl.fiml.notice.dto.NoticeUpdateResponse;
+import kpl.fiml.notice.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,8 +24,16 @@ public class NoticeService {
     @Transactional
     public NoticeUpdateResponse updateNotice(Long noticeId, NoticeUpdateRequest request) {
         Notice notice = noticeRepository.findById(noticeId)
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 공지사항이 존재하지 않습니다"));
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 공지사항이 존재하지 않습니다."));
         notice.update(request.getContent());
         return new NoticeUpdateResponse(noticeId, notice.getContent());
+    }
+
+    @Transactional(readOnly = true)
+    public NoticeDto findById(Long noticeId) {
+        Notice findNotice = noticeRepository.findById(noticeId)
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 공지사항이 존재하지 않습니다."));
+        return new NoticeDto(findNotice.getId(), findNotice.getContent(), findNotice.getCreatedAt(), findNotice.getUpdatedAt());
+
     }
 }
