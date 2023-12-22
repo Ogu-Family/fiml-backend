@@ -34,4 +34,11 @@ public class NoticeController {
 
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
+
+    @DeleteMapping("/notices/{id}")
+    public ResponseEntity<String> deleteById(@PathVariable Long id) {
+        Long deletedNoticeId = noticeService.deleteById(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body("Deleted Notice Id : " + deletedNoticeId);
+    }
 }

@@ -36,4 +36,10 @@ public class NoticeService {
         return new NoticeDto(findNotice.getId(), findNotice.getContent(), findNotice.getCreatedAt(), findNotice.getUpdatedAt());
 
     }
+
+    @Transactional
+    public Long deleteById(Long noticeId) {
+        noticeRepository.deleteById(noticeId);
+        return noticeId;
+    }
 }
