@@ -38,13 +38,34 @@ public class User extends BaseEntity {
     @Column(name = "contact", nullable = false)
     private String contact;
 
+    @Column(name = "cash", nullable = false)
+    private Long cash;
+
     @Builder
     public User(String name, String bio, String profileImage, String email, String password, String contact) {
         this.name = name;
         this.bio = bio;
         this.profileImage = profileImage;
-        this.email = new EmailVo(email).email();
-        this.password = new PasswordVo(password).password();
-        this.contact = new ContactVo(contact).contact();
+        this.email = new EmailVo(email).getEmail();
+        this.password = new PasswordVo(password).getPassword();
+        this.contact = new ContactVo(contact).getContact();
+        this.cash = 0L;
+    }
+
+    public void increaseCash(Long amount) {
+        if (amount < 0) {
+            throw new IllegalArgumentException("금액은 음수가 될 수 없습니다.");
+        }
+        this.cash += amount;
+    }
+
+    public void decreaseCash(Long amount) {
+        if (amount < 0) {
+            throw new IllegalArgumentException("금액은 음수가 될 수 없습니다.");
+        }
+        if (this.cash < amount) {
+            throw new IllegalArgumentException("보유 현금이 부족합니다.");
+        }
+        this.cash -= amount;
     }
 }

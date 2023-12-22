@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 public class UserCreateResponse {
-    Long userId;
+    private Long userId;
 
     @Builder
     public UserCreateResponse(Long userId) {
