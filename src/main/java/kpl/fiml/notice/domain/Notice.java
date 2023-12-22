@@ -24,4 +24,8 @@ public class Notice extends BaseEntity {
     public Notice(String content) {
         this.content = content;
     }
+
+    public void update(String content) {
+        this.content = content;
+    }
 }

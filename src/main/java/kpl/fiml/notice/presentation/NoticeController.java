@@ -3,13 +3,12 @@ package kpl.fiml.notice.presentation;
 import kpl.fiml.notice.application.NoticeService;
 import kpl.fiml.notice.dto.NoticeCreateRequest;
 import kpl.fiml.notice.dto.NoticeCreateResponse;
+import kpl.fiml.notice.dto.NoticeUpdateRequest;
+import kpl.fiml.notice.dto.NoticeUpdateResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,5 +22,12 @@ public class NoticeController {
         NoticeCreateResponse response = noticeService.createNotice(request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PatchMapping("/notices/{id}")
+    public ResponseEntity<NoticeUpdateResponse> updateNotice(@PathVariable Long id, @RequestBody NoticeUpdateRequest request) {
+        NoticeUpdateResponse response = noticeService.updateNotice(id, request);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
