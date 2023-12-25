@@ -84,7 +84,7 @@ public class Project {
         this.sharedCount = 0L;
         this.likedCount = 0L;
         this.sponsorCount = 0L;
-        this.status = ProjectStatus.PREPARING;
+        this.status = ProjectStatus.WRITING; // 초기 생성 시 리스트에 노출되지 않고 작성 중 상태로 생성
 
         this.projectImages = new ArrayList<>();
         this.rewards = new ArrayList<>();
