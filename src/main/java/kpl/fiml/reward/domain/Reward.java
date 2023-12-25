@@ -27,6 +27,9 @@ public class Reward {
     @Column(name = "content", columnDefinition = "text")
     private String content;
 
+    @Column(name = "sequence", nullable = false)
+    private Integer sequence;
+
     @Column(name = "price", nullable = false)
     private Long price;
 
@@ -43,9 +46,10 @@ public class Reward {
     private Integer maxPurchaseQuantity;
 
     @Builder
-    public Reward(String title, String content, Long price, Integer totalQuantity, LocalDate deliveryDate, Integer maxPurchaseQuantity) {
+    public Reward(String title, String content, Integer sequence, Long price, Integer totalQuantity, LocalDate deliveryDate, Integer maxPurchaseQuantity) {
         this.title = title;
         this.content = content;
+        this.sequence = sequence;
         this.price = price;
         this.totalQuantity = totalQuantity;
         this.deliveryDate = deliveryDate;
