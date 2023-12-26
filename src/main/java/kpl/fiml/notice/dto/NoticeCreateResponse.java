@@ -1,14 +1,15 @@
 package kpl.fiml.notice.dto;
 
-import lombok.Builder;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class NoticeCreateResponse {
-    private Long id;
+    private final Long id;
 
-    @Builder
-    public NoticeCreateResponse(Long id) {
-        this.id = id;
+    public static NoticeCreateResponse of(Long id) {
+        return new NoticeCreateResponse(id);
     }
 }

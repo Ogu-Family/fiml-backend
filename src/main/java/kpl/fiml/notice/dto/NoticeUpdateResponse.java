@@ -1,14 +1,16 @@
 package kpl.fiml.notice.dto;
 
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class NoticeUpdateResponse {
-    private Long noticeId;
-    private String content;
+    private final Long noticeId;
+    private final String content;
 
-    public NoticeUpdateResponse(Long noticeId, String content) {
-        this.noticeId = noticeId;
-        this.content = content;
+    public static NoticeUpdateResponse of(Long noticeId, String content) {
+        return new NoticeUpdateResponse(noticeId, content);
     }
 }

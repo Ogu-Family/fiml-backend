@@ -18,7 +18,7 @@ public class NoticeService {
     public NoticeCreateResponse createNotice(NoticeCreateRequest request) {
         Notice savedNotice = noticeRepository.save(request.toEntity());
 
-        return new NoticeCreateResponse(savedNotice.getId());
+        return NoticeCreateResponse.of(savedNotice.getId());
     }
 
     @Transactional
@@ -26,14 +26,14 @@ public class NoticeService {
         Notice notice = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 공지사항이 존재하지 않습니다."));
         notice.update(request.getContent());
-        return new NoticeUpdateResponse(noticeId, notice.getContent());
+        return NoticeUpdateResponse.of(noticeId, notice.getContent());
     }
 
     @Transactional(readOnly = true)
     public NoticeDto findById(Long noticeId) {
         Notice findNotice = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 공지사항이 존재하지 않습니다."));
-        return new NoticeDto(findNotice.getId(), findNotice.getContent(), findNotice.getCreatedAt(), findNotice.getUpdatedAt());
+        return NoticeDto.of(findNotice.getId(), findNotice.getContent(), findNotice.getCreatedAt(), findNotice.getUpdatedAt());
 
     }
 
