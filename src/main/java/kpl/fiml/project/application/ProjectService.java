@@ -36,7 +36,7 @@ public class ProjectService {
     @Transactional
     public void updateIntroduction(Long projectId, ProjectDetailIntroductionUpdateRequest request) {
         this.getProjectById(projectId)
-                .updateIntroduction(request.getContent());
+                .updateIntroduction(request.getIntroduction());
     }
 
     private Project getProjectById(Long projectId) {

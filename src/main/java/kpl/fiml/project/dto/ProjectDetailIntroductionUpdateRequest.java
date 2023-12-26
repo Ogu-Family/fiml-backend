@@ -5,5 +5,5 @@ import lombok.Getter;
 @Getter
 public class ProjectDetailIntroductionUpdateRequest {
 
-    private String content;
+    private String introduction;
 }
