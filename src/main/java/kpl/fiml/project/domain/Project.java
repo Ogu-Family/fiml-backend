@@ -29,8 +29,8 @@ public class Project extends BaseEntity {
     @Column(name = "title", length = 100)
     private String title;
 
-    @Column(name = "content", columnDefinition = "text")
-    private String content;
+    @Column(name = "introduction", columnDefinition = "text")
+    private String introduction;
 
     @Column(name = "summary", length = 200, nullable = false)
     private String summary;

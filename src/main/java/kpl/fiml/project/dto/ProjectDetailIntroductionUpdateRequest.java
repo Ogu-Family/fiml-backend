@@ -3,7 +3,7 @@ package kpl.fiml.project.dto;
 import lombok.Getter;
 
 @Getter
-public class ProjectContentUpdateRequest {
+public class ProjectDetailIntroductionUpdateRequest {
 
     private String content;
 }
