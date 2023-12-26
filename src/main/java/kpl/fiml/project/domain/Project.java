@@ -101,6 +101,16 @@ public class Project extends BaseEntity {
         reward.setProject(this);
     }
 
+    public void updateBasicInfo(String summary, ProjectCategory category, String title, List<ProjectImage> projectImages) {
+        this.summary = summary;
+        this.category = category;
+        this.title = title;
+
+        clearImage();
+        updateImages(projectImages);
+    }
+
+
     private void clearImage() {
         this.projectImages.clear();
     }
