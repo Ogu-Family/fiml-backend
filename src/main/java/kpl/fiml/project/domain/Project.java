@@ -70,7 +70,7 @@ public class Project extends BaseEntity {
     @Column(name = "sponsor_count", nullable = false)
     private Long sponsorCount;
 
-    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProjectImage> projectImages;
 
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -99,5 +99,15 @@ public class Project extends BaseEntity {
     public void addReward(Reward reward) {
         this.rewards.add(reward);
         reward.setProject(this);
+    }
+
+    private void clearImage() {
+        this.projectImages.clear();
+    }
+
+    private void updateImages(List<ProjectImage> projectImages) {
+        for (ProjectImage projectImageDto : projectImages) {
+            addProjectImage(projectImageDto);
+        }
     }
 }
