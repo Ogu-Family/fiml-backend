@@ -1,13 +1,14 @@
 package kpl.fiml.project.domain;
 
 import jakarta.persistence.*;
+import kpl.fiml.global.common.BaseEntity;
 import lombok.*;
 
 @Entity
 @Getter
 @Table(name = "project_images")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ProjectImage {
+public class ProjectImage extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

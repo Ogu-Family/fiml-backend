@@ -1,6 +1,7 @@
 package kpl.fiml.reward.domain;
 
 import jakarta.persistence.*;
+import kpl.fiml.global.common.BaseEntity;
 import kpl.fiml.project.domain.Project;
 import lombok.*;
 
@@ -10,7 +11,7 @@ import java.time.LocalDate;
 @Getter
 @Table(name = "rewards")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Reward {
+public class Reward extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

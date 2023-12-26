@@ -1,6 +1,7 @@
 package kpl.fiml.project.domain;
 
 import jakarta.persistence.*;
+import kpl.fiml.global.common.BaseEntity;
 import kpl.fiml.project.domain.enums.ProjectCategory;
 import kpl.fiml.project.domain.enums.ProjectStatus;
 import kpl.fiml.reward.domain.Reward;
@@ -17,7 +18,7 @@ import java.util.List;
 @Getter
 @Table(name = "projects")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Project {
+public class Project extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
