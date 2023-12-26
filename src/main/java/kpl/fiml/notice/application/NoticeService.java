@@ -25,7 +25,7 @@ public class NoticeService {
     public NoticeUpdateResponse updateNotice(Long noticeId, NoticeUpdateRequest request) {
         Notice notice = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 공지사항이 존재하지 않습니다."));
-        notice.update(request.getContent());
+        notice.updateContent(request.getContent());
         return NoticeUpdateResponse.of(noticeId, notice.getContent());
     }
 
