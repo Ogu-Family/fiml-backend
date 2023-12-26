@@ -16,6 +16,6 @@ public class ProjectService {
 
     @Transactional
     public ProjectInitResponse initProject(ProjectInitRequest request) {
-        return new ProjectInitResponse(projectRepository.save(request.toEntity()).getId());
+        return ProjectInitResponse.of(projectRepository.save(request.toEntity()).getId());
     }
 }
