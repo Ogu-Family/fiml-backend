@@ -2,6 +2,7 @@ package kpl.fiml.project.presentation;
 
 import kpl.fiml.project.application.ProjectService;
 import kpl.fiml.project.dto.ProjectBasicInfoUpdateRequest;
+import kpl.fiml.project.dto.ProjectDetailIntroductionUpdateRequest;
 import kpl.fiml.project.dto.ProjectInitRequest;
 import kpl.fiml.project.dto.ProjectInitResponse;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,14 @@ public class ProjectController {
     public ResponseEntity<Void> updateBasicInfo(@PathVariable("projectId") Long projectId,
                                                 @RequestBody ProjectBasicInfoUpdateRequest request) {
         this.projectService.updateBasicInfo(projectId, request);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/projects/{projectId}/introduction")
+    public ResponseEntity<Void> updateIntroduction(@PathVariable("projectId") Long projectId,
+                                                   @RequestBody ProjectDetailIntroductionUpdateRequest request) {
+        this.projectService.updateIntroduction(projectId, request);
 
         return ResponseEntity.ok().build();
     }
