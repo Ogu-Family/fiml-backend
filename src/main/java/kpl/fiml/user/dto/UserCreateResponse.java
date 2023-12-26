@@ -1,14 +1,15 @@
 package kpl.fiml.user.dto;
 
-import lombok.Builder;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserCreateResponse {
-    private Long userId;
+    private final Long userId;
 
-    @Builder
-    public UserCreateResponse(Long userId) {
-        this.userId = userId;
+    public static UserCreateResponse of(Long userId) {
+        return new UserCreateResponse(userId);
     }
 }

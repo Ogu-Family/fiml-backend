@@ -19,6 +19,6 @@ public class UserService {
     public UserCreateResponse createUser(UserCreateRequest request) {
         User savedUser = userRepository.save(request.toEntity());
 
-        return new UserCreateResponse(savedUser.getId());
+        return UserCreateResponse.of(savedUser.getId());
     }
 }
