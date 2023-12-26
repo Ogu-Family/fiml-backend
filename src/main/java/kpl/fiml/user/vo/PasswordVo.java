@@ -17,6 +17,6 @@ public class PasswordVo {
     }
 
     private boolean isValidPassword(String password) {
-        return password.length() >= 8 && password.matches(SPECIAL_CHARACTERS_REGEX);
+        return password.length() >= PASSWORD_LENGTH && password.matches(SPECIAL_CHARACTERS_REGEX);
     }
 }
