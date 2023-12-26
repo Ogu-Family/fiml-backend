@@ -3,6 +3,7 @@ package kpl.fiml.project.application;
 import kpl.fiml.project.domain.Project;
 import kpl.fiml.project.domain.ProjectRepository;
 import kpl.fiml.project.dto.ProjectBasicInfoUpdateRequest;
+import kpl.fiml.project.dto.ProjectDetailIntroductionUpdateRequest;
 import kpl.fiml.project.dto.ProjectInitRequest;
 import kpl.fiml.project.dto.ProjectInitResponse;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,12 @@ public class ProjectService {
                         request.getTitle(),
                         request.getProjectImageEntities()
                 );
+    }
+
+    @Transactional
+    public void updateIntroduction(Long projectId, ProjectDetailIntroductionUpdateRequest request) {
+        this.getProjectById(projectId)
+                .updateIntroduction(request.getContent());
     }
 
     private Project getProjectById(Long projectId) {

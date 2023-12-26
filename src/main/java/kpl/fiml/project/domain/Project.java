@@ -110,7 +110,6 @@ public class Project extends BaseEntity {
         updateImages(projectImages);
     }
 
-
     private void clearImage() {
         this.projectImages.clear();
     }
@@ -119,5 +118,9 @@ public class Project extends BaseEntity {
         for (ProjectImage projectImageDto : projectImages) {
             addProjectImage(projectImageDto);
         }
+    }
+
+    public void updateIntroduction(String introduction) {
+        this.introduction = introduction;
     }
 }
