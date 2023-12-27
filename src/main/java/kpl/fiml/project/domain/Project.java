@@ -137,7 +137,7 @@ public class Project extends BaseEntity {
         this.endAt = endDateTime;
         this.commissionRate = commissionRate;
 
-        this.paymentAt = this.startAt.plusDays(PAYMENT_AT_OFFSET);
+        this.paymentAt = this.endAt.plusDays(PAYMENT_AT_OFFSET);
         this.paymentEndAt = this.endAt.plusDays(PAYMENT_END_AT_OFFSET);
     }
 
