@@ -21,6 +21,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Project extends BaseEntity {
 
+    private static final int PAYMENT_AT_OFFSET = 1;
     private static final int PAYMENT_END_AT_OFFSET = 7;
 
     @Id
@@ -49,6 +50,9 @@ public class Project extends BaseEntity {
 
     @Column(name = "end_at", columnDefinition = "datetime")
     private LocalDateTime endAt;
+
+    @Column(name = "payment_at", columnDefinition = "datetime")
+    private LocalDateTime paymentAt;
 
     @Column(name = "payment_end_at", columnDefinition = "datetime")
     private LocalDateTime paymentEndAt;
