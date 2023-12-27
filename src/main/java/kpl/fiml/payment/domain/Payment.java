@@ -42,7 +42,12 @@ public class Payment extends BaseEntity {
         this.status = PaymentStatus.WAIT;
     }
 
-    public void updateApprovedAt(LocalDateTime approvedAt) {
-        this.approvedAt = approvedAt;
+    public void successPayed() {
+        this.status = PaymentStatus.SUCCESS;
+        this.approvedAt = LocalDateTime.now();
+    }
+
+    public void failPayed() {
+        this.status = PaymentStatus.FAIL;
     }
 }
