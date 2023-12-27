@@ -47,8 +47,8 @@ public class Project extends BaseEntity {
     @Column(name = "end_at", columnDefinition = "datetime")
     private LocalDateTime endAt;
 
-    @Column(name = "payment_at", columnDefinition = "datetime")
-    private LocalDateTime paymentAt;
+    @Column(name = "payment_end_at", columnDefinition = "datetime")
+    private LocalDateTime paymentEndAt;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "category", nullable = false)
