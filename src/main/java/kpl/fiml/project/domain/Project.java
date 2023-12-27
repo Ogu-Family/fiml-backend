@@ -113,15 +113,11 @@ public class Project extends BaseEntity {
         this.category = category;
         this.title = title;
 
-        clearImage();
         updateImages(projectImages);
     }
 
-    private void clearImage() {
-        this.projectImages.clear();
-    }
-
     private void updateImages(List<ProjectImage> projectImages) {
+        this.projectImages.clear();
         for (ProjectImage projectImageDto : projectImages) {
             addProjectImage(projectImageDto);
         }
