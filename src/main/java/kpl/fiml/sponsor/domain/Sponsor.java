@@ -42,4 +42,8 @@ public class Sponsor extends BaseEntity {
 
         this.status = SponsorStatus.FUNDING_PROCEEDING;
     }
+
+    public void updateStatus(SponsorStatus status) {
+        this.status = status;
+    }
 }
