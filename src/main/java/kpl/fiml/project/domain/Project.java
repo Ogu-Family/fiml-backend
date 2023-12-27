@@ -10,6 +10,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,8 @@ import java.util.List;
 @Table(name = "projects")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Project extends BaseEntity {
+
+    private static final int PAYMENT_END_AT_OFFSET = 7;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -122,5 +125,14 @@ public class Project extends BaseEntity {
 
     public void updateIntroduction(String introduction) {
         this.introduction = introduction;
+    }
+
+    public void updateFundingInfo(Long goalAmount, LocalDateTime startAt, LocalDate endAt, Double commissionRate) {
+        this.goalAmount = goalAmount;
+        this.startAt = startAt;
+        this.endAt = endAt.atTime(23, 59, 59);
+        this.commissionRate = commissionRate;
+
+        this.paymentEndAt = this.endAt.plusDays(PAYMENT_END_AT_OFFSET);
     }
 }
