@@ -13,6 +13,7 @@ public class ProjectRewardDto {
     private Long price;
     private Integer quantity;
     private LocalDate deliveryDate;
+    // TODO: 1 이상의 정수 범위 검증 추가
     private Integer maxPurchaseQuantity;
 
     public Reward toEntity(int listIndex) {
