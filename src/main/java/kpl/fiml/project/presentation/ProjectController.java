@@ -53,4 +53,11 @@ public class ProjectController {
 
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/projects/{projectId}/submit")
+    public ResponseEntity<Void> submitProject(@PathVariable("projectId") Long projectId) {
+        this.projectService.submitProject(projectId);
+
+        return ResponseEntity.ok().build();
+    }
 }

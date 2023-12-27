@@ -3,7 +3,6 @@ package kpl.fiml.project.application;
 import kpl.fiml.project.domain.Project;
 import kpl.fiml.project.domain.ProjectRepository;
 import kpl.fiml.project.dto.*;
-import kpl.fiml.project.dto.ProjectRewardUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,6 +51,12 @@ public class ProjectService {
     public void updateRewards(Long projectId, ProjectRewardUpdateRequest request) {
         this.getProjectById(projectId)
                 .updateRewards(request.getRewardEntities());
+    }
+
+    @Transactional
+    public void submitProject(Long projectId) {
+        this.getProjectById(projectId)
+                .submit();
     }
 
     private Project getProjectById(Long projectId) {
