@@ -25,23 +25,28 @@ public class NoticeService {
     public NoticeUpdateResponse updateNotice(Long noticeId, NoticeUpdateRequest request) {
         Notice notice = getById(noticeId);
         notice.updateContent(request.getContent());
+
         return NoticeUpdateResponse.of(noticeId, notice.getContent());
     }
 
     @Transactional(readOnly = true)
     public NoticeDto findById(Long noticeId) {
         Notice findNotice = getById(noticeId);
+
         return NoticeDto.of(findNotice.getId(), findNotice.getContent(), findNotice.getCreatedAt(), findNotice.getUpdatedAt());
     }
 
     @Transactional
-    public Long deleteById(Long noticeId) {
-        noticeRepository.deleteById(noticeId);
-        return noticeId;
+    public NoticeDeleteResponse deleteById(Long noticeId) {
+        Notice deleteNotice = getById(noticeId);
+        deleteNotice.delete();
+
+        return NoticeDeleteResponse.of(deleteNotice.getId(), deleteNotice.getDeletedAt());
     }
 
     private Notice getById(Long noticeId) {
         return noticeRepository.findById(noticeId)
+                .filter(notice -> !notice.isDeleted())
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 공지사항이 존재하지 않습니다."));
     }
 }
