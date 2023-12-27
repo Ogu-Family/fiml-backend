@@ -80,7 +80,7 @@ public class Project extends BaseEntity {
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProjectImage> projectImages;
 
-    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reward> rewards;
 
     @Builder
@@ -137,6 +137,14 @@ public class Project extends BaseEntity {
         this.endAt = endAt.atTime(23, 59, 59);
         this.commissionRate = commissionRate;
 
+        this.paymentAt = this.startAt.plusDays(PAYMENT_AT_OFFSET);
         this.paymentEndAt = this.endAt.plusDays(PAYMENT_END_AT_OFFSET);
+    }
+
+    public void updateRewards(List<Reward> rewardEntities) {
+        this.rewards.clear();
+        for (Reward rewardEntity : rewardEntities) {
+            addReward(rewardEntity);
+        }
     }
 }

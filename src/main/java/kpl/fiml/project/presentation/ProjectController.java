@@ -2,6 +2,7 @@ package kpl.fiml.project.presentation;
 
 import kpl.fiml.project.application.ProjectService;
 import kpl.fiml.project.dto.*;
+import kpl.fiml.project.dto.ProjectRewardUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +42,14 @@ public class ProjectController {
     public ResponseEntity<Void> updateFundingPlan(@PathVariable("projectId") Long projectId,
                                                   @RequestBody ProjectFundingPlanUpdateRequest request) {
         this.projectService.updateFundingPlan(projectId, request);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/projects/{projectId}/rewards")
+    public ResponseEntity<Void> updateRewards(@PathVariable("projectId") Long projectId,
+                                              @RequestBody ProjectRewardUpdateRequest request) {
+        this.projectService.updateRewards(projectId, request);
 
         return ResponseEntity.ok().build();
     }
