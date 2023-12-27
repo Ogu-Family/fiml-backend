@@ -51,6 +51,7 @@ public class Project extends BaseEntity {
     @Column(name = "end_at", columnDefinition = "datetime")
     private LocalDateTime endAt;
 
+    // TODO: 컬럼명 payment_start_at 으로 변경
     @Column(name = "payment_at", columnDefinition = "datetime")
     private LocalDateTime paymentAt;
 
