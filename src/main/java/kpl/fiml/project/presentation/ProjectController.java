@@ -2,7 +2,6 @@ package kpl.fiml.project.presentation;
 
 import kpl.fiml.project.application.ProjectService;
 import kpl.fiml.project.dto.*;
-import kpl.fiml.project.dto.ProjectRewardUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
