@@ -2,10 +2,7 @@ package kpl.fiml.project.application;
 
 import kpl.fiml.project.domain.Project;
 import kpl.fiml.project.domain.ProjectRepository;
-import kpl.fiml.project.dto.ProjectBasicInfoUpdateRequest;
-import kpl.fiml.project.dto.ProjectDetailIntroductionUpdateRequest;
-import kpl.fiml.project.dto.ProjectInitRequest;
-import kpl.fiml.project.dto.ProjectInitResponse;
+import kpl.fiml.project.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +34,17 @@ public class ProjectService {
     public void updateIntroduction(Long projectId, ProjectDetailIntroductionUpdateRequest request) {
         this.getProjectById(projectId)
                 .updateIntroduction(request.getIntroduction());
+    }
+
+    @Transactional
+    public void updateFundingPlan(Long projectId, ProjectFundingPlanUpdateRequest request) {
+        this.getProjectById(projectId)
+                .updateFundingInfo(
+                        request.getGoalAmount(),
+                        request.getFundingStartDateTime(),
+                        request.getFundingEndDate(),
+                        request.getCommissionRate()
+                );
     }
 
     private Project getProjectById(Long projectId) {
