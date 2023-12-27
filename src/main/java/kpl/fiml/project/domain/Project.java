@@ -127,14 +127,28 @@ public class Project extends BaseEntity {
         this.introduction = introduction;
     }
 
-    public void updateFundingInfo(Long goalAmount, LocalDateTime startAt, LocalDate endAt, Double commissionRate) {
+    public void updateFundingInfo(Long goalAmount, LocalDateTime startDateTime, LocalDate endDate, Double commissionRate) {
+        LocalDateTime endDateTime = endDate.atTime(23, 59, 59);
+        validateFundingDateTime(startDateTime, endDateTime);
+
         this.goalAmount = goalAmount;
-        this.startAt = startAt;
-        this.endAt = endAt.atTime(23, 59, 59);
+        this.startAt = startDateTime;
+        this.endAt = endDateTime;
         this.commissionRate = commissionRate;
 
         this.paymentAt = this.startAt.plusDays(PAYMENT_AT_OFFSET);
         this.paymentEndAt = this.endAt.plusDays(PAYMENT_END_AT_OFFSET);
+    }
+
+    private void validateFundingDateTime(LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        LocalDateTime currentLocalDateTime = LocalDateTime.now();
+        if (startDateTime.isAfter(endDateTime)) {
+            throw new IllegalArgumentException("펀딩 시작일은 종료일보다 빠를 수 없습니다.");
+        }
+        if (startDateTime.isBefore(currentLocalDateTime) ||
+            endDateTime.isBefore(currentLocalDateTime)) {
+            throw new IllegalArgumentException("펀딩 시작일과 종료일은 현재 시간보다 빠를 수 없습니다.");
+        }
     }
 
     public void updateRewards(List<Reward> rewardEntities) {
