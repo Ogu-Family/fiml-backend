@@ -157,4 +157,24 @@ public class Project extends BaseEntity {
             addReward(rewardEntity);
         }
     }
+
+    public void submit() {
+        validateRequiredFields();
+        validateFundingDateTime(this.startAt, this.endAt);
+        if (this.status != ProjectStatus.WRITING) {
+            throw new IllegalStateException("작성 중인 프로젝트만 승인할 수 있습니다.");
+        }
+
+        this.status = ProjectStatus.PREPARING;
+    }
+
+    private void validateRequiredFields() {
+        if (this.title == null || this.introduction == null || this.summary == null || this.category == null ||
+            this.goalAmount == null || this.currentAmount == null || this.startAt == null || this.endAt == null ||
+            this.paymentAt == null || this.paymentEndAt == null || this.commissionRate == null ||
+            this.status == null || this.sharedCount == null || this.likedCount == null || this.sponsorCount == null ||
+            this.projectImages.isEmpty() || this.rewards.isEmpty()) {
+            throw new IllegalStateException("프로젝트 정보를 모두 입력해야 합니다.");
+        }
+    }
 }
