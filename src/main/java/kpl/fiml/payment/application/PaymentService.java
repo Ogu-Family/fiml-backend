@@ -21,6 +21,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PaymentService {
 
+    private static final int MAX_PAYMENT_TRIAL = 7;
+    private static final int NEXT_PAYMENT_OFFSET = 1;
+    private static final int PAYMENT_PERIOD_HOUR = 14;
+    private static final int PAYMENT_PERIOD_MINUTE = 0;
+
     private final PaymentRepository paymentRepository;
 
     @Scheduled(cron = "0 0 14 * * *", zone = "Asia/Seoul")
@@ -41,12 +46,12 @@ public class PaymentService {
             } catch (IllegalArgumentException e) {
                 payment.failPayed();
 
-                if (paymentRepository.countBySponsor(sponsor) == 7) {
+                if (paymentRepository.countBySponsor(sponsor) == MAX_PAYMENT_TRIAL) {
                     sponsor.updateStatus(SponsorStatus.PAYMENT_FAIL);
                 } else {
                     paymentRepository.save(Payment.builder()
                             .sponsor(sponsor)
-                            .requestedAt(LocalDateTime.of(LocalDate.now().plusDays(1), LocalTime.of(14, 0)))
+                            .requestedAt(LocalDateTime.of(LocalDate.now().plusDays(NEXT_PAYMENT_OFFSET), LocalTime.of(PAYMENT_PERIOD_HOUR, PAYMENT_PERIOD_MINUTE)))
                             .build());
                     sponsor.updateStatus(SponsorStatus.PAYMENT_PROCEEDING);
                 }
