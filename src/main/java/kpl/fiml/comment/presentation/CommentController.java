@@ -3,10 +3,13 @@ package kpl.fiml.comment.presentation;
 import kpl.fiml.comment.application.CommentService;
 import kpl.fiml.comment.dto.CommentCreateRequest;
 import kpl.fiml.comment.dto.CommentCreateResponse;
+import kpl.fiml.comment.dto.CommentDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,4 +25,10 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @GetMapping("/notice/{noticeId}/comments")
+    ResponseEntity<List<CommentDto>> findAllByNoticeId(@PathVariable Long noticeId) {
+        List<CommentDto> response = commentService.findAllByNoticeId(noticeId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 }
