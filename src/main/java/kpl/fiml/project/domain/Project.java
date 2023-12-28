@@ -21,9 +21,6 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Project extends BaseEntity {
 
-    private static final int PAYMENT_AT_OFFSET = 1;
-    private static final int PAYMENT_END_AT_OFFSET = 7;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -50,13 +47,6 @@ public class Project extends BaseEntity {
 
     @Column(name = "end_at", columnDefinition = "datetime")
     private LocalDateTime endAt;
-
-    // TODO: 컬럼명 payment_start_at 으로 변경
-    @Column(name = "payment_at", columnDefinition = "datetime")
-    private LocalDateTime paymentAt;
-
-    @Column(name = "payment_end_at", columnDefinition = "datetime")
-    private LocalDateTime paymentEndAt;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "category", nullable = false)
@@ -136,9 +126,6 @@ public class Project extends BaseEntity {
         this.startAt = startDateTime;
         this.endAt = endDateTime;
         this.commissionRate = commissionRate;
-
-        this.paymentAt = this.endAt.plusDays(PAYMENT_AT_OFFSET);
-        this.paymentEndAt = this.endAt.plusDays(PAYMENT_END_AT_OFFSET);
     }
 
     private void validateFundingDateTime(LocalDateTime startDateTime, LocalDateTime endDateTime) {
@@ -172,9 +159,8 @@ public class Project extends BaseEntity {
     private void validateRequiredFields() {
         if (this.title == null || this.introduction == null || this.summary == null || this.category == null ||
             this.goalAmount == null || this.currentAmount == null || this.startAt == null || this.endAt == null ||
-            this.paymentAt == null || this.paymentEndAt == null || this.commissionRate == null ||
-            this.status == null || this.sharedCount == null || this.likedCount == null || this.sponsorCount == null ||
-            this.projectImages.isEmpty() || this.rewards.isEmpty()) {
+            this.commissionRate == null || this.status == null || this.sharedCount == null || this.likedCount == null ||
+            this.sponsorCount == null || this.projectImages.isEmpty() || this.rewards.isEmpty()) {
             throw new IllegalStateException("프로젝트 정보를 모두 입력해야 합니다.");
         }
     }
