@@ -3,8 +3,9 @@ package kpl.fiml.payment.application;
 import kpl.fiml.payment.domain.Payment;
 import kpl.fiml.payment.domain.PaymentRepository;
 import kpl.fiml.payment.domain.PaymentStatus;
+import kpl.fiml.payment.dto.PaymentGetResponse;
 import kpl.fiml.sponsor.domain.Sponsor;
-import kpl.fiml.sponsor.domain.SponsorStatus;
+import kpl.fiml.sponsor.domain.SponsorRepository;
 import kpl.fiml.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -27,6 +28,20 @@ public class PaymentService {
     private static final int PAYMENT_PERIOD_MINUTE = 0;
 
     private final PaymentRepository paymentRepository;
+    private final SponsorRepository sponsorRepository;
+
+    public List<PaymentGetResponse> getPaymentsOfSuccessAndFail(Long sponsorId) {
+        Sponsor sponsor = sponsorRepository.findById(sponsorId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 후원에 대한 요청입니다."));
+
+        List<PaymentGetResponse> responses = paymentRepository.findAllBySponsor(sponsor)
+                .stream()
+                .filter(payment -> payment.getStatus().equals(PaymentStatus.SUCCESS) || payment.getStatus().equals(PaymentStatus.FAIL))
+                .map(payment -> PaymentGetResponse.of(payment.getStatus().getDisplayName(), payment.getRequestedAt(), payment.getApprovedAt()))
+                .toList();
+
+        return responses;
+    }
 
     @Scheduled(cron = "0 0 14 * * *", zone = "Asia/Seoul")
     @Transactional
