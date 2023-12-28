@@ -32,6 +32,7 @@ public class CommentService {
         List<Comment> findList = commentRepository.findAllByNoticeId(noticeId).get();
 
         return findList.stream()
+                .filter(comment -> !comment.isDeleted())
                 .map(comment -> CommentDto.of(comment.getId(), comment.getContent(), comment.getCommenter(), noticeId, comment.getCreatedAt(), comment.getUpdatedAt()))
                 .toList();
     }
@@ -42,6 +43,14 @@ public class CommentService {
         findComment.updateContent(request.getContent());
 
         return CommentUpdateResponse.of(findComment.getId(), findComment.getContent(), findComment.getCommenter(), findComment.getCreatedAt(), findComment.getUpdatedAt());
+    }
+
+    @Transactional
+    public CommentDeleteResponse deleteById(Long id) {
+        Comment findComment = getById(id);
+        findComment.delete();
+
+        return CommentDeleteResponse.of(findComment.getId());
     }
 
     private Comment getById(Long id) {
