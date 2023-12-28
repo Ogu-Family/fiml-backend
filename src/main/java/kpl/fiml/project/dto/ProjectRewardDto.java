@@ -1,6 +1,6 @@
 package kpl.fiml.project.dto;
 
-import kpl.fiml.reward.domain.Reward;
+import kpl.fiml.project.domain.Reward;
 import lombok.Getter;
 
 import java.time.LocalDate;

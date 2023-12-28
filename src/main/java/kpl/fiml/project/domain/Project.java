@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import kpl.fiml.global.common.BaseEntity;
 import kpl.fiml.project.domain.enums.ProjectCategory;
 import kpl.fiml.project.domain.enums.ProjectStatus;
-import kpl.fiml.reward.domain.Reward;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
