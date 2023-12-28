@@ -2,9 +2,7 @@ package kpl.fiml.comment.application;
 
 import kpl.fiml.comment.domain.Comment;
 import kpl.fiml.comment.domain.CommentRepository;
-import kpl.fiml.comment.dto.CommentCreateRequest;
-import kpl.fiml.comment.dto.CommentCreateResponse;
-import kpl.fiml.comment.dto.CommentDto;
+import kpl.fiml.comment.dto.*;
 import kpl.fiml.notice.domain.Notice;
 import kpl.fiml.notice.domain.NoticeRepository;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +36,19 @@ public class CommentService {
                 .toList();
     }
 
+    @Transactional
+    public CommentUpdateResponse update(Long id, CommentUpdateRequest request) {
+        Comment findComment = getById(id);
+        findComment.updateContent(request.getContent());
+
+        return CommentUpdateResponse.of(findComment.getId(), findComment.getContent(), findComment.getCommenter(), findComment.getCreatedAt(), findComment.getUpdatedAt());
+    }
+
+    private Comment getById(Long id) {
+        return commentRepository.findById(id)
+                .filter(comment -> !comment.isDeleted())
+                .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다."));
+    }
     private Notice getNoticeById(Long noticeId) {
         return noticeRepository.findById(noticeId)
                 .filter(notice -> !notice.isDeleted())

@@ -1,9 +1,7 @@
 package kpl.fiml.comment.presentation;
 
 import kpl.fiml.comment.application.CommentService;
-import kpl.fiml.comment.dto.CommentCreateRequest;
-import kpl.fiml.comment.dto.CommentCreateResponse;
-import kpl.fiml.comment.dto.CommentDto;
+import kpl.fiml.comment.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +26,13 @@ public class CommentController {
     @GetMapping("/notice/{noticeId}/comments")
     ResponseEntity<List<CommentDto>> findAllByNoticeId(@PathVariable Long noticeId) {
         List<CommentDto> response = commentService.findAllByNoticeId(noticeId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PatchMapping("/comments/{id}")
+    ResponseEntity<CommentUpdateResponse> update(@PathVariable Long id, @RequestBody CommentUpdateRequest request) {
+        CommentUpdateResponse response = commentService.update(id, request);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
