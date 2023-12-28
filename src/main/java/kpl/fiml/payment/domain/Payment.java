@@ -24,8 +24,9 @@ public class Payment extends BaseEntity {
     @JoinColumn(name = "sponsor_id")
     private Sponsor sponsor;
 
-    @Column(name = "is_payed", nullable = false)
-    private Boolean isPayed;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private PaymentStatus status;
 
     @Column(name = "requested_at", columnDefinition = "datetime", nullable = false)
     private LocalDateTime requestedAt;
@@ -34,13 +35,19 @@ public class Payment extends BaseEntity {
     private LocalDateTime approvedAt;
 
     @Builder
-    public Payment(Sponsor sponsor, Boolean isPayed, LocalDateTime requestedAt) {
+    public Payment(Sponsor sponsor, LocalDateTime requestedAt) {
         this.sponsor = sponsor;
-        this.isPayed = isPayed;
         this.requestedAt = requestedAt;
+
+        this.status = PaymentStatus.WAIT;
     }
 
-    public void updateApprovedAt(LocalDateTime approvedAt) {
-        this.approvedAt = approvedAt;
+    public void successPayed() {
+        this.status = PaymentStatus.SUCCESS;
+        this.approvedAt = LocalDateTime.now();
+    }
+
+    public void failPayed() {
+        this.status = PaymentStatus.FAIL;
     }
 }
