@@ -4,12 +4,12 @@ import jakarta.persistence.*;
 import kpl.fiml.global.common.BaseEntity;
 import kpl.fiml.project.domain.enums.ProjectCategory;
 import kpl.fiml.project.domain.enums.ProjectStatus;
-import kpl.fiml.reward.domain.Reward;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +29,8 @@ public class Project extends BaseEntity {
     @Column(name = "title", length = 100)
     private String title;
 
-    @Column(name = "content", columnDefinition = "text")
-    private String content;
+    @Column(name = "introduction", columnDefinition = "text")
+    private String introduction;
 
     @Column(name = "summary", length = 200, nullable = false)
     private String summary;
@@ -46,9 +46,6 @@ public class Project extends BaseEntity {
 
     @Column(name = "end_at", columnDefinition = "datetime")
     private LocalDateTime endAt;
-
-    @Column(name = "payment_at", columnDefinition = "datetime")
-    private LocalDateTime paymentAt;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "category", nullable = false)
@@ -70,10 +67,10 @@ public class Project extends BaseEntity {
     @Column(name = "sponsor_count", nullable = false)
     private Long sponsorCount;
 
-    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProjectImage> projectImages;
 
-    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reward> rewards;
 
     @Builder
@@ -99,5 +96,71 @@ public class Project extends BaseEntity {
     public void addReward(Reward reward) {
         this.rewards.add(reward);
         reward.setProject(this);
+    }
+
+    public void updateBasicInfo(String summary, ProjectCategory category, String title, List<ProjectImage> projectImages) {
+        this.summary = summary;
+        this.category = category;
+        this.title = title;
+
+        updateImages(projectImages);
+    }
+
+    private void updateImages(List<ProjectImage> projectImages) {
+        this.projectImages.clear();
+        for (ProjectImage projectImageDto : projectImages) {
+            addProjectImage(projectImageDto);
+        }
+    }
+
+    public void updateIntroduction(String introduction) {
+        this.introduction = introduction;
+    }
+
+    public void updateFundingInfo(Long goalAmount, LocalDateTime startDateTime, LocalDate endDate, Double commissionRate) {
+        LocalDateTime endDateTime = endDate.atTime(23, 59, 59);
+        validateFundingDateTime(startDateTime, endDateTime);
+
+        this.goalAmount = goalAmount;
+        this.startAt = startDateTime;
+        this.endAt = endDateTime;
+        this.commissionRate = commissionRate;
+    }
+
+    private void validateFundingDateTime(LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        LocalDateTime currentLocalDateTime = LocalDateTime.now();
+        if (startDateTime.isAfter(endDateTime)) {
+            throw new IllegalArgumentException("펀딩 시작일은 종료일보다 빠를 수 없습니다.");
+        }
+        if (startDateTime.isBefore(currentLocalDateTime) ||
+            endDateTime.isBefore(currentLocalDateTime)) {
+            throw new IllegalArgumentException("펀딩 시작일과 종료일은 현재 시간보다 빠를 수 없습니다.");
+        }
+    }
+
+    public void updateRewards(List<Reward> rewardEntities) {
+        this.rewards.clear();
+        for (Reward rewardEntity : rewardEntities) {
+            addReward(rewardEntity);
+        }
+    }
+
+    public void submit() {
+        validateRequiredFields();
+        validateFundingDateTime(this.startAt, this.endAt);
+        if (this.status != ProjectStatus.WRITING) {
+            throw new IllegalStateException("작성 중인 프로젝트만 승인할 수 있습니다.");
+        }
+
+        this.status = ProjectStatus.PREPARING;
+    }
+
+    private void validateRequiredFields() {
+        if (this.title == null || this.introduction == null || this.summary == null || this.category == null ||
+            this.goalAmount == null || this.currentAmount == null || this.startAt == null || this.endAt == null ||
+            this.commissionRate == null || this.status == null || this.sharedCount == null || this.likedCount == null ||
+            this.sponsorCount == null || this.projectImages.isEmpty() || this.rewards.isEmpty()) {
+            throw new IllegalStateException("프로젝트 정보를 모두 입력해야 합니다.");
+        }
     }
 }

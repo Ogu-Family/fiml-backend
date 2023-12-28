@@ -9,7 +9,8 @@ import java.time.LocalDateTime;
 public class ProjectFundingPlanUpdateRequest {
 
     private Long goalAmount;
-    private LocalDateTime fundingStartAt;
-    private LocalDate fundingEndAt; // 시간은 23:59:59로 고정
+    private LocalDateTime fundingStartDateTime;
+    private LocalDate fundingEndDate; // 저장 시 시간 23:59:59로 고정
+    // TODO: 0-100 실수 범위 검증 추가
     private Double commissionRate;
 }

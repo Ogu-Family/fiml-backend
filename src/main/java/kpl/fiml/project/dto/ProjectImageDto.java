@@ -6,12 +6,11 @@ import lombok.Getter;
 @Getter
 public class ProjectImageDto {
 
-    private Integer sequence;
     private String path;
 
-    public ProjectImage toEntity() {
+    public ProjectImage toEntity(int listIndex) {
         return ProjectImage.builder()
-                .sequence(sequence)
+                .sequence(listIndex)
                 .path(path)
                 .build();
     }

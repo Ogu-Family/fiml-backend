@@ -1,26 +1,26 @@
-package kpl.fiml.reward.dto;
+package kpl.fiml.project.dto;
 
-import kpl.fiml.reward.domain.Reward;
+import kpl.fiml.project.domain.Reward;
 import lombok.Getter;
 
 import java.time.LocalDate;
 
 @Getter
-public class RewardDto {
+public class ProjectRewardDto {
 
     private String title;
     private String content;
-    private Integer sequence;
     private Long price;
     private Integer quantity;
     private LocalDate deliveryDate;
+    // TODO: 1 이상의 정수 범위 검증 추가
     private Integer maxPurchaseQuantity;
 
-    public Reward toEntity() {
+    public Reward toEntity(int listIndex) {
         return Reward.builder()
                 .title(title)
                 .content(content)
-                .sequence(sequence)
+                .sequence(listIndex)
                 .price(price)
                 .totalQuantity(quantity)
                 .deliveryDate(deliveryDate)

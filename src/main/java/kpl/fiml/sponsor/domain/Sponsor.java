@@ -2,7 +2,7 @@ package kpl.fiml.sponsor.domain;
 
 import jakarta.persistence.*;
 import kpl.fiml.global.common.BaseEntity;
-import kpl.fiml.reward.domain.Reward;
+import kpl.fiml.project.domain.Reward;
 import kpl.fiml.user.domain.User;
 import lombok.AccessLevel;
 import lombok.Builder;
