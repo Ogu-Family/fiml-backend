@@ -42,18 +42,18 @@ public class PaymentService {
                 user.decreaseCash(requiredPaymentAmount);
 
                 payment.successPayed();
-                sponsor.updateStatus(SponsorStatus.COMPLETE);
+                sponsor.updateStatusToComplete();
             } catch (IllegalArgumentException e) {
                 payment.failPayed();
 
                 if (paymentRepository.countBySponsor(sponsor) == MAX_PAYMENT_TRIAL) {
-                    sponsor.updateStatus(SponsorStatus.PAYMENT_FAIL);
+                    sponsor.updateStatusToPaymentFail();
                 } else {
                     paymentRepository.save(Payment.builder()
                             .sponsor(sponsor)
                             .requestedAt(LocalDateTime.of(LocalDate.now().plusDays(NEXT_PAYMENT_OFFSET), LocalTime.of(PAYMENT_PERIOD_HOUR, PAYMENT_PERIOD_MINUTE)))
                             .build());
-                    sponsor.updateStatus(SponsorStatus.PAYMENT_PROCEEDING);
+                    sponsor.updateStatusToPaymentProceeding();
                 }
             }
 
