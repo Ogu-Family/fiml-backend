@@ -30,7 +30,7 @@ public class PaymentService {
     private final PaymentRepository paymentRepository;
     private final SponsorRepository sponsorRepository;
 
-    public List<PaymentGetResponse> getPayments(Long sponsorId) {
+    public List<PaymentGetResponse> getPaymentsOfSuccessAndFail(Long sponsorId) {
         Sponsor sponsor = sponsorRepository.findById(sponsorId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 후원에 대한 요청입니다."));
 

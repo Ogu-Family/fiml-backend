@@ -19,8 +19,8 @@ public class PaymentController {
     private final PaymentService paymentService;
 
     @GetMapping("/payments/{sponsorId}")
-    public ResponseEntity<List<PaymentGetResponse>> getPayments(@PathVariable Long sponsorId) {
-        List<PaymentGetResponse> responses = paymentService.getPayments(sponsorId);
+    public ResponseEntity<List<PaymentGetResponse>> getPaymentsOfSuccessAndFail(@PathVariable Long sponsorId) {
+        List<PaymentGetResponse> responses = paymentService.getPaymentsOfSuccessAndFail(sponsorId);
 
         return ResponseEntity.ok(responses);
     }
