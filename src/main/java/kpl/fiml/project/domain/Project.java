@@ -163,4 +163,9 @@ public class Project extends BaseEntity {
             throw new IllegalStateException("프로젝트 정보를 모두 입력해야 합니다.");
         }
     }
+
+    public void updateSponsorInfo(Long paymentFailAmount) {
+        this.currentAmount -= paymentFailAmount;
+        this.sponsorCount--;
+    }
 }

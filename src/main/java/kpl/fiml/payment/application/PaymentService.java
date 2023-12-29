@@ -62,7 +62,7 @@ public class PaymentService {
                 payment.failPayed();
 
                 if (paymentRepository.countBySponsor(sponsor) == MAX_PAYMENT_TRIAL) {
-                    sponsor.updateStatusToPaymentFail();
+                    sponsor.paymentFail();
                 } else {
                     paymentRepository.save(Payment.builder()
                             .sponsor(sponsor)

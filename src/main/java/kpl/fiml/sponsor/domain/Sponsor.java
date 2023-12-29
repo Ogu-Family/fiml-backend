@@ -51,11 +51,12 @@ public class Sponsor extends BaseEntity {
         this.status = SponsorStatus.FUNDING_FAIL;
     }
 
-    public void updateStatusToPaymentFail() {
-        this.status = SponsorStatus.PAYMENT_FAIL;
-    }
-
     public void updateStatusToComplete() {
         this.status = SponsorStatus.COMPLETE;
+    }
+
+    public void paymentFail() {
+        this.status = SponsorStatus.PAYMENT_FAIL;
+        this.reward.getProject().updateSponsorInfo(this.totalAmount);
     }
 }
