@@ -1,4 +1,4 @@
-package kpl.fiml.global.config;
+package kpl.fiml.global.jwt;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

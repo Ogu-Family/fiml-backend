@@ -1,7 +1,6 @@
-package kpl.fiml.global.config;
+package kpl.fiml.global.jwt;
 
 import io.jsonwebtoken.*;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,7 +18,7 @@ import java.util.List;
 public class JwtTokenProvider {
 
     private final String secretKey;
-    private final long tokenValidTime = 60 * 60 * 1000L;  // 토큰 유효시간 1시간
+    private static final long TOKEN_VALID_TIME = 60 * 60 * 1000L;  // 토큰 유효시간 1시간
     private final UserDetailsService userDetailsService;
 
     public JwtTokenProvider(@Value("${JWT_KEY}") String secretKey, UserDetailsService userDetailsService) {
@@ -37,7 +36,7 @@ public class JwtTokenProvider {
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + tokenValidTime))
+                .setExpiration(new Date(now.getTime() + TOKEN_VALID_TIME))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
