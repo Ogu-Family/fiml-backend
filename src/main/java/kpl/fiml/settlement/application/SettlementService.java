@@ -19,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SettlementService {
 
-    private static final int SETTLEMENT_OFFSET = 14;
+    private static final int SETTLEMENT_OFFSET_DAY = 14;
 
     private final SettlementRepository settlementRepository;
     private final ProjectRepository projectRepository;
@@ -29,7 +29,7 @@ public class SettlementService {
     public void createSettlement() {
         List<Project> projects = projectRepository.findAllByStatus(ProjectStatus.FUNDING_COMPLETE)
                 .stream()
-                .filter(project -> project.getEndAt().plusDays(SETTLEMENT_OFFSET).isBefore(LocalDateTime.now()))
+                .filter(project -> project.getEndAt().plusDays(SETTLEMENT_OFFSET_DAY).isBefore(LocalDateTime.now()))
                 .toList();
 
         for (Project project : projects) {
