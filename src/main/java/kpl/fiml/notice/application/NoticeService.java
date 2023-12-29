@@ -3,6 +3,8 @@ package kpl.fiml.notice.application;
 import kpl.fiml.notice.domain.Notice;
 import kpl.fiml.notice.domain.NoticeRepository;
 import kpl.fiml.notice.dto.*;
+import kpl.fiml.user.domain.User;
+import kpl.fiml.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,12 +15,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class NoticeService {
 
     private final NoticeRepository noticeRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public NoticeCreateResponse createNotice(NoticeCreateRequest request) {
-        Notice savedNotice = noticeRepository.save(request.toEntity());
+        User user = getUserByUserId(request.getUserId());
+        Notice savedNotice = noticeRepository.save(request.toEntity(user));
 
-        return NoticeCreateResponse.of(savedNotice.getId());
+        return NoticeCreateResponse.of(savedNotice.getId(), user.getId());
     }
 
     @Transactional
@@ -48,5 +52,11 @@ public class NoticeService {
         return noticeRepository.findById(noticeId)
                 .filter(notice -> !notice.isDeleted())
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 공지사항이 존재하지 않습니다."));
+    }
+
+    private User getUserByUserId(Long userId) {
+        return userRepository.findById(userId)
+                .filter(user -> !user.isDeleted())
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 사용자가 없습니다."));
     }
 }
