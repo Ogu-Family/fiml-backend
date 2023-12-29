@@ -27,7 +27,6 @@ public class CommentService {
         return CommentCreateResponse.of(createdComment.getId(), createdComment.getContent(), createdComment.getCommenter(), noticeId);
     }
 
-    @Transactional(readOnly = true)
     public List<CommentDto> findAllByNoticeId(Long noticeId) {
         List<Comment> findList = getNoticeById(noticeId).getCommentList();
 
