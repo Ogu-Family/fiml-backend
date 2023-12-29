@@ -3,6 +3,7 @@ package kpl.fiml.comment.domain;
 import jakarta.persistence.*;
 import kpl.fiml.global.common.BaseEntity;
 import kpl.fiml.notice.domain.Notice;
+import kpl.fiml.user.domain.User;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,6 +24,10 @@ public class Comment extends BaseEntity {
 
     @Column(name = "commenter", nullable = false)
     private String commenter;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "notice_id")

@@ -2,6 +2,7 @@ package kpl.fiml.user.domain;
 
 import jakarta.persistence.*;
 import kpl.fiml.global.common.BaseEntity;
+import kpl.fiml.notice.domain.Notice;
 import kpl.fiml.user.vo.ContactVo;
 import kpl.fiml.user.vo.EmailVo;
 import kpl.fiml.user.vo.PasswordVo;
@@ -9,6 +10,9 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -40,6 +44,9 @@ public class User extends BaseEntity {
 
     @Column(name = "cash", nullable = false)
     private Long cash;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Notice> noticeList = new ArrayList<>();
 
     @Builder
     public User(String name, String bio, String profileImage, String email, String password, String contact) {
