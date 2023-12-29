@@ -24,7 +24,8 @@ public class Comment extends BaseEntity {
     @Column(name = "commenter", nullable = false)
     private String commenter;
 
-    @ManyToOne(targetEntity = Notice.class, fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "notice_id")
     private Notice notice;
 
     @Builder

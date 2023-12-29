@@ -29,7 +29,7 @@ public class CommentService {
 
     @Transactional(readOnly = true)
     public List<CommentDto> findAllByNoticeId(Long noticeId) {
-        List<Comment> findList = commentRepository.findAllByNoticeId(noticeId).get();
+        List<Comment> findList = noticeRepository.findById(noticeId).get().getCommentList();
 
         return findList.stream()
                 .filter(comment -> !comment.isDeleted())
