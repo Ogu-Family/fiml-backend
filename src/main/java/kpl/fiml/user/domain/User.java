@@ -2,6 +2,7 @@ package kpl.fiml.user.domain;
 
 import jakarta.persistence.*;
 import kpl.fiml.global.common.BaseEntity;
+import kpl.fiml.notice.domain.Notice;
 import kpl.fiml.user.vo.ContactVo;
 import kpl.fiml.user.vo.EmailVo;
 import kpl.fiml.user.vo.PasswordVo;
@@ -17,6 +18,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -51,6 +55,9 @@ public class User extends BaseEntity implements UserDetails {
 
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Notice> noticeList = new ArrayList<>();
 
     @Builder
     public User(String name, String bio, String profileImage, String email, String password, String contact) {

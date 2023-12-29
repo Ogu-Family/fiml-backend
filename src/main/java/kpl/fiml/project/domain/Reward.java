@@ -1,8 +1,7 @@
-package kpl.fiml.reward.domain;
+package kpl.fiml.project.domain;
 
 import jakarta.persistence.*;
 import kpl.fiml.global.common.BaseEntity;
-import kpl.fiml.project.domain.Project;
 import lombok.*;
 
 import java.time.LocalDate;

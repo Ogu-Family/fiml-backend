@@ -1,6 +1,6 @@
-package kpl.fiml.reward.application;
+package kpl.fiml.sponsor.application;
 
-import kpl.fiml.reward.domain.RewardRepository;
+import kpl.fiml.sponsor.domain.SponsorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class RewardService {
+public class SponsorService {
 
-    private final RewardRepository rewardRepository;
+    private final SponsorRepository sponsorRepository;
 }

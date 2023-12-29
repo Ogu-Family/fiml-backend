@@ -1,6 +1,6 @@
-package kpl.fiml.reward.presentation;
+package kpl.fiml.sponsor.presentation;
 
-import kpl.fiml.reward.application.RewardService;
+import kpl.fiml.sponsor.application.SponsorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
-public class RewardController {
+public class SponsorController {
 
-    private final RewardService rewardService;
+    private final SponsorService sponsorService;
 }
