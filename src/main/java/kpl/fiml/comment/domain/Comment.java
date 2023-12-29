@@ -22,21 +22,17 @@ public class Comment extends BaseEntity {
     @Column(name = "content", nullable = false)
     private String content;
 
-    @Column(name = "commenter", nullable = false)
-    private String commenter;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id")
-    private User user;
+//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+//    @JoinColumn(name = "user_id")
+//    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "notice_id")
     private Notice notice;
 
     @Builder
-    public Comment(String content, String commenter, Notice notice) {
+    public Comment(String content, Notice notice) {
         this.content = content;
-        this.commenter = commenter;
         this.notice = notice;
     }
 

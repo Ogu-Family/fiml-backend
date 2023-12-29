@@ -24,7 +24,7 @@ public class CommentService {
         Notice notice = getNoticeById(noticeId);
         Comment createdComment = commentRepository.save(request.toEntity(notice));
 
-        return CommentCreateResponse.of(createdComment.getId(), createdComment.getContent(), createdComment.getCommenter(), noticeId);
+        return CommentCreateResponse.of(createdComment.getId(), createdComment.getContent(), noticeId);
     }
 
     public List<CommentDto> findAllByNoticeId(Long noticeId) {
@@ -32,7 +32,7 @@ public class CommentService {
 
         return findList.stream()
                 .filter(comment -> !comment.isDeleted())
-                .map(comment -> CommentDto.of(comment.getId(), comment.getContent(), comment.getCommenter(), noticeId, comment.getCreatedAt(), comment.getUpdatedAt()))
+                .map(comment -> CommentDto.of(comment.getId(), comment.getContent(), noticeId, comment.getCreatedAt(), comment.getUpdatedAt()))
                 .toList();
     }
 
@@ -41,7 +41,7 @@ public class CommentService {
         Comment findComment = getById(id);
         findComment.updateContent(request.getContent());
 
-        return CommentUpdateResponse.of(findComment.getId(), findComment.getContent(), findComment.getCommenter(), findComment.getCreatedAt(), findComment.getUpdatedAt());
+        return CommentUpdateResponse.of(findComment.getId(), findComment.getContent(), findComment.getCreatedAt(), findComment.getUpdatedAt());
     }
 
     @Transactional
@@ -57,6 +57,7 @@ public class CommentService {
                 .filter(comment -> !comment.isDeleted())
                 .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다."));
     }
+
     private Notice getNoticeById(Long noticeId) {
         return noticeRepository.findById(noticeId)
                 .filter(notice -> !notice.isDeleted())

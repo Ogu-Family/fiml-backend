@@ -7,12 +7,10 @@ import lombok.Getter;
 @Getter
 public class CommentCreateRequest {
     private String content;
-    private String commenter;
 
     public Comment toEntity(Notice notice) {
         return Comment.builder()
                 .content(content)
-                .commenter(commenter)
                 .notice(notice)
                 .build();
     }

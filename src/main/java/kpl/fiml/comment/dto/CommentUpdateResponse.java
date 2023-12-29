@@ -11,11 +11,10 @@ import java.time.LocalDateTime;
 public class CommentUpdateResponse {
     private final Long id;
     private final String content;
-    private final String commenter;
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
 
-    public static CommentUpdateResponse of(Long id, String content, String commenter, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        return new CommentUpdateResponse(id, content, commenter, createdAt, updatedAt);
+    public static CommentUpdateResponse of(Long id, String content, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        return new CommentUpdateResponse(id, content, createdAt, updatedAt);
     }
 }

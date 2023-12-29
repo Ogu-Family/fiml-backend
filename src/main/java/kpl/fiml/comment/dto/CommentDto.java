@@ -11,12 +11,11 @@ import java.time.LocalDateTime;
 public class CommentDto {
     private final Long id;
     private final String content;
-    private final String commenter;
     private final Long noticeId;
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
 
-    public static CommentDto of(Long id, String content, String commenter, Long noticeId, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        return new CommentDto(id, content, commenter, noticeId, createdAt, updatedAt);
+    public static CommentDto of(Long id, String content, Long noticeId, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        return new CommentDto(id, content, noticeId, createdAt, updatedAt);
     }
 }
