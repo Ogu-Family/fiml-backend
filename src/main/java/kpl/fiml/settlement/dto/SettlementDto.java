@@ -8,12 +8,12 @@ import java.time.LocalDateTime;
 
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public class SettlementGetResponse {
+public class SettlementDto {
 
     private final Long settleAmount;
     private final LocalDateTime settledAt;
 
-    public static SettlementGetResponse of(Long settleAmount, LocalDateTime settledAt) {
-        return new SettlementGetResponse(settleAmount, settledAt);
+    public static SettlementDto of(Long settleAmount, LocalDateTime settledAt) {
+        return new SettlementDto(settleAmount, settledAt);
     }
 }
