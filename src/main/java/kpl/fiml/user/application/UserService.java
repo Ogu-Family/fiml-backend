@@ -1,6 +1,6 @@
 package kpl.fiml.user.application;
 
-import kpl.fiml.global.config.JwtTokenProvider;
+import kpl.fiml.global.jwt.JwtTokenProvider;
 import kpl.fiml.user.domain.User;
 import kpl.fiml.user.domain.UserRepository;
 import kpl.fiml.user.dto.LoginRequest;

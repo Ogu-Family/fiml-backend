@@ -1,5 +1,7 @@
 package kpl.fiml.global.config;
 
+import kpl.fiml.global.jwt.JwtAuthenticationFilter;
+import kpl.fiml.global.jwt.JwtTokenProvider;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
