@@ -45,7 +45,7 @@ public class User extends BaseEntity {
     @Column(name = "cash", nullable = false)
     private Long cash;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "user")
     private List<Notice> noticeList = new ArrayList<>();
 
     @Builder
