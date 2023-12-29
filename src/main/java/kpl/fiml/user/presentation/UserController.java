@@ -1,6 +1,8 @@
 package kpl.fiml.user.presentation;
 
 import kpl.fiml.user.application.UserService;
+import kpl.fiml.user.dto.LoginRequest;
+import kpl.fiml.user.dto.LoginResponse;
 import kpl.fiml.user.dto.UserCreateRequest;
 import kpl.fiml.user.dto.UserCreateResponse;
 import lombok.RequiredArgsConstructor;
@@ -23,5 +25,18 @@ public class UserController {
         UserCreateResponse response = userService.createUser(request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PostMapping("/users/login")
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
+        LoginResponse response = userService.signIn(request);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PostMapping("/users/test")
+    public String test() {
+        // security ROLE_USER 권한 확인용 api
+        return "success";
     }
 }
