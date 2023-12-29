@@ -3,7 +3,7 @@ package kpl.fiml.payment.application;
 import kpl.fiml.payment.domain.Payment;
 import kpl.fiml.payment.domain.PaymentRepository;
 import kpl.fiml.payment.domain.PaymentStatus;
-import kpl.fiml.payment.dto.PaymentGetResponse;
+import kpl.fiml.payment.dto.PaymentDto;
 import kpl.fiml.sponsor.domain.Sponsor;
 import kpl.fiml.sponsor.domain.SponsorRepository;
 import kpl.fiml.user.domain.User;
@@ -30,14 +30,14 @@ public class PaymentService {
     private final PaymentRepository paymentRepository;
     private final SponsorRepository sponsorRepository;
 
-    public List<PaymentGetResponse> getPaymentsOfSuccessAndFail(Long sponsorId) {
+    public List<PaymentDto> getPaymentsOfSuccessAndFail(Long sponsorId) {
         Sponsor sponsor = sponsorRepository.findById(sponsorId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 후원에 대한 요청입니다."));
 
-        List<PaymentGetResponse> responses = paymentRepository.findAllBySponsor(sponsor)
+        List<PaymentDto> responses = paymentRepository.findAllBySponsor(sponsor)
                 .stream()
                 .filter(payment -> payment.getStatus().equals(PaymentStatus.SUCCESS) || payment.getStatus().equals(PaymentStatus.FAIL))
-                .map(payment -> PaymentGetResponse.of(payment.getStatus().getDisplayName(), payment.getRequestedAt(), payment.getApprovedAt()))
+                .map(payment -> PaymentDto.of(payment.getStatus().getDisplayName(), payment.getRequestedAt(), payment.getApprovedAt()))
                 .toList();
 
         return responses;
@@ -62,7 +62,7 @@ public class PaymentService {
                 payment.failPayed();
 
                 if (paymentRepository.countBySponsor(sponsor) == MAX_PAYMENT_TRIAL) {
-                    sponsor.updateStatusToPaymentFail();
+                    sponsor.paymentFail();
                 } else {
                     paymentRepository.save(Payment.builder()
                             .sponsor(sponsor)
