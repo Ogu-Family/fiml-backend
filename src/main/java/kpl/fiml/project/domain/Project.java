@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import kpl.fiml.global.common.BaseEntity;
 import kpl.fiml.project.domain.enums.ProjectCategory;
 import kpl.fiml.project.domain.enums.ProjectStatus;
+import kpl.fiml.user.domain.User;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,7 +25,9 @@ public class Project extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // TODO: user_id 참조 외래키 추가
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(name = "title", length = 100)
     private String title;
@@ -167,5 +170,9 @@ public class Project extends BaseEntity {
     public void updateSponsorInfo(Long paymentFailAmount) {
         this.currentAmount -= paymentFailAmount;
         this.sponsorCount--;
+    }
+
+    public void updateStatusToSettlementComplete() {
+        this.status = ProjectStatus.SETTLEMENT_COMPLETE;
     }
 }
