@@ -48,6 +48,7 @@ public class SettlementService {
 
     public SettlementDto getSettlement(Long projectId) {
         Project project = projectRepository.findById(projectId)
+                .filter(uncheckedProject -> !uncheckedProject.isDeleted())
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 프로젝트가 존재하지 않습니다."));
 
         Settlement settlement = settlementRepository.findByProject(project)
