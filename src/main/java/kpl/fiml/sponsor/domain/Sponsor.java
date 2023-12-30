@@ -36,6 +36,8 @@ public class Sponsor extends BaseEntity {
 
     @Builder
     public Sponsor(User user, Reward reward, Long totalAmount) {
+        validateTotalAmount(reward, totalAmount);
+
         this.user = user;
         this.reward = reward;
         this.totalAmount = totalAmount;
@@ -58,5 +60,11 @@ public class Sponsor extends BaseEntity {
     public void paymentFail() {
         this.status = SponsorStatus.PAYMENT_FAIL;
         this.reward.getProject().updateSponsorDeleteInfo(this.totalAmount);
+    }
+
+    private void validateTotalAmount(Reward reward, Long totalAmount) {
+        if (reward.getPrice() > totalAmount) {
+            throw new IllegalArgumentException("후원 금액이 리워드 가격보다 적습니다.");
+        }
     }
 }
