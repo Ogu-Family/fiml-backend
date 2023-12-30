@@ -35,8 +35,8 @@ public class SponsorService {
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 리워드가 존재하지 않습니다."));
 
         Sponsor sponsor = sponsorRepository.save(request.toEntity(user, reward));
-        reward.getProject().updateSponsorAddInfo(sponsor.getTotalAmount());
 
+        reward.getProject().updateSponsorAddInfo(sponsor.getTotalAmount());
         paymentService.createPayment(PaymentCreateRequest.of(sponsor, reward.getProject().getEndAt().toLocalDate()));
 
         return SponsorCreateResponse.of(sponsor.getId());
