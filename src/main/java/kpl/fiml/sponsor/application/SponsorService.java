@@ -48,6 +48,7 @@ public class SponsorService {
 
             for (Sponsor sponsor : sponsors) {
                 paymentService.deletePayments(sponsor);
+                sponsor.updateStatusToFundingFail();
                 sponsor.delete();
             }
         }
