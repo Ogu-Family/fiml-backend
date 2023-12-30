@@ -49,6 +49,15 @@ public class PaymentService {
         paymentRepository.save(request.toEntity(LocalDateTime.of(request.getRequestedDay().plusDays(NEXT_PAYMENT_OFFSET), LocalTime.of(PAYMENT_PERIOD_HOUR, PAYMENT_PERIOD_MINUTE))));
     }
 
+    @Transactional
+    public void deletePayments(Sponsor sponsor) {
+        List<Payment> payments = paymentRepository.findAllBySponsor(sponsor);
+
+        for (Payment payment : payments) {
+            payment.delete();
+        }
+    }
+
     @Scheduled(cron = "0 0 14 * * *", zone = "Asia/Seoul")
     @Transactional
     public void tryPay() {
