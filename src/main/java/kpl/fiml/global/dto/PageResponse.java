@@ -13,8 +13,8 @@ public class PageResponse<T, R> {
         private final int totalPages;
         private final long totalElements;
 
-        public PageResponse(Page<T> pageResponse, Function<T, R> function) {
-            this.content = pageResponse.getContent().stream().map(function).toList();
+        public PageResponse(Page<T> pageResponse, Function<T, R> converter) {
+            this.content = pageResponse.getContent().stream().map(converter).toList();
             this.totalPages = pageResponse.getTotalPages();
             this.totalElements = pageResponse.getTotalElements();
         }
