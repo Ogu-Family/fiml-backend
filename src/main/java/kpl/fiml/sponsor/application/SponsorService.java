@@ -44,9 +44,7 @@ public class SponsorService {
 
     @Transactional
     public SponsorDeleteResponse deleteSponsorByUser(Long sponsorId, User user) {
-        Sponsor sponsor = sponsorRepository.findByIdAndUser(sponsorId, user)
-                .filter(uncheckedSponsor -> !uncheckedSponsor.isDeleted())
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 후원이 존재하지 않습니다."));
+        Sponsor sponsor = getByIdAndUser(sponsorId, user);
 
         if (sponsor.getReward().getProject().getEndAt().isBefore(LocalDateTime.now())) {
             throw new IllegalArgumentException("펀딩이 종료된 후에는 후원 취소가 불가합니다.");
@@ -70,5 +68,12 @@ public class SponsorService {
                 sponsor.delete();
             }
         }
+    }
+
+    private Sponsor getByIdAndUser(Long sponsorId, User user) {
+        return sponsorRepository.findById(sponsorId)
+                .filter(uncheckedSponsor -> uncheckedSponsor.getUser().equals(user))
+                .filter(uncheckedSponsor -> !uncheckedSponsor.isDeleted())
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 후원이 존재하지 않습니다."));
     }
 }
