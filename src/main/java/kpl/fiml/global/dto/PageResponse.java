@@ -13,9 +13,13 @@ public class PageResponse<T, R> {
         private final int totalPages;
         private final long totalElements;
 
-        public PageResponse(Page<T> pageResponse, Function<T, R> converter) {
+        private PageResponse(Page<T> pageResponse, Function<T, R> converter) {
             this.content = pageResponse.getContent().stream().map(converter).toList();
             this.totalPages = pageResponse.getTotalPages();
             this.totalElements = pageResponse.getTotalElements();
+        }
+
+        public static <T, R> PageResponse<T, R> of(Page<T> pageResponse, Function<T, R> converter) {
+            return new PageResponse<>(pageResponse, converter);
         }
 }

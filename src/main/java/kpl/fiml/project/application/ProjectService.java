@@ -62,7 +62,7 @@ public class ProjectService {
     }
 
     public PageResponse<Project, ProjectDto> findProjectsBySearchConditions(ProjectListFindRequest request) {
-        return new PageResponse<>(
+        return PageResponse.of(
                 projectRepository.findWithSearchKeyword(request, PageRequest.of(request.getPage(), request.getSize())), ProjectDto::of
         );
     }
