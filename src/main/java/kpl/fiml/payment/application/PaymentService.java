@@ -90,6 +90,7 @@ public class PaymentService {
     private List<Payment> getRequiredPayments() {
         return paymentRepository.findAllByStatus(PaymentStatus.WAIT)
                 .stream()
+                .filter(payment -> !payment.isDeleted())
                 .filter(payment ->
                         payment.getRequestedAt().isEqual(LocalDateTime.now()) || payment.getRequestedAt().isBefore(LocalDateTime.now())
                 )
