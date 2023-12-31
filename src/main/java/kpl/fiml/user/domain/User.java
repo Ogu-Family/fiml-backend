@@ -60,12 +60,12 @@ public class User extends BaseEntity implements UserDetails {
     private List<Notice> noticeList = new ArrayList<>();
 
     @Builder
-    public User(String name, String bio, String profileImage, String email, String password, String contact) {
+    public User(String name, String bio, String profileImage, String email, String encryptPassword, String contact) {
         this.name = name;
         this.bio = bio;
         this.profileImage = profileImage;
         this.email = new EmailVo(email).getEmail();
-        this.password = new PasswordVo(password).getPassword();
+        this.password = encryptPassword;
         this.contact = new ContactVo(contact).getContact();
         this.cash = 0L;
         this.roles.add("ROLE_USER"); // 권한 처리 필요로 하지 않아서 생성 시 기본 ROLE_USER
@@ -86,6 +86,27 @@ public class User extends BaseEntity implements UserDetails {
             throw new IllegalArgumentException("보유 현금이 부족합니다.");
         }
         this.cash -= amount;
+    }
+
+    public void updateUser(String name, String bio, String profileImage, String email, String encryptPassword, String contact) {
+        if (!name.isBlank()) {
+            this.name = name;
+        }
+        if (!bio.isBlank()) {
+            this.bio = bio;
+        }
+        if (!profileImage.isBlank()) {
+            this.profileImage = profileImage;
+        }
+        if (!email.isBlank()) {
+            this.email = new EmailVo(email).getEmail();
+        }
+        if (!password.isBlank()) {
+            this.password = encryptPassword;
+        }
+        if (!contact.isBlank()) {
+            this.contact = new ContactVo(contact).getContact();
+        }
     }
 
     @Override
