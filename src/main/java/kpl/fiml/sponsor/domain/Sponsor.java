@@ -63,7 +63,7 @@ public class Sponsor extends BaseEntity {
     }
 
     private void validateTotalAmount(Reward reward, Long totalAmount) {
-        if (reward.getPrice() > totalAmount) {
+        if (reward.checkUnderflowPrice(totalAmount)) {
             throw new IllegalArgumentException("후원 금액이 리워드 가격보다 적습니다.");
         }
     }
