@@ -1,9 +1,11 @@
 package kpl.fiml.project.application;
 
+import kpl.fiml.global.dto.PageResponse;
 import kpl.fiml.project.domain.Project;
 import kpl.fiml.project.domain.ProjectRepository;
 import kpl.fiml.project.dto.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,6 +59,12 @@ public class ProjectService {
     public void submitProject(Long projectId) {
         this.getProjectById(projectId)
                 .submit();
+    }
+
+    public PageResponse<Project, ProjectDto> findProjectsBySearchConditions(ProjectListFindRequest request) {
+        return PageResponse.of(
+                projectRepository.findWithSearchKeyword(request, PageRequest.of(request.getPage(), request.getSize())), ProjectDto::of
+        );
     }
 
     private Project getProjectById(Long projectId) {

@@ -1,6 +1,8 @@
 package kpl.fiml.project.presentation;
 
+import kpl.fiml.global.dto.PageResponse;
 import kpl.fiml.project.application.ProjectService;
+import kpl.fiml.project.domain.Project;
 import kpl.fiml.project.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -58,5 +60,12 @@ public class ProjectController {
         this.projectService.submitProject(projectId);
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/projects")
+    public ResponseEntity<PageResponse<Project, ProjectDto>> findProjects(@ModelAttribute ProjectListFindRequest request) {
+        PageResponse<Project, ProjectDto> projectsBySearchConditions = this.projectService.findProjectsBySearchConditions(request);
+
+        return ResponseEntity.ok(projectsBySearchConditions);
     }
 }
