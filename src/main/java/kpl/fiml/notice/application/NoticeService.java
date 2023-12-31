@@ -9,6 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -38,6 +41,14 @@ public class NoticeService {
         Notice findNotice = getById(noticeId);
 
         return NoticeDto.of(findNotice.getId(), findNotice.getContent(), findNotice.getCreatedAt(), findNotice.getUpdatedAt());
+    }
+
+    public List<NoticeDto> findAllByUserId(Long userId) {
+        List<Notice> findNoticeList = noticeRepository.findAllByUserIdAndDeletedAtIsNull(userId).get();
+
+        return findNoticeList.stream()
+                .map(notice -> NoticeDto.of(notice.getId(), notice.getContent(), notice.getCreatedAt(), notice.getUpdatedAt()))
+                .toList();
     }
 
     @Transactional
