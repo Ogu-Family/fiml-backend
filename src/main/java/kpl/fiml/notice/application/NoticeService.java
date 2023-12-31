@@ -18,22 +18,22 @@ public class NoticeService {
     private final UserRepository userRepository;
 
     @Transactional
-    public NoticeCreateResponse createNotice(NoticeCreateRequest request) {
-        User user = getUserByUserId(request.getUserId());
+    public NoticeCreateResponse createNotice(Long userId, NoticeCreateRequest request) {
+        User user = getUserByUserId(userId);
         Notice savedNotice = noticeRepository.save(request.toEntity(user));
 
         return NoticeCreateResponse.of(savedNotice.getId(), user.getId());
     }
 
     @Transactional
-    public NoticeUpdateResponse updateNotice(Long noticeId, NoticeUpdateRequest request) {
+    public NoticeUpdateResponse updateNotice(Long userId, Long noticeId, NoticeUpdateRequest request) {
         Notice notice = getById(noticeId);
+        validateUser(userId, notice.getUser());
         notice.updateContent(request.getContent());
 
-        return NoticeUpdateResponse.of(noticeId, notice.getContent());
+        return NoticeUpdateResponse.of(noticeId, notice.getContent(), notice.getUser().getId());
     }
 
-    @Transactional(readOnly = true)
     public NoticeDto findById(Long noticeId) {
         Notice findNotice = getById(noticeId);
 
@@ -41,11 +41,19 @@ public class NoticeService {
     }
 
     @Transactional
-    public NoticeDeleteResponse deleteById(Long noticeId) {
+    public NoticeDeleteResponse deleteById(Long noticeId, Long userId) {
         Notice deleteNotice = getById(noticeId);
+        validateUser(userId, deleteNotice.getUser());
         deleteNotice.delete();
 
-        return NoticeDeleteResponse.of(deleteNotice.getId(), deleteNotice.getDeletedAt());
+        return NoticeDeleteResponse.of(deleteNotice.getId(), userId, deleteNotice.getDeletedAt());
+    }
+
+    private void validateUser(Long userId, User user) {
+        if(!userId.equals(user.getId())) {
+            // TODO : 프로젝트 생성자만 작성 가능한 로직으로 변경
+            throw new IllegalArgumentException("공지사항 작성자만 접근 가능합니다.");
+        }
     }
 
     private Notice getById(Long noticeId) {
