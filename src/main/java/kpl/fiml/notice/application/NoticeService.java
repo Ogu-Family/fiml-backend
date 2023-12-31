@@ -68,14 +68,12 @@ public class NoticeService {
     }
 
     private Notice getById(Long noticeId) {
-        return noticeRepository.findById(noticeId)
-                .filter(notice -> !notice.isDeleted())
+        return noticeRepository.findByIdAndDeletedAtIsNull(noticeId)
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 공지사항이 존재하지 않습니다."));
     }
 
     private User getUserByUserId(Long userId) {
-        return userRepository.findById(userId)
-                .filter(user -> !user.isDeleted())
+        return userRepository.findByIdAndDeletedAtIsNull(userId)
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 사용자가 없습니다."));
     }
 }

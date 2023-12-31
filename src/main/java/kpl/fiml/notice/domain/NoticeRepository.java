@@ -8,5 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface NoticeRepository extends JpaRepository<Notice, Long> {
+    Optional<Notice> findByIdAndDeletedAtIsNull(Long id);
     Optional<List<Notice>> findAllByUserIdAndDeletedAtIsNull(Long userId);
 }

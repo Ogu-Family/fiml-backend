@@ -30,7 +30,7 @@ public class UserService {
 
     @Transactional
     public LoginResponse signIn(LoginRequest request) {
-        User user = userRepository.findByEmail(request.getEmail())
+        User user = userRepository.findByEmailAndDeletedAtIsNull(request.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("가입된 E-MAIL이 아닙니다."));
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");

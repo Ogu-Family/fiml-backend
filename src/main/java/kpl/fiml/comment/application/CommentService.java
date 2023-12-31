@@ -65,20 +65,17 @@ public class CommentService {
     }
 
     private Comment getById(Long id) {
-        return commentRepository.findById(id)
-                .filter(comment -> !comment.isDeleted())
+        return commentRepository.findByIdAndDeletedAtIsNull(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다."));
     }
 
     private User getUserById(Long userId) {
-        return userRepository.findById(userId)
-                .filter(user -> !user.isDeleted())
+        return userRepository.findByIdAndDeletedAtIsNull(userId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 존재하지 않습니다."));
     }
 
     private Notice getNoticeById(Long noticeId) {
-        return noticeRepository.findById(noticeId)
-                .filter(notice -> !notice.isDeleted())
+        return noticeRepository.findByIdAndDeletedAtIsNull(noticeId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 공지사항이 존재하지 않습니다."));
     }
 }
