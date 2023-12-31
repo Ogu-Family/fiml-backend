@@ -42,6 +42,13 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<UserDeleteResponse> deleteById(@PathVariable Long id) {
+        UserDeleteResponse response = userService.deleteById(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
     @PostMapping("/users/test")
     public String test() {
         // security ROLE_USER 권한 확인용 api

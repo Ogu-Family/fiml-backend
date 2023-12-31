@@ -58,6 +58,14 @@ public class UserService {
         return UserDto.of(findUser.getId(), findUser.getName(), findUser.getBio(), findUser.getProfileImage(), findUser.getEmail(), findUser.getContact(), findUser.getCash(), findUser.getCreatedAt(), findUser.getUpdatedAt());
     }
 
+    @Transactional
+    public UserDeleteResponse deleteById(Long userId) {
+        User user = getById(userId);
+        user.delete();
+
+        return UserDeleteResponse.of(user.getId());
+    }
+
     private String validateAndEncryptPassword(String password) {
         String rawPassword = new PasswordVo(password).getPassword();
         return passwordEncoder.encode(rawPassword);
