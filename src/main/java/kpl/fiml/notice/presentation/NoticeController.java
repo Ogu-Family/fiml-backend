@@ -24,6 +24,7 @@ public class NoticeController {
 
     @PatchMapping("/notices/{id}")
     public ResponseEntity<NoticeUpdateResponse> updateNotice(@PathVariable Long id, @RequestBody NoticeUpdateRequest request) {
+        // TODO : userId - authentication 처리
         NoticeUpdateResponse response = noticeService.updateNotice(request.getUserId(), id, request);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -38,6 +39,7 @@ public class NoticeController {
 
     @DeleteMapping("/notices/{id}")
     public ResponseEntity<NoticeDeleteResponse> deleteById(@PathVariable Long id, @RequestParam Long userId) {
+        // TODO : userId - authentication 처리
         NoticeDeleteResponse response = noticeService.deleteById(id, userId);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
