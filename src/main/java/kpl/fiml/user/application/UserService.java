@@ -43,7 +43,6 @@ public class UserService {
     @Transactional
     public UserUpdateResponse updateUser(Long userId, UserUpdateRequest request) {
         User user = getById(userId);
-
         String encryptPassword = request.getPassword();
         if(!encryptPassword.isBlank()) {
             encryptPassword = validateAndEncryptPassword(request.getPassword());
@@ -51,6 +50,12 @@ public class UserService {
         user.updateUser(request.getName(), request.getBio(), request.getProfileImage(), request.getEmail(), encryptPassword, request.getContact());
 
         return UserUpdateResponse.of(user.getId(), user.getName(), user.getBio(), user.getProfileImage(), user.getEmail(), user.getPassword(), user.getContact());
+    }
+
+    public UserDto findById(Long userId) {
+        User findUser = getById(userId);
+
+        return UserDto.of(findUser.getId(), findUser.getName(), findUser.getBio(), findUser.getProfileImage(), findUser.getEmail(), findUser.getContact(), findUser.getCash(), findUser.getCreatedAt(), findUser.getUpdatedAt());
     }
 
     private String validateAndEncryptPassword(String password) {

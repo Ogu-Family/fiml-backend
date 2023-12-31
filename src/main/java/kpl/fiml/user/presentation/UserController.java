@@ -35,6 +35,13 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @GetMapping("/users/{id}")
+    public ResponseEntity<UserDto> findById(@PathVariable Long id) {
+        UserDto response = userService.findById(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
     @PostMapping("/users/test")
     public String test() {
         // security ROLE_USER 권한 확인용 api
