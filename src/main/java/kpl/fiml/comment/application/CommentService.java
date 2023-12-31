@@ -43,25 +43,24 @@ public class CommentService {
     @Transactional
     public CommentUpdateResponse update(Long id, Long userId, CommentUpdateRequest request) {
         Comment findComment = getById(id);
+        validateUser(userId, findComment.getUser());
+        findComment.updateContent(request.getContent());
 
-        if (userId.equals(findComment.getUser().getId())) {
-            findComment.updateContent(request.getContent());
-
-            return CommentUpdateResponse.of(findComment.getId(), request.getUserId(), findComment.getContent(), findComment.getCreatedAt(), findComment.getUpdatedAt());
-        } else {
-            throw new IllegalArgumentException("작성자만 수정 가능합니다.");
-        }
+        return CommentUpdateResponse.of(findComment.getId(), request.getUserId(), findComment.getContent(), findComment.getCreatedAt(), findComment.getUpdatedAt());
     }
 
     @Transactional
     public CommentDeleteResponse deleteById(Long id, Long userId) {
         Comment findComment = getById(id);
+        validateUser(userId, findComment.getUser());
+        findComment.delete();
 
-        if (userId.equals(findComment.getUser().getId())) {
-            findComment.delete();
-            return CommentDeleteResponse.of(findComment.getId());
-        } else {
-            throw new IllegalArgumentException("작성자만 삭제 가능합니다.");
+        return CommentDeleteResponse.of(findComment.getId());
+    }
+
+    private void validateUser(Long userId, User user) {
+        if (!userId.equals(user.getId())) {
+            throw new IllegalArgumentException("작성자만 접근 가능합니다.");
         }
     }
 
