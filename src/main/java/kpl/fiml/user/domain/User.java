@@ -19,9 +19,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Getter
 @Entity
 @Table(name = "users")
@@ -93,6 +90,10 @@ public class User extends BaseEntity implements UserDetails {
         return this.roles.stream()
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
+    }
+
+    public boolean isSameUser(User user) {
+        return this.Id.equals(user.getId());
     }
 
     @Override

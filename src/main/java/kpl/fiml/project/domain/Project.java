@@ -102,7 +102,9 @@ public class Project extends BaseEntity {
         reward.setProject(this);
     }
 
-    public void updateBasicInfo(String summary, ProjectCategory category, String title, List<ProjectImage> projectImages) {
+    public void updateBasicInfo(String summary, ProjectCategory category, String title, List<ProjectImage> projectImages, User user) {
+        validateUser(user);
+
         this.summary = summary;
         this.category = category;
         this.title = title;
@@ -117,11 +119,15 @@ public class Project extends BaseEntity {
         }
     }
 
-    public void updateIntroduction(String introduction) {
+    public void updateIntroduction(String introduction, User user) {
+        validateUser(user);
+
         this.introduction = introduction;
     }
 
-    public void updateFundingInfo(Long goalAmount, LocalDateTime startDateTime, LocalDate endDate, Double commissionRate) {
+    public void updateFundingInfo(Long goalAmount, LocalDateTime startDateTime, LocalDate endDate, Double commissionRate, User user) {
+        validateUser(user);
+
         LocalDateTime endDateTime = endDate.atTime(23, 59, 59);
         validateFundingDateTime(startDateTime, endDateTime);
 
@@ -142,14 +148,17 @@ public class Project extends BaseEntity {
         }
     }
 
-    public void updateRewards(List<Reward> rewardEntities) {
+    public void updateRewards(List<Reward> rewardEntities, User user) {
+        validateUser(user);
+
         this.rewards.clear();
         for (Reward rewardEntity : rewardEntities) {
             addReward(rewardEntity);
         }
     }
 
-    public void submit() {
+    public void submit(User user) {
+        validateUser(user);
         validateRequiredFields();
         validateFundingDateTime(this.startAt, this.endAt);
         if (this.status != ProjectStatus.WRITING) {
@@ -180,5 +189,11 @@ public class Project extends BaseEntity {
 
     public void updateStatusToSettlementComplete() {
         this.status = ProjectStatus.SETTLEMENT_COMPLETE;
+    }
+
+    private void validateUser(User user) {
+        if (!this.user.isSameUser(user)) {
+            throw new IllegalArgumentException("프로젝트 작성자만 수정할 수 있습니다.");
+        }
     }
 }
