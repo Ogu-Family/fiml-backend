@@ -25,8 +25,7 @@ public class Project extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // TODO: optional = false로 변경
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -78,9 +77,10 @@ public class Project extends BaseEntity {
     private List<Reward> rewards;
 
     @Builder
-    public Project(String summary, ProjectCategory category) {
+    public Project(String summary, ProjectCategory category, User user) {
         this.summary = summary;
         this.category = category;
+        this.user = user;
 
         this.currentAmount = 0L;
         this.sharedCount = 0L;

@@ -4,6 +4,7 @@ import kpl.fiml.global.dto.PageResponse;
 import kpl.fiml.project.domain.Project;
 import kpl.fiml.project.domain.ProjectRepository;
 import kpl.fiml.project.dto.*;
+import kpl.fiml.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -17,8 +18,8 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
 
     @Transactional
-    public ProjectInitResponse initProject(ProjectInitRequest request) {
-        return ProjectInitResponse.of(projectRepository.save(request.toEntity()).getId());
+    public ProjectInitResponse initProject(ProjectInitRequest request, User user) {
+        return ProjectInitResponse.of(projectRepository.save(request.toEntity(user)).getId());
     }
 
     @Transactional

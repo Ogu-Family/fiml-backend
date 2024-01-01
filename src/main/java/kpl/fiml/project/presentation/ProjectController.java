@@ -4,9 +4,11 @@ import kpl.fiml.global.dto.PageResponse;
 import kpl.fiml.project.application.ProjectService;
 import kpl.fiml.project.domain.Project;
 import kpl.fiml.project.dto.*;
+import kpl.fiml.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,8 +19,8 @@ public class ProjectController {
     private final ProjectService projectService;
 
     @PostMapping("/projects")
-    public ResponseEntity<ProjectInitResponse> initProject(@RequestBody ProjectInitRequest request) {
-        ProjectInitResponse response = this.projectService.initProject(request);
+    public ResponseEntity<ProjectInitResponse> initProject(@RequestBody ProjectInitRequest request, @AuthenticationPrincipal User user) {
+        ProjectInitResponse response = this.projectService.initProject(request, user);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
