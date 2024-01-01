@@ -17,6 +17,7 @@ import org.springframework.data.support.PageableExecutionUtils;
 import java.util.List;
 
 import static kpl.fiml.project.domain.QProject.project;
+import static kpl.fiml.project.domain.QProjectImage.projectImage;
 
 @RequiredArgsConstructor
 public class ProjectRepositoryQueryImpl implements ProjectRepositoryQuery {
@@ -29,10 +30,12 @@ public class ProjectRepositoryQueryImpl implements ProjectRepositoryQuery {
                 .and(projectStatusEq(searchRequest.getStatus()))
                 .and(project.status.ne(ProjectStatus.WRITING))
                 .and(projectCategoryEq(searchRequest.getCategory()))
-                .and(achieveRateBetween(searchRequest.getMinAchieveRate(), searchRequest.getMaxAchieveRate()));
+                .and(achieveRateBetween(searchRequest.getMinAchieveRate(), searchRequest.getMaxAchieveRate()))
+                .and(projectImageFirstSequenceEq());
 
         List<Project> projects = jpaQueryFactory
                 .selectFrom(project)
+                .leftJoin(project.projectImages, projectImage).fetchJoin()
                 .where(expression)
                 .orderBy(getOrderSpecifier(searchRequest.getSortField(), searchRequest.getSortDirection()))
                 .offset(pageable.getOffset())
@@ -41,6 +44,7 @@ public class ProjectRepositoryQueryImpl implements ProjectRepositoryQuery {
 
         JPAQuery<Project> countQuery = jpaQueryFactory
                 .selectFrom(project)
+                .leftJoin(project.projectImages, projectImage).fetchJoin()
                 .where(expression);
 
         return PageableExecutionUtils.getPage(projects, pageable, countQuery::fetchCount);
@@ -101,5 +105,9 @@ public class ProjectRepositoryQueryImpl implements ProjectRepositoryQuery {
         }
 
         return null;
+    }
+
+    private BooleanExpression projectImageFirstSequenceEq() {
+        return projectImage.sequence.eq(0);
     }
 }
