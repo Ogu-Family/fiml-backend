@@ -29,7 +29,7 @@ public class ProjectDto {
         this.summary = project.getSummary();
         this.thumbnailImagePath = project.getProjectImages().get(0).getPath();
         this.category = project.getCategory().getDisplayName();
-        this.userName = "사용자 이름"; // TODO: 올바른 User 객체를 참조하여 사용자 이름을 가져오기
+        this.userName = project.getUser().getName();
         this.projectStatus = project.getStatus().getDisplayName();
         this.achieveRate = BigDecimal.valueOf(project.getCurrentAmount())
                 .divide(BigDecimal.valueOf(project.getGoalAmount()), 2, RoundingMode.HALF_UP)
