@@ -45,6 +45,13 @@ public class Sponsor extends BaseEntity {
         this.status = SponsorStatus.FUNDING_PROCEEDING;
     }
 
+    public void updateRewardAndTotalAmount(Reward reward, Long totalAmount) {
+        validateTotalAmount(reward, totalAmount);
+
+        this.reward = reward;
+        this.totalAmount = totalAmount;
+    }
+
     public void updateStatusToPaymentProceeding() {
         this.status = SponsorStatus.PAYMENT_PROCEEDING;
     }
