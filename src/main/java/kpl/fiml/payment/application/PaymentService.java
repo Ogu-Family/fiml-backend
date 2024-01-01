@@ -31,8 +31,9 @@ public class PaymentService {
     private final PaymentRepository paymentRepository;
     private final SponsorRepository sponsorRepository;
 
-    public List<PaymentDto> getPaymentsOfSuccessAndFail(Long sponsorId) {
+    public List<PaymentDto> getPaymentsOfSuccessAndFail(Long sponsorId, User user) {
         Sponsor sponsor = sponsorRepository.findById(sponsorId)
+                .filter(uncheckedSponsor -> uncheckedSponsor.getUser().equals(user))
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 후원에 대한 요청입니다."));
 
         List<PaymentDto> responses = paymentRepository.findAllBySponsor(sponsor)
