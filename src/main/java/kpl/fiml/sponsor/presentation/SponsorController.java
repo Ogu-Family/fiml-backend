@@ -1,9 +1,7 @@
 package kpl.fiml.sponsor.presentation;
 
 import kpl.fiml.sponsor.application.SponsorService;
-import kpl.fiml.sponsor.dto.SponsorCreateRequest;
-import kpl.fiml.sponsor.dto.SponsorCreateResponse;
-import kpl.fiml.sponsor.dto.SponsorDeleteResponse;
+import kpl.fiml.sponsor.dto.*;
 import kpl.fiml.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,6 +26,13 @@ public class SponsorController {
     @GetMapping("/sponsors/{sponsorId}")
     public ResponseEntity<SponsorDto> getSponsor(@PathVariable Long sponsorId, @AuthenticationPrincipal User user) {
         SponsorDto response = sponsorService.getSponsor(sponsorId, user);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/sponsors/{sponsorId}")
+    public ResponseEntity<SponsorDto> updateSponsor(@PathVariable Long sponsorId, @RequestBody SponsorUpdateRequest request, @AuthenticationPrincipal User user) {
+        SponsorDto response = sponsorService.updateSponsor(sponsorId, request, user);
 
         return ResponseEntity.ok(response);
     }
