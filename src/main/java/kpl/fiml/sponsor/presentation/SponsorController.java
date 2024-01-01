@@ -25,6 +25,13 @@ public class SponsorController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @GetMapping("/sponsors/{sponsorId}")
+    public ResponseEntity<SponsorDto> getSponsor(@PathVariable Long sponsorId, @AuthenticationPrincipal User user) {
+        SponsorDto response = sponsorService.getSponsor(sponsorId, user);
+
+        return ResponseEntity.ok(response);
+    }
+
     @DeleteMapping("/sponsors/{sponsorId}")
     public ResponseEntity<SponsorDeleteResponse> deleteSponsor(@PathVariable Long sponsorId, @AuthenticationPrincipal User user) {
         SponsorDeleteResponse response = sponsorService.deleteSponsorByUser(sponsorId, user);
