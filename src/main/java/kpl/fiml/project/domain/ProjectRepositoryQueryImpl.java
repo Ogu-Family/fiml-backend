@@ -28,7 +28,8 @@ public class ProjectRepositoryQueryImpl implements ProjectRepositoryQuery {
         BooleanExpression expression = titleContainsIgnoreCase(searchRequest.getSearchKeyword())
                 .and(projectStatusEq(searchRequest.getStatus()))
                 .and(project.status.ne(ProjectStatus.WRITING))
-                .and(projectCategoryEq(searchRequest.getCategory()));
+                .and(projectCategoryEq(searchRequest.getCategory()))
+                .and(achieveRateBetween(searchRequest.getMinAchieveRate(), searchRequest.getMaxAchieveRate()));
 
         List<Project> projects = jpaQueryFactory
                 .selectFrom(project)
@@ -90,5 +91,15 @@ public class ProjectRepositoryQueryImpl implements ProjectRepositoryQuery {
         return null;
     }
 
-    // TODO: AchieveRate 검색 조건 추가
+    private BooleanExpression achieveRateBetween(Integer minAchieveRate, Integer maxAchieveRate) {
+        if (minAchieveRate != null && maxAchieveRate != null) {
+            return project.currentAmount.divide(project.goalAmount).between(minAchieveRate, maxAchieveRate);
+        } else if (minAchieveRate != null) {
+            return project.currentAmount.divide(project.goalAmount).goe(minAchieveRate);
+        } else if (maxAchieveRate != null) {
+            return project.currentAmount.divide(project.goalAmount).loe(maxAchieveRate);
+        }
+
+        return null;
+    }
 }
