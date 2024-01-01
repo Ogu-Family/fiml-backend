@@ -3,6 +3,7 @@ package kpl.fiml.payment.application;
 import kpl.fiml.payment.domain.Payment;
 import kpl.fiml.payment.domain.PaymentRepository;
 import kpl.fiml.payment.domain.PaymentStatus;
+import kpl.fiml.payment.dto.PaymentCreateRequest;
 import kpl.fiml.payment.dto.PaymentDto;
 import kpl.fiml.sponsor.domain.Sponsor;
 import kpl.fiml.sponsor.domain.SponsorRepository;
@@ -43,6 +44,20 @@ public class PaymentService {
         return responses;
     }
 
+    @Transactional
+    public void createPayment(PaymentCreateRequest request) {
+        paymentRepository.save(request.toEntity(LocalDateTime.of(request.getRequestedDay().plusDays(NEXT_PAYMENT_OFFSET), LocalTime.of(PAYMENT_PERIOD_HOUR, PAYMENT_PERIOD_MINUTE))));
+    }
+
+    @Transactional
+    public void deletePayments(Sponsor sponsor) {
+        List<Payment> payments = paymentRepository.findAllBySponsor(sponsor);
+
+        for (Payment payment : payments) {
+            payment.delete();
+        }
+    }
+
     @Scheduled(cron = "0 0 14 * * *", zone = "Asia/Seoul")
     @Transactional
     public void tryPay() {
@@ -64,10 +79,7 @@ public class PaymentService {
                 if (paymentRepository.countBySponsor(sponsor) == MAX_PAYMENT_TRIAL) {
                     sponsor.paymentFail();
                 } else {
-                    paymentRepository.save(Payment.builder()
-                            .sponsor(sponsor)
-                            .requestedAt(LocalDateTime.of(LocalDate.now().plusDays(NEXT_PAYMENT_OFFSET), LocalTime.of(PAYMENT_PERIOD_HOUR, PAYMENT_PERIOD_MINUTE)))
-                            .build());
+                    createPayment(PaymentCreateRequest.of(sponsor, LocalDate.now()));
                     sponsor.updateStatusToPaymentProceeding();
                 }
             }
@@ -78,6 +90,7 @@ public class PaymentService {
     private List<Payment> getRequiredPayments() {
         return paymentRepository.findAllByStatus(PaymentStatus.WAIT)
                 .stream()
+                .filter(payment -> !payment.isDeleted())
                 .filter(payment ->
                         payment.getRequestedAt().isEqual(LocalDateTime.now()) || payment.getRequestedAt().isBefore(LocalDateTime.now())
                 )

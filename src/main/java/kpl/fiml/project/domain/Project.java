@@ -168,7 +168,12 @@ public class Project extends BaseEntity {
         }
     }
 
-    public void updateSponsorInfo(Long paymentFailAmount) {
+    public void updateSponsorAddInfo(Long paymentAddAmount) {
+        this.currentAmount += paymentAddAmount;
+        this.sponsorCount++;
+    }
+
+    public void updateSponsorDeleteInfo(Long paymentFailAmount) {
         this.currentAmount -= paymentFailAmount;
         this.sponsorCount--;
     }

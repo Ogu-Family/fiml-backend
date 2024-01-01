@@ -57,4 +57,8 @@ public class Reward extends BaseEntity {
 
         this.remainQuantity = totalQuantity;
     }
+
+    public boolean checkUnderflowPrice(Long amount) {
+        return price > amount;
+    }
 }
