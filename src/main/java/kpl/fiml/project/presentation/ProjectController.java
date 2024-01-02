@@ -75,6 +75,13 @@ public class ProjectController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/projects/{projectId}/unlike")
+    public ResponseEntity<Void> unlikeProject(@PathVariable("projectId") Long projectId, @AuthenticationPrincipal User user) {
+        this.projectService.unlikeProject(projectId, user.getId());
+
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/projects")
     public ResponseEntity<PageResponse<Project, ProjectDto>> findProjects(@ModelAttribute ProjectListFindRequest request) {
         PageResponse<Project, ProjectDto> projectsBySearchConditions = this.projectService.findProjectsBySearchConditions(request);

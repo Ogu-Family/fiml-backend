@@ -97,6 +97,21 @@ public class ProjectService {
                 });
     }
 
+    @Transactional
+    public void unlikeProject(Long projectId, Long id) {
+        Project project = getProjectById(projectId);
+        User user = userService.getById(id);
+
+        ProjectLike projectLike = getByProjectAndUser(project, user);
+
+        projectLikeRepository.delete(projectLike);
+    }
+
+    private ProjectLike getByProjectAndUser(Project project, User user) {
+        return projectLikeRepository.findByProjectAndUser(project, user)
+                .orElseThrow(() -> new IllegalArgumentException("좋아요를 누르지 않은 프로젝트입니다."));
+    }
+
     private Project getProjectById(Long projectId) {
         return projectRepository.findById(projectId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 프로젝트입니다."));
