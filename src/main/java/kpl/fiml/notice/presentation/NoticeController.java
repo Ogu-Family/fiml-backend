@@ -27,9 +27,9 @@ public class NoticeController {
     }
 
     @PatchMapping("/notices/{id}")
-    public ResponseEntity<NoticeUpdateResponse> updateNotice(@PathVariable Long id, @RequestBody NoticeUpdateRequest request) {
-        // TODO : userId - authentication 처리
-        NoticeUpdateResponse response = noticeService.updateNotice(request.getUserId(), id, request);
+    public ResponseEntity<NoticeUpdateResponse> updateNotice(@PathVariable Long id, @RequestBody NoticeUpdateRequest request,
+                                                             @AuthenticationPrincipal User user) {
+        NoticeUpdateResponse response = noticeService.updateNotice(user.getId(), id, request);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

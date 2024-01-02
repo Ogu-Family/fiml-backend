@@ -38,7 +38,12 @@ public class NoticeService {
     @Transactional
     public NoticeUpdateResponse updateNotice(Long userId, Long noticeId, NoticeUpdateRequest request) {
         Notice notice = getById(noticeId);
-        validateUser(userId, notice.getUser());
+        User user = getUserByUserId(userId);
+
+        if (!user.isSameUser(notice.getUser())) {
+            throw new IllegalArgumentException("프로젝트 생성자만 공지사항 수정이 가능합니다.");
+        }
+
         notice.updateContent(request.getContent());
 
         return NoticeUpdateResponse.of(noticeId, notice.getContent(), notice.getUser().getId());
@@ -75,9 +80,8 @@ public class NoticeService {
         return NoticeDeleteResponse.of(deleteNotice.getId(), userId, deleteNotice.getDeletedAt());
     }
 
-    private void validateUser(Long userId, User user) {
+    private void validateUser(Long userId, User user) { // TODO: isSameUser 로 변경
         if (!userId.equals(user.getId())) {
-            // TODO : 프로젝트 생성자만 작성 가능한 로직으로 변경
             throw new IllegalArgumentException("공지사항 작성자만 접근 가능합니다.");
         }
     }
