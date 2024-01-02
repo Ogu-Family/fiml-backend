@@ -30,6 +30,7 @@ public class UserController {
 
     @PatchMapping("/users/{id}")
     public ResponseEntity<UserUpdateResponse> update(@PathVariable Long id, @RequestBody UserUpdateRequest request) {
+        // TODO: auth 적용
         UserUpdateResponse response = userService.updateUser(id, request);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -37,6 +38,7 @@ public class UserController {
 
     @GetMapping("/users/{id}")
     public ResponseEntity<UserDto> findById(@PathVariable Long id) {
+        // TODO: auth 적용
         UserDto response = userService.findById(id);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -44,6 +46,7 @@ public class UserController {
 
     @DeleteMapping("/users/{id}")
     public ResponseEntity<UserDeleteResponse> deleteById(@PathVariable Long id) {
+        // TODO: auth 적용
         UserDeleteResponse response = userService.deleteById(id);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
