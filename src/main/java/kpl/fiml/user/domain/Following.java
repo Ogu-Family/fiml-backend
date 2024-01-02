@@ -33,8 +33,4 @@ public class Following {
         this.followerUser = followerUser;
         this.followingUser = followingUser;
     }
-
-    public boolean isDuplicate(User user, User following) {
-        return this.followerUser.isSameUser(user) && this.followingUser.isSameUser(following);
-    }
 }
