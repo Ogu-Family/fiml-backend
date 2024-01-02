@@ -101,4 +101,22 @@ public class UserService {
                     throw new IllegalArgumentException("이미 팔로우한 사용자 입니다.");
                 });
     }
+
+    @Transactional
+    public void unfollow(Long followingId, Long followerId) {
+        User following = userRepository.findByIdAndDeletedAtIsNull(followingId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자 입니다."));
+        User follower = userRepository.findByIdAndDeletedAtIsNull(followerId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자 입니다."));
+
+        Following findFollowing = getByFolloInfo(following, follower);
+
+        followingRepository.delete(findFollowing);
+
+    }
+
+    private Following getByFolloInfo(User following, User follower) {
+        return followingRepository.findByFollowingUserAndFollowerUser(following, follower)
+                .orElseThrow(() -> new IllegalArgumentException("팔로우하지 않은 사용자 입니다."));
+    }
 }
