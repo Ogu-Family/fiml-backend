@@ -70,7 +70,7 @@ public class UserService {
         return passwordEncoder.encode(rawPassword);
     }
 
-    private User getById(Long userId) {
+    public User getById(Long userId) {
         return userRepository.findByIdAndDeletedAtIsNull(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자 입니다."));
     }
