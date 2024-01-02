@@ -1,10 +1,12 @@
 package kpl.fiml.user.presentation;
 
 import kpl.fiml.user.application.UserService;
+import kpl.fiml.user.domain.User;
 import kpl.fiml.user.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -29,25 +31,23 @@ public class UserController {
     }
 
     @PatchMapping("/users/{id}")
-    public ResponseEntity<UserUpdateResponse> update(@PathVariable Long id, @RequestBody UserUpdateRequest request) {
-        // TODO: auth 적용
-        UserUpdateResponse response = userService.updateUser(id, request);
+    public ResponseEntity<UserUpdateResponse> update(@PathVariable Long id, @RequestBody UserUpdateRequest request,
+                                                     @AuthenticationPrincipal User loginUser) {
+        UserUpdateResponse response = userService.updateUser(id, loginUser.getId(), request);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @GetMapping("/users/{id}")
-    public ResponseEntity<UserDto> findById(@PathVariable Long id) {
-        // TODO: auth 적용
-        UserDto response = userService.findById(id);
+    public ResponseEntity<UserDto> findById(@PathVariable Long id, @AuthenticationPrincipal User loginUser) {
+        UserDto response = userService.findById(id, loginUser.getId());
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @DeleteMapping("/users/{id}")
-    public ResponseEntity<UserDeleteResponse> deleteById(@PathVariable Long id) {
-        // TODO: auth 적용
-        UserDeleteResponse response = userService.deleteById(id);
+    public ResponseEntity<UserDeleteResponse> deleteById(@PathVariable Long id, @AuthenticationPrincipal User loginUser) {
+        UserDeleteResponse response = userService.deleteById(id, loginUser.getId());
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

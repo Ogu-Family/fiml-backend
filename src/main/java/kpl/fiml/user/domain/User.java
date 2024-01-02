@@ -3,6 +3,7 @@ package kpl.fiml.user.domain;
 import jakarta.persistence.*;
 import kpl.fiml.global.common.BaseEntity;
 import kpl.fiml.notice.domain.Notice;
+import kpl.fiml.project.domain.Project;
 import kpl.fiml.user.vo.ContactVo;
 import kpl.fiml.user.vo.EmailVo;
 import kpl.fiml.user.vo.PasswordVo;
@@ -55,6 +56,9 @@ public class User extends BaseEntity implements UserDetails {
 
     @OneToMany(mappedBy = "user")
     private List<Notice> noticeList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Project> projectList = new ArrayList<>();
 
     @Builder
     public User(String name, String bio, String profileImage, String email, String encryptPassword, String contact) {
