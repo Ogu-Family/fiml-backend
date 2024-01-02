@@ -43,7 +43,6 @@ public class NoticeService {
         if (!user.isSameUser(notice.getUser())) {
             throw new IllegalArgumentException("프로젝트 생성자만 공지사항 수정이 가능합니다.");
         }
-
         notice.updateContent(request.getContent());
 
         return NoticeUpdateResponse.of(noticeId, notice.getContent(), notice.getUser().getId());
@@ -74,16 +73,14 @@ public class NoticeService {
     @Transactional
     public NoticeDeleteResponse deleteById(Long noticeId, Long userId) {
         Notice deleteNotice = getById(noticeId);
-        validateUser(userId, deleteNotice.getUser());
+        User user = getUserByUserId(userId);
+
+        if (!user.isSameUser(deleteNotice.getUser())) {
+            throw new IllegalArgumentException("프로젝트 생성자만 공지사항 삭제가 가능합니다.");
+        }
         deleteNotice.delete();
 
         return NoticeDeleteResponse.of(deleteNotice.getId(), userId, deleteNotice.getDeletedAt());
-    }
-
-    private void validateUser(Long userId, User user) { // TODO: isSameUser 로 변경
-        if (!userId.equals(user.getId())) {
-            throw new IllegalArgumentException("공지사항 작성자만 접근 가능합니다.");
-        }
     }
 
     private Notice getById(Long noticeId) {

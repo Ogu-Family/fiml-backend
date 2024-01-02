@@ -56,9 +56,8 @@ public class NoticeController {
     }
 
     @DeleteMapping("/notices/{id}")
-    public ResponseEntity<NoticeDeleteResponse> deleteById(@PathVariable Long id, @RequestParam Long userId) {
-        // TODO : userId - authentication 처리
-        NoticeDeleteResponse response = noticeService.deleteById(id, userId);
+    public ResponseEntity<NoticeDeleteResponse> deleteById(@PathVariable Long id, @AuthenticationPrincipal User user) {
+        NoticeDeleteResponse response = noticeService.deleteById(id, user.getId());
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
