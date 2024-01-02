@@ -6,6 +6,7 @@ import kpl.fiml.project.domain.enums.ProjectStatus;
 import kpl.fiml.settlement.domain.Settlement;
 import kpl.fiml.settlement.domain.SettlementRepository;
 import kpl.fiml.settlement.dto.SettlementDto;
+import kpl.fiml.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -46,8 +47,9 @@ public class SettlementService {
         }
     }
 
-    public SettlementDto getSettlement(Long projectId) {
+    public SettlementDto getSettlement(Long projectId, User user) {
         Project project = projectRepository.findById(projectId)
+                .filter(uncheckedProject -> uncheckedProject.getUser().equals(user))
                 .filter(uncheckedProject -> !uncheckedProject.isDeleted())
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 프로젝트가 존재하지 않습니다."));
 

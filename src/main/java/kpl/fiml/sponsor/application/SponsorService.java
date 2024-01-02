@@ -7,9 +7,7 @@ import kpl.fiml.project.domain.Reward;
 import kpl.fiml.project.domain.RewardRepository;
 import kpl.fiml.sponsor.domain.Sponsor;
 import kpl.fiml.sponsor.domain.SponsorRepository;
-import kpl.fiml.sponsor.dto.SponsorCreateRequest;
-import kpl.fiml.sponsor.dto.SponsorCreateResponse;
-import kpl.fiml.sponsor.dto.SponsorDeleteResponse;
+import kpl.fiml.sponsor.dto.*;
 import kpl.fiml.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,9 +28,7 @@ public class SponsorService {
 
     @Transactional
     public SponsorCreateResponse createSponsor(SponsorCreateRequest request, User user) {
-        Reward reward = rewardRepository.findById(request.getRewardId())
-                .filter(uncheckedReward -> !uncheckedReward.isDeleted())
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 리워드가 존재하지 않습니다."));
+        Reward reward = getRewardById(request.getRewardId());
 
         Sponsor sponsor = sponsorRepository.save(request.toEntity(user, reward));
 
@@ -42,9 +38,26 @@ public class SponsorService {
         return SponsorCreateResponse.of(sponsor.getId());
     }
 
+    public SponsorDto getSponsor(Long sponsorId, User user) {
+        Sponsor sponsor = getSponsorByIdAndUser(sponsorId, user);
+
+        return SponsorDto.of(sponsor.getUser().getId(), sponsor.getReward().getId(), sponsor.getTotalAmount(), sponsor.getStatus().getDisplayName());
+    }
+
+    @Transactional
+    public SponsorDto updateSponsor(Long sponsorId, SponsorUpdateRequest request, User user) {
+        Sponsor sponsor = getSponsorByIdAndUser(sponsorId, user);
+        Reward reward = getRewardById(request.getRewardId());
+
+        reward.getProject().updateCurrentAmount(sponsor.getTotalAmount() - request.getTotalAmount());
+        sponsor.updateRewardAndTotalAmount(reward, request.getTotalAmount());
+
+        return SponsorDto.of(sponsor.getUser().getId(), sponsor.getReward().getId(), sponsor.getTotalAmount(), sponsor.getStatus().getDisplayName());
+    }
+
     @Transactional
     public SponsorDeleteResponse deleteSponsorByUser(Long sponsorId, User user) {
-        Sponsor sponsor = getByIdAndUser(sponsorId, user);
+        Sponsor sponsor = getSponsorByIdAndUser(sponsorId, user);
 
         if (sponsor.getReward().getProject().getEndAt().isBefore(LocalDateTime.now())) {
             throw new IllegalArgumentException("펀딩이 종료된 후에는 후원 취소가 불가합니다.");
@@ -70,10 +83,16 @@ public class SponsorService {
         }
     }
 
-    private Sponsor getByIdAndUser(Long sponsorId, User user) {
+    private Sponsor getSponsorByIdAndUser(Long sponsorId, User user) {
         return sponsorRepository.findById(sponsorId)
                 .filter(uncheckedSponsor -> uncheckedSponsor.getUser().equals(user))
                 .filter(uncheckedSponsor -> !uncheckedSponsor.isDeleted())
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 후원이 존재하지 않습니다."));
+    }
+
+    private Reward getRewardById(Long rewardId) {
+        return rewardRepository.findById(rewardId)
+                .filter(uncheckedReward -> !uncheckedReward.isDeleted())
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 리워드가 존재하지 않습니다."));
     }
 }

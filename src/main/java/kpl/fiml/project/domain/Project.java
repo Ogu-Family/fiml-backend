@@ -178,6 +178,10 @@ public class Project extends BaseEntity {
         this.sponsorCount--;
     }
 
+    public void updateCurrentAmount(Long amount) {
+        this.currentAmount += amount;
+    }
+
     public void updateStatusToSettlementComplete() {
         this.status = ProjectStatus.SETTLEMENT_COMPLETE;
     }
