@@ -34,17 +34,16 @@ public class CommentController {
     }
 
     @PatchMapping("/comments/{id}")
-    ResponseEntity<CommentUpdateResponse> update(@PathVariable Long id, @RequestBody CommentUpdateRequest request) {
-        // TODO: auth 적용
-        CommentUpdateResponse response = commentService.update(id, request.getUserId(), request);
+    ResponseEntity<CommentUpdateResponse> update(@PathVariable Long id, @RequestBody CommentUpdateRequest request,
+                                                 @AuthenticationPrincipal User user) {
+        CommentUpdateResponse response = commentService.update(id, user.getId(), request);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @DeleteMapping("/comments/{id}")
-    ResponseEntity<CommentDeleteResponse> deleteById(@PathVariable Long id, @RequestParam Long userId) {
-        // TODO: auth 적용
-        CommentDeleteResponse response = commentService.deleteById(id, userId);
+    ResponseEntity<CommentDeleteResponse> deleteById(@PathVariable Long id, @AuthenticationPrincipal User user) {
+        CommentDeleteResponse response = commentService.deleteById(id, user.getId());
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
