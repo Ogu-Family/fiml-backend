@@ -5,7 +5,6 @@ import kpl.fiml.global.common.BaseEntity;
 import kpl.fiml.notice.domain.Notice;
 import kpl.fiml.user.vo.ContactVo;
 import kpl.fiml.user.vo.EmailVo;
-import kpl.fiml.user.vo.PasswordVo;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -55,6 +54,12 @@ public class User extends BaseEntity implements UserDetails {
 
     @OneToMany(mappedBy = "user")
     private List<Notice> noticeList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "followerUser", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<Following> followingList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "followingUser", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<Following> followerList = new ArrayList<>();
 
     @Builder
     public User(String name, String bio, String profileImage, String email, String encryptPassword, String contact) {
