@@ -46,6 +46,13 @@ public class NoticeController {
         return ResponseEntity.status(HttpStatus.OK).body(noticeDtoList);
     }
 
+    @GetMapping("/projects/{projectId}/notices")
+    public ResponseEntity<List<NoticeDto>> findAllByProjectId(@PathVariable Long projectId) {
+        List<NoticeDto> response = noticeService.findAllByProjectId(projectId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
     @DeleteMapping("/notices/{id}")
     public ResponseEntity<NoticeDeleteResponse> deleteById(@PathVariable Long id, @RequestParam Long userId) {
         // TODO : userId - authentication 처리

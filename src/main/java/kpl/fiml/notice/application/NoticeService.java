@@ -3,6 +3,8 @@ package kpl.fiml.notice.application;
 import kpl.fiml.notice.domain.Notice;
 import kpl.fiml.notice.domain.NoticeRepository;
 import kpl.fiml.notice.dto.*;
+import kpl.fiml.project.domain.Project;
+import kpl.fiml.project.domain.ProjectRepository;
 import kpl.fiml.user.domain.User;
 import kpl.fiml.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -19,13 +20,15 @@ public class NoticeService {
 
     private final NoticeRepository noticeRepository;
     private final UserRepository userRepository;
+    private final ProjectRepository projectRepository;
 
     @Transactional
     public NoticeCreateResponse createNotice(Long userId, NoticeCreateRequest request) {
         User user = getUserByUserId(userId);
-        Notice savedNotice = noticeRepository.save(request.toEntity(user));
+        Project project = getProjectByProjectId(request.getProjectId());
+        Notice savedNotice = noticeRepository.save(request.toEntity(user, project));
 
-        return NoticeCreateResponse.of(savedNotice.getId(), user.getId());
+        return NoticeCreateResponse.of(savedNotice.getId(), user.getId(), project.getId());
     }
 
     @Transactional
@@ -51,6 +54,14 @@ public class NoticeService {
                 .toList();
     }
 
+    public List<NoticeDto> findAllByProjectId(Long projectId) {
+        List<Notice> findNoticeList = noticeRepository.findAllByProjectIdAndDeletedAtIsNull(projectId).get();
+
+        return findNoticeList.stream()
+                .map(notice -> NoticeDto.of(notice.getId(), notice.getContent(), notice.getCreatedAt(), notice.getUpdatedAt()))
+                .toList();
+    }
+
     @Transactional
     public NoticeDeleteResponse deleteById(Long noticeId, Long userId) {
         Notice deleteNotice = getById(noticeId);
@@ -61,7 +72,7 @@ public class NoticeService {
     }
 
     private void validateUser(Long userId, User user) {
-        if(!userId.equals(user.getId())) {
+        if (!userId.equals(user.getId())) {
             // TODO : 프로젝트 생성자만 작성 가능한 로직으로 변경
             throw new IllegalArgumentException("공지사항 작성자만 접근 가능합니다.");
         }
@@ -75,5 +86,11 @@ public class NoticeService {
     private User getUserByUserId(Long userId) {
         return userRepository.findByIdAndDeletedAtIsNull(userId)
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 사용자가 없습니다."));
+    }
+
+    private Project getProjectByProjectId(Long projectId) {
+        return projectRepository.findById(projectId)
+                .filter(project -> !project.isDeleted())
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 프로젝트가 존재하지 않습니다."));
     }
 }
