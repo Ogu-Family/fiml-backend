@@ -54,12 +54,6 @@ public class User extends BaseEntity implements UserDetails {
     @OneToMany(mappedBy = "user")
     private List<Notice> noticeList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "followerUser", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private final List<Following> followingList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "followingUser", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private final List<Following> followerList = new ArrayList<>();
-
     @Builder
     public User(String name, String bio, String profileImage, String email, String encryptPassword, String contact) {
         this.name = name;
@@ -70,26 +64,6 @@ public class User extends BaseEntity implements UserDetails {
         this.contact = new ContactVo(contact).getContact();
         this.cash = 0L;
         this.roles.add("ROLE_USER"); // 권한 처리 필요로 하지 않아서 생성 시 기본 ROLE_USER
-    }
-
-    public void addFollowing(User followingUser) {
-        checkDuplicateFollowing(followingUser);
-
-        Following following = Following.builder()
-                .followerUser(this)
-                .followingUser(followingUser)
-                .build();
-        this.followingList.add(following);
-        followingUser.followerList.add(following);
-    }
-
-    private void checkDuplicateFollowing(User followingUser) {
-        this.followingList.stream()
-                .filter(follow -> follow.isDuplicate(this, followingUser))
-                .findFirst()
-                .ifPresent(follow -> {
-                    throw new IllegalArgumentException("이미 팔로우 중인 사용자입니다.");
-                });
     }
 
     public void increaseCash(Long amount) {

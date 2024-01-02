@@ -1,6 +1,8 @@
 package kpl.fiml.user.application;
 
 import kpl.fiml.global.jwt.JwtTokenProvider;
+import kpl.fiml.user.domain.Following;
+import kpl.fiml.user.domain.FollowingRepository;
 import kpl.fiml.user.domain.User;
 import kpl.fiml.user.domain.UserRepository;
 import kpl.fiml.user.dto.*;
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final FollowingRepository followingRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -82,6 +85,20 @@ public class UserService {
         User follower = userRepository.findByIdAndDeletedAtIsNull(followerId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자 입니다."));
 
-        follower.addFollowing(following);
+        checkIfAlreadyFollowing(following, follower);
+
+        followingRepository.save(
+                Following.builder()
+                        .followingUser(following)
+                        .followerUser(follower)
+                        .build()
+        );
+    }
+
+    private void checkIfAlreadyFollowing(User following, User follower) {
+        this.followingRepository.findByFollowingUserAndFollowerUser(following, follower)
+                .ifPresent(follow -> {
+                    throw new IllegalArgumentException("이미 팔로우한 사용자 입니다.");
+                });
     }
 }
