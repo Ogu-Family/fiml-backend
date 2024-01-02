@@ -76,4 +76,13 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자 입니다."));
     }
 
+    @Transactional
+    public void follow(Long followingId, Long followerId) {
+        User following = userRepository.findByIdAndDeletedAtIsNull(followingId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자 입니다."));
+        User follower = userRepository.findByIdAndDeletedAtIsNull(followerId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자 입니다."));
+
+        follower.addFollowing(following);
+    }
 }

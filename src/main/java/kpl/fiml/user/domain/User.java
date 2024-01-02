@@ -72,6 +72,26 @@ public class User extends BaseEntity implements UserDetails {
         this.roles.add("ROLE_USER"); // 권한 처리 필요로 하지 않아서 생성 시 기본 ROLE_USER
     }
 
+    public void addFollowing(User followingUser) {
+        checkDuplicateFollowing(followingUser);
+
+        Following following = Following.builder()
+                .followerUser(this)
+                .followingUser(followingUser)
+                .build();
+        this.followingList.add(following);
+        followingUser.followerList.add(following);
+    }
+
+    private void checkDuplicateFollowing(User followingUser) {
+        this.followingList.stream()
+                .filter(follow -> follow.isDuplicate(this, followingUser))
+                .findFirst()
+                .ifPresent(follow -> {
+                    throw new IllegalArgumentException("이미 팔로우 중인 사용자입니다.");
+                });
+    }
+
     public void increaseCash(Long amount) {
         if (amount < 0) {
             throw new IllegalArgumentException("금액은 음수가 될 수 없습니다.");

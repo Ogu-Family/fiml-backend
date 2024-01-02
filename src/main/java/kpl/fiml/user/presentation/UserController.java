@@ -1,10 +1,12 @@
 package kpl.fiml.user.presentation;
 
 import kpl.fiml.user.application.UserService;
+import kpl.fiml.user.domain.User;
 import kpl.fiml.user.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -47,6 +49,13 @@ public class UserController {
         UserDeleteResponse response = userService.deleteById(id);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PostMapping("/users/{followingId}/follow")
+    public ResponseEntity<Void> follow(@PathVariable("followingId") Long followingId, @AuthenticationPrincipal User user) {
+        this.userService.follow(followingId, user.getId());
+
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @PostMapping("/users/test")
