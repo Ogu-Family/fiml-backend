@@ -1,17 +1,11 @@
 package kpl.fiml.user.presentation;
 
 import kpl.fiml.user.application.UserService;
-import kpl.fiml.user.dto.LoginRequest;
-import kpl.fiml.user.dto.LoginResponse;
-import kpl.fiml.user.dto.UserCreateRequest;
-import kpl.fiml.user.dto.UserCreateResponse;
+import kpl.fiml.user.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,6 +24,27 @@ public class UserController {
     @PostMapping("/users/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
         LoginResponse response = userService.signIn(request);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PatchMapping("/users/{id}")
+    public ResponseEntity<UserUpdateResponse> update(@PathVariable Long id, @RequestBody UserUpdateRequest request) {
+        UserUpdateResponse response = userService.updateUser(id, request);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/users/{id}")
+    public ResponseEntity<UserDto> findById(@PathVariable Long id) {
+        UserDto response = userService.findById(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<UserDeleteResponse> deleteById(@PathVariable Long id) {
+        UserDeleteResponse response = userService.deleteById(id);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

@@ -2,9 +2,11 @@ package kpl.fiml.comment.presentation;
 
 import kpl.fiml.comment.application.CommentService;
 import kpl.fiml.comment.dto.*;
+import kpl.fiml.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,8 +19,10 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("/notice/{noticeId}/comments")
-    ResponseEntity<CommentCreateResponse> create(@PathVariable Long noticeId, @RequestBody CommentCreateRequest request) {
-        CommentCreateResponse response = commentService.create(noticeId, request);
+    ResponseEntity<CommentCreateResponse> create(@PathVariable Long noticeId, @RequestBody CommentCreateRequest request,
+                                                 @AuthenticationPrincipal User user) {
+        // TODO: userId - authentication 에서 받기
+        CommentCreateResponse response = commentService.create(request.getUserId(), noticeId, request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -32,14 +36,14 @@ public class CommentController {
 
     @PatchMapping("/comments/{id}")
     ResponseEntity<CommentUpdateResponse> update(@PathVariable Long id, @RequestBody CommentUpdateRequest request) {
-        CommentUpdateResponse response = commentService.update(id, request);
+        CommentUpdateResponse response = commentService.update(id, request.getUserId(), request);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @DeleteMapping("/comments/{id}")
-    ResponseEntity<CommentDeleteResponse> deleteById(@PathVariable Long id) {
-        CommentDeleteResponse response = commentService.deleteById(id);
+    ResponseEntity<CommentDeleteResponse> deleteById(@PathVariable Long id, @RequestParam Long userId) {
+        CommentDeleteResponse response = commentService.deleteById(id, userId);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

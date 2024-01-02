@@ -13,13 +13,13 @@ public class UserCreateRequest {
     private String password;
     private String contact;
 
-    public User toEntity(PasswordEncoder passwordEncoder) {
+    public User toEntity(String encryptPassword) {
         return User.builder()
                 .name(this.name)
                 .bio(this.bio)
                 .profileImage(this.profileImage)
                 .email(this.email)
-                .password(passwordEncoder.encode(this.password))
+                .encryptPassword(encryptPassword)
                 .contact(this.contact)
                 .build();
     }

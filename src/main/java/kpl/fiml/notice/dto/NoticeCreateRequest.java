@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 public class NoticeCreateRequest {
     private String content;
-    private Long userId;
+    private Long userId; // TODO : authentication 적용시 삭제
 
     public Notice toEntity(User user) {
         return Notice.builder()
