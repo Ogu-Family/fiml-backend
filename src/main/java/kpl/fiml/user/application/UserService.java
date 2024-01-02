@@ -4,7 +4,6 @@ import kpl.fiml.global.jwt.JwtTokenProvider;
 import kpl.fiml.user.domain.User;
 import kpl.fiml.user.domain.UserRepository;
 import kpl.fiml.user.dto.*;
-import kpl.fiml.user.vo.EmailVo;
 import kpl.fiml.user.vo.PasswordVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -44,7 +43,7 @@ public class UserService {
     public UserUpdateResponse updateUser(Long userId, UserUpdateRequest request) {
         User user = getById(userId);
         String encryptPassword = request.getPassword();
-        if(!encryptPassword.isBlank()) {
+        if (!encryptPassword.isBlank()) {
             encryptPassword = validateAndEncryptPassword(request.getPassword());
         }
         user.updateUser(request.getName(), request.getBio(), request.getProfileImage(), request.getEmail(), encryptPassword, request.getContact());
