@@ -2,9 +2,11 @@ package kpl.fiml.notice.presentation;
 
 import kpl.fiml.notice.application.NoticeService;
 import kpl.fiml.notice.dto.*;
+import kpl.fiml.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,9 +19,9 @@ public class NoticeController {
     private final NoticeService noticeService;
 
     @PostMapping("/notices")
-    public ResponseEntity<NoticeCreateResponse> createNotice(@RequestBody NoticeCreateRequest request) {
-        //TODO : userId - authentication 처리
-        NoticeCreateResponse response = noticeService.createNotice(request.getUserId(), request);
+    public ResponseEntity<NoticeCreateResponse> createNotice(@RequestBody NoticeCreateRequest request,
+                                                             @AuthenticationPrincipal User user) {
+        NoticeCreateResponse response = noticeService.createNotice(user.getId(), request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }

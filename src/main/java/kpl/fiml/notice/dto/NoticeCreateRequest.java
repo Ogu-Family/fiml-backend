@@ -8,7 +8,6 @@ import lombok.Getter;
 @Getter
 public class NoticeCreateRequest {
     private String content;
-    private Long userId; // TODO : authentication 적용시 삭제
     private Long projectId;
 
     public Notice toEntity(User user, Project project) {
