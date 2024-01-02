@@ -4,6 +4,7 @@ import kpl.fiml.global.dto.PageResponse;
 import kpl.fiml.project.domain.Project;
 import kpl.fiml.project.domain.ProjectRepository;
 import kpl.fiml.project.dto.*;
+import kpl.fiml.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -17,48 +18,50 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
 
     @Transactional
-    public ProjectInitResponse initProject(ProjectInitRequest request) {
-        return ProjectInitResponse.of(projectRepository.save(request.toEntity()).getId());
+    public ProjectInitResponse initProject(ProjectInitRequest request, User user) {
+        return ProjectInitResponse.of(projectRepository.save(request.toEntity(user)).getId());
     }
 
     @Transactional
-    public void updateBasicInfo(Long projectId, ProjectBasicInfoUpdateRequest request) {
+    public void updateBasicInfo(Long projectId, ProjectBasicInfoUpdateRequest request, User user) {
         this.getProjectById(projectId)
                 .updateBasicInfo(
                         request.getSummary(),
                         request.getCategory(),
                         request.getTitle(),
-                        request.getProjectImageEntities()
+                        request.getProjectImageEntities(),
+                        user
                 );
     }
 
     @Transactional
-    public void updateIntroduction(Long projectId, ProjectDetailIntroductionUpdateRequest request) {
+    public void updateIntroduction(Long projectId, ProjectDetailIntroductionUpdateRequest request, User user) {
         this.getProjectById(projectId)
-                .updateIntroduction(request.getIntroduction());
+                .updateIntroduction(request.getIntroduction(), user);
     }
 
     @Transactional
-    public void updateFundingPlan(Long projectId, ProjectFundingPlanUpdateRequest request) {
+    public void updateFundingPlan(Long projectId, ProjectFundingPlanUpdateRequest request, User user) {
         this.getProjectById(projectId)
                 .updateFundingInfo(
                         request.getGoalAmount(),
                         request.getFundingStartDateTime(),
                         request.getFundingEndDate(),
-                        request.getCommissionRate()
+                        request.getCommissionRate(),
+                        user
                 );
     }
 
     @Transactional
-    public void updateRewards(Long projectId, ProjectRewardUpdateRequest request) {
+    public void updateRewards(Long projectId, ProjectRewardUpdateRequest request, User user) {
         this.getProjectById(projectId)
-                .updateRewards(request.getRewardEntities());
+                .updateRewards(request.getRewardEntities(), user);
     }
 
     @Transactional
-    public void submitProject(Long projectId) {
+    public void submitProject(Long projectId, User user) {
         this.getProjectById(projectId)
-                .submit();
+                .submit(user);
     }
 
     public PageResponse<Project, ProjectDto> findProjectsBySearchConditions(ProjectListFindRequest request) {

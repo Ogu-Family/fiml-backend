@@ -13,9 +13,9 @@ public class ProjectListFindRequest {
     private String searchKeyword;
     private Status status;
     // TODO: 0 - 100 사이의 정수
-    private int minAchieveRate;
+    private Integer minAchieveRate;
     // TODO: 0 - 100 사이의 정수
-    private int maxAchieveRate;
+    private Integer maxAchieveRate;
     private SortField sortField;
     private Direction sortDirection;
     private ProjectCategory category;
