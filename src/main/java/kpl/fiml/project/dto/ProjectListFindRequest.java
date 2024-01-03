@@ -1,7 +1,8 @@
 package kpl.fiml.project.dto;
 
 import kpl.fiml.project.domain.enums.ProjectCategory;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.data.domain.Sort.Direction;
 
 @Getter
@@ -12,9 +13,7 @@ public class ProjectListFindRequest {
     private Integer size;
     private String searchKeyword;
     private Status status;
-    // TODO: 0 - 100 사이의 정수
     private Integer minAchieveRate;
-    // TODO: 0 - 100 사이의 정수
     private Integer maxAchieveRate;
     private SortField sortField;
     private Direction sortDirection;
