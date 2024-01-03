@@ -59,7 +59,10 @@ public class Reward extends BaseEntity {
         this.deliveryDate = deliveryDate;
         this.maxPurchaseQuantity = maxPurchaseQuantity;
 
-        this.remainQuantity = totalQuantity;
+        if (Boolean.TRUE.equals(quantityLimited) && totalQuantity < 1) {
+            throw new IllegalArgumentException("수량 제한이 있는 리워드는 최소 1개 이상이어야 합니다.");
+        }
+
         if (this.maxPurchaseQuantity < 1) {
             throw new IllegalArgumentException("최소 구매 수량은 1개 이상이어야 합니다.");
         }
