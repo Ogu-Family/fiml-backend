@@ -22,7 +22,7 @@ public class PaymentController {
 
     @GetMapping("/payments/{sponsorId}")
     public ResponseEntity<List<PaymentDto>> getPaymentsOfSuccessAndFail(@PathVariable Long sponsorId, @AuthenticationPrincipal User user) {
-        List<PaymentDto> responses = paymentService.getPaymentsOfSuccessAndFail(sponsorId, user);
+        List<PaymentDto> responses = paymentService.getPaymentsOfSuccessAndFail(sponsorId, user.getId());
 
         return ResponseEntity.ok(responses);
     }

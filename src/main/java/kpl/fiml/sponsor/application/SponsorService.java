@@ -102,7 +102,7 @@ public class SponsorService {
         }
     }
 
-    private Sponsor getSponsorById(Long sponsorId) {
+    public Sponsor getSponsorById(Long sponsorId) {
         return sponsorRepository.findByIdAndDeletedAtIsNull(sponsorId)
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 후원이 존재하지 않습니다."));
     }

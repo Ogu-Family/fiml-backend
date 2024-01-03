@@ -5,8 +5,9 @@ import kpl.fiml.payment.domain.PaymentRepository;
 import kpl.fiml.payment.domain.PaymentStatus;
 import kpl.fiml.payment.dto.PaymentCreateRequest;
 import kpl.fiml.payment.dto.PaymentDto;
+import kpl.fiml.sponsor.application.SponsorService;
 import kpl.fiml.sponsor.domain.Sponsor;
-import kpl.fiml.sponsor.domain.SponsorRepository;
+import kpl.fiml.user.application.UserService;
 import kpl.fiml.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -28,13 +29,18 @@ public class PaymentService {
     private static final int PAYMENT_PERIOD_HOUR = 14;
     private static final int PAYMENT_PERIOD_MINUTE = 0;
 
-    private final PaymentRepository paymentRepository;
-    private final SponsorRepository sponsorRepository;
+    private final UserService userService;
+    private final SponsorService sponsorService;
 
-    public List<PaymentDto> getPaymentsOfSuccessAndFail(Long sponsorId, User user) {
-        Sponsor sponsor = sponsorRepository.findById(sponsorId)
-                .filter(uncheckedSponsor -> uncheckedSponsor.getUser().equals(user))
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 후원에 대한 요청입니다."));
+    private final PaymentRepository paymentRepository;
+
+    public List<PaymentDto> getPaymentsOfSuccessAndFail(Long sponsorId, Long userId) {
+        User user = userService.getById(userId);
+        Sponsor sponsor = sponsorService.getSponsorById(sponsorId);
+
+        if (!user.isSameUser(sponsor.getUser())) {
+            throw new IllegalArgumentException("본인의 후원에 대한 결제 조회만 요청할 수 있습니다.");
+        }
 
         List<PaymentDto> responses = paymentRepository.findAllBySponsor(sponsor)
                 .stream()
@@ -89,9 +95,8 @@ public class PaymentService {
     }
 
     private List<Payment> getRequiredPayments() {
-        return paymentRepository.findAllByStatus(PaymentStatus.WAIT)
+        return paymentRepository.findAllByStatusAndDeletedAtIsNull(PaymentStatus.WAIT)
                 .stream()
-                .filter(payment -> !payment.isDeleted())
                 .filter(payment ->
                         payment.getRequestedAt().isEqual(LocalDateTime.now()) || payment.getRequestedAt().isBefore(LocalDateTime.now())
                 )
