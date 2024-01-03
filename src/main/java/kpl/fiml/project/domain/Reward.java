@@ -60,6 +60,9 @@ public class Reward extends BaseEntity {
         this.maxPurchaseQuantity = maxPurchaseQuantity;
 
         this.remainQuantity = totalQuantity;
+        if (this.maxPurchaseQuantity < 1) {
+            throw new IllegalArgumentException("최소 구매 수량은 1개 이상이어야 합니다.");
+        }
     }
 
     public boolean checkUnderflowPrice(Long amount) {
