@@ -1,4 +1,4 @@
-package kpl.fiml.notice.dto;
+package kpl.fiml.notice.dto.request;
 
 import kpl.fiml.notice.domain.Notice;
 import kpl.fiml.project.domain.Project;

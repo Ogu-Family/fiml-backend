@@ -1,4 +1,4 @@
-package kpl.fiml.notice.dto;
+package kpl.fiml.notice.dto.request;
 
 import lombok.Getter;
 

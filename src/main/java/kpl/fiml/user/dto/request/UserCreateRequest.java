@@ -1,4 +1,4 @@
-package kpl.fiml.user.dto;
+package kpl.fiml.user.dto.request;
 
 import kpl.fiml.user.domain.User;
 import lombok.Getter;

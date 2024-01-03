@@ -1,4 +1,4 @@
-package kpl.fiml.comment.dto;
+package kpl.fiml.comment.dto.request;
 
 import kpl.fiml.comment.domain.Comment;
 import kpl.fiml.notice.domain.Notice;

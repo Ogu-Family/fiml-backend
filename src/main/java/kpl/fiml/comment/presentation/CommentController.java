@@ -2,6 +2,11 @@ package kpl.fiml.comment.presentation;
 
 import kpl.fiml.comment.application.CommentService;
 import kpl.fiml.comment.dto.*;
+import kpl.fiml.comment.dto.request.CommentCreateRequest;
+import kpl.fiml.comment.dto.request.CommentUpdateRequest;
+import kpl.fiml.comment.dto.response.CommentCreateResponse;
+import kpl.fiml.comment.dto.response.CommentDeleteResponse;
+import kpl.fiml.comment.dto.response.CommentUpdateResponse;
 import kpl.fiml.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
