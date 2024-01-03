@@ -80,10 +80,8 @@ public class UserService {
 
     @Transactional
     public void follow(Long followingId, Long followerId) {
-        User following = userRepository.findByIdAndDeletedAtIsNull(followingId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자 입니다."));
-        User follower = userRepository.findByIdAndDeletedAtIsNull(followerId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자 입니다."));
+        User following = this.getById(followingId);
+        User follower = this.getById(followerId);
 
         checkIfAlreadyFollowing(following, follower);
 
@@ -104,10 +102,8 @@ public class UserService {
 
     @Transactional
     public void unfollow(Long followingId, Long followerId) {
-        User following = userRepository.findByIdAndDeletedAtIsNull(followingId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자 입니다."));
-        User follower = userRepository.findByIdAndDeletedAtIsNull(followerId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자 입니다."));
+        User following = this.getById(followingId);
+        User follower = this.getById(followerId);
 
         Following findFollowing = getByFolloInfo(following, follower);
 
