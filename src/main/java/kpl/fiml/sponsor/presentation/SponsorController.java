@@ -18,28 +18,28 @@ public class SponsorController {
 
     @PostMapping("/sponsors")
     public ResponseEntity<SponsorCreateResponse> createSponsor(@RequestBody SponsorCreateRequest request, @AuthenticationPrincipal User user) {
-        SponsorCreateResponse response = sponsorService.createSponsor(request, user);
+        SponsorCreateResponse response = sponsorService.createSponsor(request, user.getId());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("/sponsors/{sponsorId}")
     public ResponseEntity<SponsorDto> getSponsor(@PathVariable Long sponsorId, @AuthenticationPrincipal User user) {
-        SponsorDto response = sponsorService.getSponsor(sponsorId, user);
+        SponsorDto response = sponsorService.getSponsor(sponsorId, user.getId());
 
         return ResponseEntity.ok(response);
     }
 
     @PatchMapping("/sponsors/{sponsorId}")
     public ResponseEntity<SponsorDto> updateSponsor(@PathVariable Long sponsorId, @RequestBody SponsorUpdateRequest request, @AuthenticationPrincipal User user) {
-        SponsorDto response = sponsorService.updateSponsor(sponsorId, request, user);
+        SponsorDto response = sponsorService.updateSponsor(sponsorId, request, user.getId());
 
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/sponsors/{sponsorId}")
     public ResponseEntity<SponsorDeleteResponse> deleteSponsor(@PathVariable Long sponsorId, @AuthenticationPrincipal User user) {
-        SponsorDeleteResponse response = sponsorService.deleteSponsorByUser(sponsorId, user);
+        SponsorDeleteResponse response = sponsorService.deleteSponsorByUser(sponsorId, user.getId());
 
         return ResponseEntity.ok(response);
     }
