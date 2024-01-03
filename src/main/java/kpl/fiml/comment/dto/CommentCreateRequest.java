@@ -8,7 +8,6 @@ import lombok.Getter;
 @Getter
 public class CommentCreateRequest {
     private String content;
-    private Long userId; // TODO: authentication 적용시 삭제
 
     public Comment toEntity(User user, Notice notice) {
         return Comment.builder()

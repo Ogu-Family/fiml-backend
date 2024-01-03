@@ -9,8 +9,9 @@ import lombok.RequiredArgsConstructor;
 public class NoticeCreateResponse {
     private final Long id;
     private final Long userId;
+    private final Long projectId;
 
-    public static NoticeCreateResponse of(Long id, Long userId) {
-        return new NoticeCreateResponse(id, userId);
+    public static NoticeCreateResponse of(Long id, Long userId, Long projectId) {
+        return new NoticeCreateResponse(id, userId, projectId);
     }
 }

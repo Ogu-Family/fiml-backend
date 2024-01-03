@@ -21,8 +21,7 @@ public class CommentController {
     @PostMapping("/notice/{noticeId}/comments")
     ResponseEntity<CommentCreateResponse> create(@PathVariable Long noticeId, @RequestBody CommentCreateRequest request,
                                                  @AuthenticationPrincipal User user) {
-        // TODO: userId - authentication 에서 받기
-        CommentCreateResponse response = commentService.create(request.getUserId(), noticeId, request);
+        CommentCreateResponse response = commentService.create(user.getId(), noticeId, request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -35,15 +34,16 @@ public class CommentController {
     }
 
     @PatchMapping("/comments/{id}")
-    ResponseEntity<CommentUpdateResponse> update(@PathVariable Long id, @RequestBody CommentUpdateRequest request) {
-        CommentUpdateResponse response = commentService.update(id, request.getUserId(), request);
+    ResponseEntity<CommentUpdateResponse> update(@PathVariable Long id, @RequestBody CommentUpdateRequest request,
+                                                 @AuthenticationPrincipal User user) {
+        CommentUpdateResponse response = commentService.update(id, user.getId(), request);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @DeleteMapping("/comments/{id}")
-    ResponseEntity<CommentDeleteResponse> deleteById(@PathVariable Long id, @RequestParam Long userId) {
-        CommentDeleteResponse response = commentService.deleteById(id, userId);
+    ResponseEntity<CommentDeleteResponse> deleteById(@PathVariable Long id, @AuthenticationPrincipal User user) {
+        CommentDeleteResponse response = commentService.deleteById(id, user.getId());
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

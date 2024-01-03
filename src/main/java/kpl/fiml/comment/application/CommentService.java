@@ -24,7 +24,7 @@ public class CommentService {
 
     @Transactional
     public CommentCreateResponse create(Long userId, Long noticeId, CommentCreateRequest request) {
-        User user = getUserById(userId);
+        User user = getUserByUserId(userId);
         Notice notice = getNoticeById(noticeId);
         Comment createdComment = commentRepository.save(request.toEntity(user, notice));
 
@@ -43,25 +43,27 @@ public class CommentService {
     @Transactional
     public CommentUpdateResponse update(Long id, Long userId, CommentUpdateRequest request) {
         Comment findComment = getById(id);
-        validateUser(userId, findComment.getUser());
+        User user = getUserByUserId(userId);
+
+        if (!user.isSameUser(findComment.getUser())) {
+            throw new IllegalArgumentException("댓글 작성자만 댓글 수정이 가능합니다.");
+        }
         findComment.updateContent(request.getContent());
 
-        return CommentUpdateResponse.of(findComment.getId(), request.getUserId(), findComment.getContent(), findComment.getCreatedAt(), findComment.getUpdatedAt());
+        return CommentUpdateResponse.of(findComment.getId(), userId, findComment.getContent(), findComment.getCreatedAt(), findComment.getUpdatedAt());
     }
 
     @Transactional
     public CommentDeleteResponse deleteById(Long id, Long userId) {
         Comment findComment = getById(id);
-        validateUser(userId, findComment.getUser());
+        User user = getUserByUserId(userId);
+
+        if (!user.isSameUser(findComment.getUser())) {
+            throw new IllegalArgumentException("댓글 작성자만 댓글 삭제가 가능합니다.");
+        }
         findComment.delete();
 
         return CommentDeleteResponse.of(findComment.getId());
-    }
-
-    private void validateUser(Long userId, User user) {
-        if (!userId.equals(user.getId())) {
-            throw new IllegalArgumentException("작성자만 접근 가능합니다.");
-        }
     }
 
     private Comment getById(Long id) {
@@ -69,7 +71,7 @@ public class CommentService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다."));
     }
 
-    private User getUserById(Long userId) {
+    private User getUserByUserId(Long userId) {
         return userRepository.findByIdAndDeletedAtIsNull(userId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 존재하지 않습니다."));
     }

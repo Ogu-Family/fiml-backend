@@ -2,9 +2,11 @@ package kpl.fiml.notice.presentation;
 
 import kpl.fiml.notice.application.NoticeService;
 import kpl.fiml.notice.dto.*;
+import kpl.fiml.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,17 +19,17 @@ public class NoticeController {
     private final NoticeService noticeService;
 
     @PostMapping("/notices")
-    public ResponseEntity<NoticeCreateResponse> createNotice(@RequestBody NoticeCreateRequest request) {
-        //TODO : userId - authentication 처리
-        NoticeCreateResponse response = noticeService.createNotice(request.getUserId(), request);
+    public ResponseEntity<NoticeCreateResponse> createNotice(@RequestBody NoticeCreateRequest request,
+                                                             @AuthenticationPrincipal User user) {
+        NoticeCreateResponse response = noticeService.createNotice(user.getId(), request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PatchMapping("/notices/{id}")
-    public ResponseEntity<NoticeUpdateResponse> updateNotice(@PathVariable Long id, @RequestBody NoticeUpdateRequest request) {
-        // TODO : userId - authentication 처리
-        NoticeUpdateResponse response = noticeService.updateNotice(request.getUserId(), id, request);
+    public ResponseEntity<NoticeUpdateResponse> updateNotice(@PathVariable Long id, @RequestBody NoticeUpdateRequest request,
+                                                             @AuthenticationPrincipal User user) {
+        NoticeUpdateResponse response = noticeService.updateNotice(user.getId(), id, request);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
@@ -46,10 +48,16 @@ public class NoticeController {
         return ResponseEntity.status(HttpStatus.OK).body(noticeDtoList);
     }
 
+    @GetMapping("/projects/{projectId}/notices")
+    public ResponseEntity<List<NoticeDto>> findAllByProjectId(@PathVariable Long projectId) {
+        List<NoticeDto> response = noticeService.findAllByProjectId(projectId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
     @DeleteMapping("/notices/{id}")
-    public ResponseEntity<NoticeDeleteResponse> deleteById(@PathVariable Long id, @RequestParam Long userId) {
-        // TODO : userId - authentication 처리
-        NoticeDeleteResponse response = noticeService.deleteById(id, userId);
+    public ResponseEntity<NoticeDeleteResponse> deleteById(@PathVariable Long id, @AuthenticationPrincipal User user) {
+        NoticeDeleteResponse response = noticeService.deleteById(id, user.getId());
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

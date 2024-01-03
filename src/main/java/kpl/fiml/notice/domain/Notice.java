@@ -3,6 +3,7 @@ package kpl.fiml.notice.domain;
 import jakarta.persistence.*;
 import kpl.fiml.comment.domain.Comment;
 import kpl.fiml.global.common.BaseEntity;
+import kpl.fiml.project.domain.Project;
 import kpl.fiml.user.domain.User;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -29,13 +30,18 @@ public class Notice extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_id")
+    private Project project;
+
     @OneToMany(mappedBy = "notice", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Comment> commentList = new ArrayList<>();
 
     @Builder
-    public Notice(String content, User user) {
+    public Notice(String content, User user, Project project) {
         this.content = content;
         this.user = user;
+        this.project = project;
     }
 
     public void updateContent(String content) {
