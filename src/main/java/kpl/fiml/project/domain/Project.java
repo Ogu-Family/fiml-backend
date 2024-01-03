@@ -135,6 +135,10 @@ public class Project extends BaseEntity {
         this.startAt = startDateTime;
         this.endAt = endDateTime;
         this.commissionRate = commissionRate;
+
+        if (this.commissionRate < 0 || this.commissionRate > 100) {
+            throw new IllegalArgumentException("수수료율은 0-100 사이의 실수여야 합니다.");
+        }
     }
 
     private void validateFundingDateTime(LocalDateTime startDateTime, LocalDateTime endDateTime) {
