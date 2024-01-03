@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Transactional(readOnly = true)
@@ -52,7 +53,7 @@ public class CommentService {
         if (!user.isSameUser(findComment.getUser())) {
             throw new IllegalArgumentException("댓글 작성자만 댓글 수정이 가능합니다.");
         }
-        findComment.updateContent(request.getContent());
+        findComment.updateContent(Objects.requireNonNull(request.getContent(), ""));
 
         return CommentUpdateResponse.of(findComment.getId(), userId, findComment.getContent(), findComment.getCreatedAt(), findComment.getUpdatedAt());
     }

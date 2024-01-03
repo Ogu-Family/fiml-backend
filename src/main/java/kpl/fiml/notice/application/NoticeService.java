@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Transactional(readOnly = true)
@@ -48,7 +49,7 @@ public class NoticeService {
         if (!user.isSameUser(notice.getUser())) {
             throw new IllegalArgumentException("프로젝트 생성자만 공지사항 수정이 가능합니다.");
         }
-        notice.updateContent(request.getContent());
+        notice.updateContent(Objects.requireNonNull(request.getContent(), "content가 null 입니다."));
 
         return NoticeUpdateResponse.of(noticeId, notice.getContent(), notice.getUser().getId());
     }

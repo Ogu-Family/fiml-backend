@@ -9,6 +9,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Objects;
+
 @Entity
 @Getter
 @Table(name = "comments")
@@ -38,6 +40,6 @@ public class Comment extends BaseEntity {
     }
 
     public void updateContent(String content) {
-        this.content = content;
+        this.content = Objects.requireNonNull(content, "content 가 null 입니다.");
     }
 }
