@@ -37,7 +37,7 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "profile_image")
     private String profileImage;
 
-    @Column(name = "email", nullable = false, unique = true)
+    @Column(name = "email", nullable = false)
     private String email;
 
     @Column(name = "password", nullable = false)

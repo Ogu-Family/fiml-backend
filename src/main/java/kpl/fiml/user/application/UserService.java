@@ -31,6 +31,11 @@ public class UserService {
 
     @Transactional
     public UserCreateResponse createUser(UserCreateRequest request) {
+        // email 중복 확인
+        if (userRepository.existsByEmailAndDeletedAtIsNull(request.getEmail())) {
+            throw new IllegalArgumentException("이미 가입된 이메일입니다.");
+        }
+
         String encryptPassword = validateAndEncryptPassword(request.getPassword());
         User savedUser = userRepository.save(request.toEntity(encryptPassword));
 
