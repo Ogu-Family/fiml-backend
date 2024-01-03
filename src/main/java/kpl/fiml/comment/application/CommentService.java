@@ -66,12 +66,6 @@ public class CommentService {
         return CommentDeleteResponse.of(findComment.getId());
     }
 
-    private void validateUser(Long userId, User user) {
-        if (!userId.equals(user.getId())) {
-            throw new IllegalArgumentException("작성자만 접근 가능합니다.");
-        }
-    }
-
     private Comment getById(Long id) {
         return commentRepository.findByIdAndDeletedAtIsNull(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다."));
