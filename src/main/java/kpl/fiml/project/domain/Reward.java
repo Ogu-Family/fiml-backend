@@ -55,7 +55,12 @@ public class Reward extends BaseEntity {
         this.sequence = sequence;
         this.price = price;
         this.quantityLimited = quantityLimited;
+        this.remainQuantity = totalQuantity;
         this.totalQuantity = totalQuantity;
+        if (Boolean.FALSE.equals(quantityLimited)) {
+            this.remainQuantity = Integer.MAX_VALUE;
+            this.totalQuantity = Integer.MAX_VALUE;
+        }
         this.deliveryDate = deliveryDate;
         this.maxPurchaseQuantity = maxPurchaseQuantity;
 
