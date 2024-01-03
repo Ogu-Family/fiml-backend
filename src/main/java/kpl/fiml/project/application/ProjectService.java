@@ -111,7 +111,7 @@ public class ProjectService {
                 .orElseThrow(() -> new IllegalArgumentException("좋아요를 누르지 않은 프로젝트입니다."));
     }
 
-    private Project getProjectById(Long projectId) {
+    public Project getProjectById(Long projectId) {
         return projectRepository.findById(projectId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 프로젝트입니다."));
     }
