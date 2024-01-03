@@ -1,5 +1,6 @@
 package kpl.fiml.comment.presentation;
 
+import jakarta.validation.Valid;
 import kpl.fiml.comment.application.CommentService;
 import kpl.fiml.comment.dto.*;
 import kpl.fiml.comment.dto.request.CommentCreateRequest;
@@ -24,7 +25,7 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("/notice/{noticeId}/comments")
-    ResponseEntity<CommentCreateResponse> create(@PathVariable Long noticeId, @RequestBody CommentCreateRequest request,
+    ResponseEntity<CommentCreateResponse> create(@PathVariable Long noticeId, @Valid @RequestBody CommentCreateRequest request,
                                                  @AuthenticationPrincipal User user) {
         CommentCreateResponse response = commentService.create(user.getId(), noticeId, request);
 
@@ -39,7 +40,7 @@ public class CommentController {
     }
 
     @PatchMapping("/comments/{id}")
-    ResponseEntity<CommentUpdateResponse> update(@PathVariable Long id, @RequestBody CommentUpdateRequest request,
+    ResponseEntity<CommentUpdateResponse> update(@PathVariable Long id, @Valid @RequestBody CommentUpdateRequest request,
                                                  @AuthenticationPrincipal User user) {
         CommentUpdateResponse response = commentService.update(id, user.getId(), request);
 
