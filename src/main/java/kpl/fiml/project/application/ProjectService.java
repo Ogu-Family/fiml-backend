@@ -113,12 +113,12 @@ public class ProjectService {
         Project project = getProjectById(projectId);
         User user = userService.getById(id);
 
-        ProjectLike projectLike = getByProjectAndUser(project, user);
+        ProjectLike projectLike = getProjectLikeByProjectAndUser(project, user);
 
         projectLikeRepository.delete(projectLike);
     }
 
-    private ProjectLike getByProjectAndUser(Project project, User user) {
+    private ProjectLike getProjectLikeByProjectAndUser(Project project, User user) {
         return projectLikeRepository.findByProjectAndUser(project, user)
                 .orElseThrow(() -> new IllegalArgumentException("좋아요를 누르지 않은 프로젝트입니다."));
     }
