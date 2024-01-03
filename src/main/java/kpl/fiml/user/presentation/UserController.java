@@ -1,5 +1,6 @@
 package kpl.fiml.user.presentation;
 
+import jakarta.validation.Valid;
 import kpl.fiml.user.application.UserService;
 import kpl.fiml.user.domain.User;
 import kpl.fiml.user.dto.*;
@@ -24,14 +25,14 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/users/join")
-    public ResponseEntity<UserCreateResponse> createUser(@RequestBody UserCreateRequest request) {
+    public ResponseEntity<UserCreateResponse> createUser(@Valid @RequestBody UserCreateRequest request) {
         UserCreateResponse response = userService.createUser(request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PostMapping("/users/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
         LoginResponse response = userService.signIn(request);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
