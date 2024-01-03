@@ -23,12 +23,16 @@ public class ProjectService {
     private final UserService userService;
 
     @Transactional
-    public ProjectInitResponse initProject(ProjectInitRequest request, User user) {
+    public ProjectInitResponse initProject(ProjectInitRequest request, Long userId) {
+        User user = userService.getById(userId);
+
         return ProjectInitResponse.of(projectRepository.save(request.toEntity(user)).getId());
     }
 
     @Transactional
-    public void updateBasicInfo(Long projectId, ProjectBasicInfoUpdateRequest request, User user) {
+    public void updateBasicInfo(Long projectId, ProjectBasicInfoUpdateRequest request, Long userId) {
+        User user = userService.getById(userId);
+
         this.getProjectById(projectId)
                 .updateBasicInfo(
                         request.getSummary(),
@@ -40,13 +44,17 @@ public class ProjectService {
     }
 
     @Transactional
-    public void updateIntroduction(Long projectId, ProjectDetailIntroductionUpdateRequest request, User user) {
+    public void updateIntroduction(Long projectId, ProjectDetailIntroductionUpdateRequest request, Long userId) {
+        User user = userService.getById(userId);
+
         this.getProjectById(projectId)
                 .updateIntroduction(request.getIntroduction(), user);
     }
 
     @Transactional
-    public void updateFundingPlan(Long projectId, ProjectFundingPlanUpdateRequest request, User user) {
+    public void updateFundingPlan(Long projectId, ProjectFundingPlanUpdateRequest request, Long userId) {
+        User user = userService.getById(userId);
+
         this.getProjectById(projectId)
                 .updateFundingInfo(
                         request.getGoalAmount(),
@@ -58,13 +66,17 @@ public class ProjectService {
     }
 
     @Transactional
-    public void updateRewards(Long projectId, ProjectRewardUpdateRequest request, User user) {
+    public void updateRewards(Long projectId, ProjectRewardUpdateRequest request, Long userId) {
+        User user = userService.getById(userId);
+
         this.getProjectById(projectId)
                 .updateRewards(request.getRewardEntities(), user);
     }
 
     @Transactional
-    public void submitProject(Long projectId, User user) {
+    public void submitProject(Long projectId, Long userId) {
+        User user = userService.getById(userId);
+
         this.getProjectById(projectId)
                 .submit(user);
     }
