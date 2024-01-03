@@ -91,10 +91,9 @@ public class ProjectService {
     }
 
     private void checkIfProjectAlreadyLiked(Project project, User user) {
-        projectLikeRepository.findByProjectAndUser(project, user)
-                .ifPresent(projectLike -> {
-                    throw new IllegalArgumentException("이미 좋아요를 누른 프로젝트입니다.");
-                });
+        if (projectLikeRepository.existsByProjectAndUser(project, user)) {
+            throw new IllegalArgumentException("이미 좋아요를 누른 프로젝트입니다.");
+        }
     }
 
     @Transactional

@@ -9,4 +9,6 @@ import java.util.Optional;
 @Repository
 public interface ProjectLikeRepository extends JpaRepository<ProjectLike, Long> {
     Optional<ProjectLike> findByProjectAndUser(Project project, User user);
+
+    boolean existsByProjectAndUser(Project project, User user);
 }

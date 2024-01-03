@@ -94,10 +94,9 @@ public class UserService {
     }
 
     private void checkIfAlreadyFollowing(User following, User follower) {
-        this.followingRepository.findByFollowingUserAndFollowerUser(following, follower)
-                .ifPresent(follow -> {
-                    throw new IllegalArgumentException("이미 팔로우한 사용자 입니다.");
-                });
+        if (followingRepository.existsByFollowingUserAndFollowerUser(following, follower)) {
+            throw new IllegalArgumentException("이미 팔로우한 사용자 입니다.");
+        }
     }
 
     @Transactional
