@@ -53,9 +53,6 @@ public class User extends BaseEntity implements UserDetails {
     private List<String> roles = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    private List<Notice> noticeList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user")
     private List<Project> projectList = new ArrayList<>();
 
     @Builder
