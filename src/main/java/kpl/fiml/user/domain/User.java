@@ -91,12 +91,8 @@ public class User extends BaseEntity implements UserDetails {
         if (!name.isBlank()) {
             this.name = name;
         }
-        if (!bio.isBlank()) {
-            this.bio = bio;
-        }
-        if (!profileImage.isBlank()) {
-            this.profileImage = profileImage;
-        }
+        this.bio = bio;
+        this.profileImage = profileImage;
         if (!email.isBlank()) {
             this.email = new EmailVo(email).getEmail();
         }
