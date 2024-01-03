@@ -124,7 +124,7 @@ public class ProjectService {
     }
 
     public Project getProjectById(Long projectId) {
-        return projectRepository.findById(projectId)
+        return projectRepository.findByIdAndDeletedAtIsNull(projectId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 프로젝트입니다."));
     }
 }
