@@ -105,13 +105,13 @@ public class UserService {
         User following = this.getById(followingId);
         User follower = this.getById(followerId);
 
-        Following findFollowing = getByFolloInfo(following, follower);
+        Following findFollowing = getFollowingByFollowInfo(following, follower);
 
         followingRepository.delete(findFollowing);
 
     }
 
-    private Following getByFolloInfo(User following, User follower) {
+    private Following getFollowingByFollowInfo(User following, User follower) {
         return followingRepository.findByFollowingUserAndFollowerUser(following, follower)
                 .orElseThrow(() -> new IllegalArgumentException("팔로우하지 않은 사용자 입니다."));
     }
