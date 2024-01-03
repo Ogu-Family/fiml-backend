@@ -28,6 +28,7 @@ public class ProjectRepositoryQueryImpl implements ProjectRepositoryQuery {
         BooleanExpression expression = titleContainsIgnoreCase(searchRequest.getSearchKeyword())
                 .and(projectStatusEq(searchRequest.getStatus()))
                 .and(project.status.ne(ProjectStatus.WRITING))
+                .and(project.deletedAt.isNull())
                 .and(projectCategoryEq(searchRequest.getCategory()))
                 .and(achieveRateBetween(searchRequest.getMinAchieveRate(), searchRequest.getMaxAchieveRate()));
 
