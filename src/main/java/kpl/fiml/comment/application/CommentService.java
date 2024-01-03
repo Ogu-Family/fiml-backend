@@ -18,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CommentService {
 
-    private final UserRepository userRepository;
+    private final UserRepository userRepository;  // TODO : Service 단에서 끌고 오기
     private final NoticeRepository noticeRepository;
     private final CommentRepository commentRepository;
 
