@@ -1,5 +1,6 @@
 package kpl.fiml.payment.dto;
 
+import jakarta.validation.constraints.NotNull;
 import kpl.fiml.payment.domain.Payment;
 import kpl.fiml.sponsor.domain.Sponsor;
 import lombok.AccessLevel;
@@ -13,7 +14,10 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class PaymentCreateRequest {
 
+    @NotNull
     private final Sponsor sponsor;
+
+    @NotNull
     private final LocalDate requestedDay;
 
     public static PaymentCreateRequest of(Sponsor sponsor, LocalDate requestedDay) {
