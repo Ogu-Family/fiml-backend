@@ -1,5 +1,6 @@
 package kpl.fiml.project.dto;
 
+import jakarta.validation.constraints.NotNull;
 import kpl.fiml.project.domain.Reward;
 import lombok.Getter;
 
@@ -8,13 +9,19 @@ import java.time.LocalDate;
 @Getter
 public class ProjectRewardDto {
 
+    @NotNull
     private String title;
+    @NotNull
     private String content;
+    @NotNull
     private Long price;
+    @NotNull
     private Boolean quantityLimited;
+    @NotNull
     private Integer quantity;
+    @NotNull
     private LocalDate deliveryDate;
-    // TODO: 1 이상의 정수 범위 검증 추가
+    @NotNull
     private Integer maxPurchaseQuantity;
 
     public Reward toEntity(int listIndex) {
