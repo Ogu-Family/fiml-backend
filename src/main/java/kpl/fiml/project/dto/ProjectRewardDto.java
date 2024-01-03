@@ -11,6 +11,7 @@ public class ProjectRewardDto {
     private String title;
     private String content;
     private Long price;
+    private Boolean quantityLimited;
     private Integer quantity;
     private LocalDate deliveryDate;
     // TODO: 1 이상의 정수 범위 검증 추가
@@ -22,6 +23,7 @@ public class ProjectRewardDto {
                 .content(content)
                 .sequence(listIndex)
                 .price(price)
+                .quantityLimited(quantityLimited)
                 .totalQuantity(quantity)
                 .deliveryDate(deliveryDate)
                 .maxPurchaseQuantity(maxPurchaseQuantity)
