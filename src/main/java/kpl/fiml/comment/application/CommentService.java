@@ -37,10 +37,9 @@ public class CommentService {
     }
 
     public List<CommentDto> findAllByNoticeId(Long noticeId) {
-        List<Comment> findList = noticeService.getById(noticeId).getCommentList();
+        List<Comment> findList = commentRepository.findAllByNoticeIdAndDeletedAtIsNull(noticeId).get();
 
         return findList.stream()
-                .filter(comment -> !comment.isDeleted())
                 .map(comment -> CommentDto.of(comment.getId(), comment.getContent(), comment.getUser().getId(), noticeId, comment.getCreatedAt(), comment.getUpdatedAt()))
                 .toList();
     }

@@ -34,10 +34,6 @@ public class Notice extends BaseEntity {
     @JoinColumn(name = "project_id")
     private Project project;
 
-    // TODO : OneToMany 삭제
-    @OneToMany(mappedBy = "notice", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<Comment> commentList = new ArrayList<>();
-
     @Builder
     public Notice(String content, User user, Project project) {
         this.content = content;
