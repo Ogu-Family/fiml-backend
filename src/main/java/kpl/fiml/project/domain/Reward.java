@@ -33,6 +33,9 @@ public class Reward extends BaseEntity {
     @Column(name = "price", nullable = false)
     private Long price;
 
+    @Column(name = "quantity_limited", nullable = false)
+    private Boolean quantityLimited;
+
     @Column(name = "remain_quantity", nullable = false)
     private Integer remainQuantity;
 
@@ -46,11 +49,12 @@ public class Reward extends BaseEntity {
     private Integer maxPurchaseQuantity;
 
     @Builder
-    public Reward(String title, String content, Integer sequence, Long price, Integer totalQuantity, LocalDate deliveryDate, Integer maxPurchaseQuantity) {
+    public Reward(String title, String content, Integer sequence, Long price, Boolean quantityLimited, Integer totalQuantity, LocalDate deliveryDate, Integer maxPurchaseQuantity) {
         this.title = title;
         this.content = content;
         this.sequence = sequence;
         this.price = price;
+        this.quantityLimited = quantityLimited;
         this.totalQuantity = totalQuantity;
         this.deliveryDate = deliveryDate;
         this.maxPurchaseQuantity = maxPurchaseQuantity;
