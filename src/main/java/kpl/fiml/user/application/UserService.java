@@ -1,6 +1,8 @@
 package kpl.fiml.user.application;
 
 import kpl.fiml.global.jwt.JwtTokenProvider;
+import kpl.fiml.user.domain.Following;
+import kpl.fiml.user.domain.FollowingRepository;
 import kpl.fiml.user.domain.User;
 import kpl.fiml.user.domain.UserRepository;
 import kpl.fiml.user.dto.*;
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final FollowingRepository followingRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -86,9 +89,45 @@ public class UserService {
         return passwordEncoder.encode(rawPassword);
     }
 
-    private User getById(Long userId) {
+    public User getById(Long userId) {
         return userRepository.findByIdAndDeletedAtIsNull(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자 입니다."));
     }
 
+    @Transactional
+    public void follow(Long followingId, Long followerId) {
+        User following = this.getById(followingId);
+        User follower = this.getById(followerId);
+
+        checkIfAlreadyFollowing(following, follower);
+
+        followingRepository.save(
+                Following.builder()
+                        .followingUser(following)
+                        .followerUser(follower)
+                        .build()
+        );
+    }
+
+    private void checkIfAlreadyFollowing(User following, User follower) {
+        if (followingRepository.existsByFollowingUserAndFollowerUser(following, follower)) {
+            throw new IllegalArgumentException("이미 팔로우한 사용자 입니다.");
+        }
+    }
+
+    @Transactional
+    public void unfollow(Long followingId, Long followerId) {
+        User following = this.getById(followingId);
+        User follower = this.getById(followerId);
+
+        Following findFollowing = getFollowingByFollowInfo(following, follower);
+
+        followingRepository.delete(findFollowing);
+
+    }
+
+    private Following getFollowingByFollowInfo(User following, User follower) {
+        return followingRepository.findByFollowingUserAndFollowerUser(following, follower)
+                .orElseThrow(() -> new IllegalArgumentException("팔로우하지 않은 사용자 입니다."));
+    }
 }

@@ -6,7 +6,6 @@ import kpl.fiml.notice.domain.Notice;
 import kpl.fiml.project.domain.Project;
 import kpl.fiml.user.vo.ContactVo;
 import kpl.fiml.user.vo.EmailVo;
-import kpl.fiml.user.vo.PasswordVo;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,7 +17,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @Entity
@@ -28,7 +26,7 @@ public class User extends BaseEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -114,11 +112,11 @@ public class User extends BaseEntity implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.roles.stream()
                 .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public boolean isSameUser(User user) {
-        return this.Id.equals(user.getId());
+        return this.id.equals(user.getId());
     }
 
     @Override

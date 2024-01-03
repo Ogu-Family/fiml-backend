@@ -52,6 +52,20 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @PostMapping("/users/{followingId}/follow")
+    public ResponseEntity<Void> follow(@PathVariable("followingId") Long followingId, @AuthenticationPrincipal User user) {
+        this.userService.follow(followingId, user.getId());
+
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @PostMapping("/users/{followingId}/unfollow")
+    public ResponseEntity<Void> unfollow(@PathVariable("followingId") Long followingId, @AuthenticationPrincipal User user) {
+        this.userService.unfollow(followingId, user.getId());
+
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
     @PostMapping("/users/test")
     public String test() {
         // security ROLE_USER 권한 확인용 api
