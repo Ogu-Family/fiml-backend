@@ -8,7 +8,7 @@ import java.util.List;
 
 @Repository
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
-    List<Payment> findAllByStatus(PaymentStatus status);
+    List<Payment> findAllByStatusAndDeletedAtIsNull(PaymentStatus status);
     List<Payment> findAllBySponsor(Sponsor sponsor);
     Long countBySponsor(Sponsor sponsor);
 }
