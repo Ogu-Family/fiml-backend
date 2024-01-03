@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -23,14 +24,14 @@ public class Notice extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "content", columnDefinition = "text")
+    @Column(name = "content", columnDefinition = "text", nullable = false)
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "project_id")
     private Project project;
 
@@ -42,6 +43,6 @@ public class Notice extends BaseEntity {
     }
 
     public void updateContent(String content) {
-        this.content = content;
+        this.content = Objects.requireNonNull(content, "content 가 null 입니다");
     }
 }
