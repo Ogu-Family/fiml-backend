@@ -1,5 +1,6 @@
 package kpl.fiml.project.presentation;
 
+import jakarta.validation.Valid;
 import kpl.fiml.global.dto.PageResponse;
 import kpl.fiml.project.application.ProjectService;
 import kpl.fiml.project.domain.Project;
@@ -19,17 +20,17 @@ public class ProjectController {
     private final ProjectService projectService;
 
     @PostMapping("/projects")
-    public ResponseEntity<ProjectInitResponse> initProject(@RequestBody ProjectInitRequest request, @AuthenticationPrincipal User user) {
-        ProjectInitResponse response = this.projectService.initProject(request, user);
+    public ResponseEntity<ProjectInitResponse> initProject(@RequestBody @Valid ProjectInitRequest request, @AuthenticationPrincipal User user) {
+        ProjectInitResponse response = this.projectService.initProject(request, user.getId());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PatchMapping("/projects/{projectId}/basic-info")
     public ResponseEntity<Void> updateBasicInfo(@PathVariable("projectId") Long projectId,
-                                                @RequestBody ProjectBasicInfoUpdateRequest request,
+                                                @RequestBody @Valid ProjectBasicInfoUpdateRequest request,
                                                 @AuthenticationPrincipal User user) {
-        this.projectService.updateBasicInfo(projectId, request, user);
+        this.projectService.updateBasicInfo(projectId, request, user.getId());
 
         return ResponseEntity.ok().build();
     }
@@ -38,7 +39,7 @@ public class ProjectController {
     public ResponseEntity<Void> updateIntroduction(@PathVariable("projectId") Long projectId,
                                                    @RequestBody ProjectDetailIntroductionUpdateRequest request,
                                                    @AuthenticationPrincipal User user) {
-        this.projectService.updateIntroduction(projectId, request, user);
+        this.projectService.updateIntroduction(projectId, request, user.getId());
 
         return ResponseEntity.ok().build();
     }
@@ -47,23 +48,23 @@ public class ProjectController {
     public ResponseEntity<Void> updateFundingPlan(@PathVariable("projectId") Long projectId,
                                                   @RequestBody ProjectFundingPlanUpdateRequest request,
                                                   @AuthenticationPrincipal User user) {
-        this.projectService.updateFundingPlan(projectId, request, user);
+        this.projectService.updateFundingPlan(projectId, request, user.getId());
 
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/projects/{projectId}/rewards")
     public ResponseEntity<Void> updateRewards(@PathVariable("projectId") Long projectId,
-                                              @RequestBody ProjectRewardUpdateRequest request,
+                                              @RequestBody @Valid ProjectRewardUpdateRequest request,
                                               @AuthenticationPrincipal User user) {
-        this.projectService.updateRewards(projectId, request, user);
+        this.projectService.updateRewards(projectId, request, user.getId());
 
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/projects/{projectId}/submit")
     public ResponseEntity<Void> submitProject(@PathVariable("projectId") Long projectId, @AuthenticationPrincipal User user) {
-        this.projectService.submitProject(projectId, user);
+        this.projectService.submitProject(projectId, user.getId());
 
         return ResponseEntity.ok().build();
     }

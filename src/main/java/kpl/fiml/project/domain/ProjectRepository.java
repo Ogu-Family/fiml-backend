@@ -9,6 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Long>, ProjectRepositoryQuery {
+
     Optional<Project> findByIdAndDeletedAtIsNull(Long id);
     List<Project> findAllByStatus(ProjectStatus status);
 }

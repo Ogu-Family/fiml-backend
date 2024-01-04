@@ -28,6 +28,7 @@ public class ProjectRepositoryQueryImpl implements ProjectRepositoryQuery {
         BooleanExpression expression = titleContainsIgnoreCase(searchRequest.getSearchKeyword())
                 .and(projectStatusEq(searchRequest.getStatus()))
                 .and(project.status.ne(ProjectStatus.WRITING))
+                .and(project.deletedAt.isNull())
                 .and(projectCategoryEq(searchRequest.getCategory()))
                 .and(achieveRateBetween(searchRequest.getMinAchieveRate(), searchRequest.getMaxAchieveRate()));
 
@@ -92,6 +93,8 @@ public class ProjectRepositoryQueryImpl implements ProjectRepositoryQuery {
     }
 
     private BooleanExpression achieveRateBetween(Integer minAchieveRate, Integer maxAchieveRate) {
+        validateAchieveRateRange(minAchieveRate, maxAchieveRate);
+
         if (minAchieveRate != null && maxAchieveRate != null) {
             return project.currentAmount.divide(project.goalAmount).between(minAchieveRate, maxAchieveRate);
         } else if (minAchieveRate != null) {
@@ -101,5 +104,17 @@ public class ProjectRepositoryQueryImpl implements ProjectRepositoryQuery {
         }
 
         return null;
+    }
+
+    private static void validateAchieveRateRange(Integer minAchieveRate, Integer maxAchieveRate) {
+        if (minAchieveRate != null && (minAchieveRate < 0 || minAchieveRate > 100)) {
+            throw new IllegalArgumentException("minAchieveRate는 0 - 100 사이의 정수만 가능합니다.");
+        }
+        if (maxAchieveRate != null && (maxAchieveRate < 0 || maxAchieveRate > 100)) {
+            throw new IllegalArgumentException("maxAchieveRate는 0 - 100 사이의 정수만 가능합니다.");
+        }
+        if (minAchieveRate != null && maxAchieveRate != null && (minAchieveRate > maxAchieveRate)) {
+            throw new IllegalArgumentException("minAchieveRate는 maxAchieveRate보다 작거나 같아야 합니다.");
+        }
     }
 }
