@@ -37,6 +37,13 @@ public class SponsorController {
         return ResponseEntity.ok(responses);
     }
 
+    @GetMapping("/sponsors/project/{projectId}")
+    public ResponseEntity<List<SponsorDto>> getSponsorsByProject(@PathVariable Long projectId, @AuthenticationPrincipal User user) {
+        List<SponsorDto> responses = sponsorService.getSponsorsByProject(projectId, user.getId());
+
+        return ResponseEntity.ok(responses);
+    }
+
     @GetMapping("/sponsors/{sponsorId}")
     public ResponseEntity<SponsorDto> getSponsor(@PathVariable Long sponsorId, @AuthenticationPrincipal User user) {
         SponsorDto response = sponsorService.getSponsor(sponsorId, user.getId());
