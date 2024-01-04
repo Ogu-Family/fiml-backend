@@ -2,6 +2,7 @@ package kpl.fiml.sponsor.application;
 
 import kpl.fiml.payment.application.PaymentService;
 import kpl.fiml.payment.dto.request.PaymentCreateRequest;
+import kpl.fiml.project.application.ProjectService;
 import kpl.fiml.project.domain.Project;
 import kpl.fiml.project.domain.Reward;
 import kpl.fiml.project.domain.RewardRepository;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -26,6 +28,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SponsorService {
 
+    private final ProjectService projectService;
     private final UserService userService;
     private final PaymentService paymentService;
 
@@ -52,6 +55,26 @@ public class SponsorService {
                 .stream()
                 .map(sponsor -> SponsorDto.of(sponsor.getUser().getId(), sponsor.getReward().getId(), sponsor.getTotalAmount(), sponsor.getStatus().getDisplayName()))
                 .toList();
+    }
+
+    public List<SponsorDto> getSponsorsByProject(Long projectId, Long userId) {
+        User user = userService.getById(userId);
+        Project project = projectService.getProjectById(projectId);
+
+        if (!user.isSameUser(project.getUser())) {
+            throw new IllegalArgumentException("프로젝트 창작자만 프로젝트 기준 후원 리스트 조회를 할 수 있습니다.");
+        }
+
+        List<Reward> rewards = rewardRepository.findAllByProjectAndDeletedAtIsNull(project);
+        List<SponsorDto> responses = new ArrayList<>();
+        for (Reward reward : rewards) {
+            responses.addAll(sponsorRepository.findAllByReward(reward)
+                    .stream()
+                    .map(sponsor -> SponsorDto.of(sponsor.getUser().getId(), sponsor.getReward().getId(), sponsor.getTotalAmount(), sponsor.getStatus().getDisplayName()))
+                    .toList());
+        }
+
+        return responses;
     }
 
     public SponsorDto getSponsor(Long sponsorId, Long userId) {
@@ -102,7 +125,7 @@ public class SponsorService {
 
     @Transactional
     public void deleteSponsorsByProject(Project project) {
-        List<Reward> rewards = rewardRepository.findAllByProject(project);
+        List<Reward> rewards = rewardRepository.findAllByProjectAndDeletedAtIsNull(project);
 
         for (Reward reward : rewards) {
             List<Sponsor> sponsors = sponsorRepository.findAllByReward(reward);
