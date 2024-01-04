@@ -1,4 +1,4 @@
-package kpl.fiml.project.dto;
+package kpl.fiml.project.dto.request;
 
 import lombok.Getter;
 

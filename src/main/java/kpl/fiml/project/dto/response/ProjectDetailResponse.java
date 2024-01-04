@@ -1,4 +1,4 @@
-package kpl.fiml.project.dto;
+package kpl.fiml.project.dto.response;
 
 import kpl.fiml.project.domain.Project;
 import lombok.AccessLevel;

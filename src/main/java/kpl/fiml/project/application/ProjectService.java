@@ -5,7 +5,10 @@ import kpl.fiml.project.domain.Project;
 import kpl.fiml.project.domain.ProjectLike;
 import kpl.fiml.project.domain.ProjectLikeRepository;
 import kpl.fiml.project.domain.ProjectRepository;
-import kpl.fiml.project.dto.*;
+import kpl.fiml.project.dto.request.*;
+import kpl.fiml.project.dto.response.ProjectDetailResponse;
+import kpl.fiml.project.dto.response.ProjectInitResponse;
+import kpl.fiml.project.dto.response.ProjectResponse;
 import kpl.fiml.user.application.UserService;
 import kpl.fiml.user.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -81,9 +84,9 @@ public class ProjectService {
                 .submit(user);
     }
 
-    public PageResponse<Project, ProjectDto> findProjectsBySearchConditions(ProjectListFindRequest request) {
+    public PageResponse<Project, ProjectResponse> findProjectsBySearchConditions(ProjectListFindRequest request) {
         return PageResponse.of(
-                projectRepository.findWithSearchKeyword(request, PageRequest.of(request.getPage(), request.getSize())), ProjectDto::of
+                projectRepository.findWithSearchKeyword(request, PageRequest.of(request.getPage(), request.getSize())), ProjectResponse::of
         );
     }
 

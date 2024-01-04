@@ -1,4 +1,4 @@
-package kpl.fiml.project.dto;
+package kpl.fiml.project.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 import kpl.fiml.project.domain.Reward;
@@ -7,7 +7,7 @@ import lombok.Getter;
 import java.time.LocalDate;
 
 @Getter
-public class ProjectRewardDto {
+public class ProjectRewardRequest {
 
     @NotNull
     private String title;

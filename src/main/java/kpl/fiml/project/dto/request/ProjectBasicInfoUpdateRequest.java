@@ -1,4 +1,4 @@
-package kpl.fiml.project.dto;
+package kpl.fiml.project.dto.request;
 
 import kpl.fiml.project.domain.ProjectImage;
 import kpl.fiml.project.domain.enums.ProjectCategory;
@@ -12,12 +12,12 @@ public class ProjectBasicInfoUpdateRequest {
     private String summary;
     private ProjectCategory category;
     private String title;
-    private List<ProjectImageDto> projectImages;
+    private List<ProjectImageRequest> projectImages;
 
     public List<ProjectImage> getProjectImageEntities() {
         return this.projectImages.stream()
-                .map(projectImageDto ->
-                        projectImageDto.toEntity(this.projectImages.indexOf(projectImageDto)))
+                .map(projectImageRequest ->
+                        projectImageRequest.toEntity(this.projectImages.indexOf(projectImageRequest)))
                 .toList();
     }
 }

@@ -1,4 +1,4 @@
-package kpl.fiml.project.dto;
+package kpl.fiml.project.dto.request;
 
 import kpl.fiml.project.domain.enums.ProjectCategory;
 import lombok.AllArgsConstructor;

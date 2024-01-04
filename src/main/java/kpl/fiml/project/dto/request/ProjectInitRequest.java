@@ -1,4 +1,4 @@
-package kpl.fiml.project.dto;
+package kpl.fiml.project.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 import kpl.fiml.project.domain.Project;
