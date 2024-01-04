@@ -1,5 +1,6 @@
 package kpl.fiml.sponsor.presentation;
 
+import jakarta.validation.Valid;
 import kpl.fiml.sponsor.application.SponsorService;
 import kpl.fiml.sponsor.dto.*;
 import kpl.fiml.user.domain.User;
@@ -17,7 +18,7 @@ public class SponsorController {
     private final SponsorService sponsorService;
 
     @PostMapping("/sponsors")
-    public ResponseEntity<SponsorCreateResponse> createSponsor(@RequestBody SponsorCreateRequest request, @AuthenticationPrincipal User user) {
+    public ResponseEntity<SponsorCreateResponse> createSponsor(@Valid @RequestBody SponsorCreateRequest request, @AuthenticationPrincipal User user) {
         SponsorCreateResponse response = sponsorService.createSponsor(request, user.getId());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -31,7 +32,7 @@ public class SponsorController {
     }
 
     @PatchMapping("/sponsors/{sponsorId}")
-    public ResponseEntity<SponsorDto> updateSponsor(@PathVariable Long sponsorId, @RequestBody SponsorUpdateRequest request, @AuthenticationPrincipal User user) {
+    public ResponseEntity<SponsorDto> updateSponsor(@PathVariable Long sponsorId, @Valid @RequestBody SponsorUpdateRequest request, @AuthenticationPrincipal User user) {
         SponsorDto response = sponsorService.updateSponsor(sponsorId, request, user.getId());
 
         return ResponseEntity.ok(response);
