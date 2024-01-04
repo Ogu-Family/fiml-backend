@@ -99,4 +99,11 @@ public class ProjectController {
 
         return ResponseEntity.ok(projectDetail);
     }
+
+    @DeleteMapping("/projects/{projectId}")
+    public ResponseEntity<Void> deleteProject(@PathVariable("projectId") Long projectId, @AuthenticationPrincipal User user) {
+        this.projectService.deleteProject(projectId, user.getId());
+
+        return ResponseEntity.ok().build();
+    }
 }

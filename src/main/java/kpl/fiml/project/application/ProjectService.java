@@ -139,4 +139,12 @@ public class ProjectService {
         return projectRepository.findByIdAndIsNotWritingStatusWithUser(projectId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 프로젝트입니다."));
     }
+
+    @Transactional
+    public void deleteProject(Long projectId, Long id) {
+        Project project = getProjectById(projectId);
+        User user = userService.getById(id);
+
+        project.deleteProject(user);
+    }
 }
