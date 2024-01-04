@@ -201,7 +201,7 @@ public class Project extends BaseEntity {
 
     private void validateUser(User user) {
         if (!this.user.isSameUser(user)) {
-            throw new IllegalArgumentException("프로젝트 작성자만 수정할 수 있습니다.");
+            throw new IllegalArgumentException("프로젝트 작성자만 접근할 수 있습니다.");
         }
     }
 }
