@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
@@ -28,11 +30,18 @@ public class SponsorController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @GetMapping("/sponsors/{sponsorId}")
-    public ResponseEntity<SponsorDto> getSponsor(@PathVariable Long sponsorId, @AuthenticationPrincipal User user) {
-        SponsorDto response = sponsorService.getSponsor(sponsorId, user.getId());
+    @GetMapping("/sponsors")
+    public ResponseEntity<List<SponsorDto>> getSponsorsByUser(@AuthenticationPrincipal User user) {
+        List<SponsorDto> responses = sponsorService.getSponsorsByUser(user.getId());
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(responses);
+    }
+
+    @GetMapping("/sponsors/project/{projectId}")
+    public ResponseEntity<List<SponsorDto>> getSponsorsByProject(@PathVariable Long projectId, @AuthenticationPrincipal User user) {
+        List<SponsorDto> responses = sponsorService.getSponsorsByProject(projectId, user.getId());
+
+        return ResponseEntity.ok(responses);
     }
 
     @PatchMapping("/sponsors/{sponsorId}")

@@ -43,13 +43,11 @@ public class PaymentService {
             throw new IllegalArgumentException("본인의 후원에 대한 결제 조회만 요청할 수 있습니다.");
         }
 
-        List<PaymentDto> responses = paymentRepository.findAllBySponsor(sponsor)
+        return paymentRepository.findAllBySponsor(sponsor)
                 .stream()
                 .filter(payment -> payment.getStatus().equals(PaymentStatus.SUCCESS) || payment.getStatus().equals(PaymentStatus.FAIL))
                 .map(payment -> PaymentDto.of(payment.getStatus().getDisplayName(), payment.getRequestedAt(), payment.getApprovedAt()))
                 .toList();
-
-        return responses;
     }
 
     @Transactional
