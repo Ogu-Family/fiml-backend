@@ -1,8 +1,16 @@
 package kpl.fiml.user.presentation;
 
+import jakarta.validation.Valid;
 import kpl.fiml.user.application.UserService;
 import kpl.fiml.user.domain.User;
 import kpl.fiml.user.dto.*;
+import kpl.fiml.user.dto.request.LoginRequest;
+import kpl.fiml.user.dto.request.UserCreateRequest;
+import kpl.fiml.user.dto.request.UserUpdateRequest;
+import kpl.fiml.user.dto.response.LoginResponse;
+import kpl.fiml.user.dto.response.UserCreateResponse;
+import kpl.fiml.user.dto.response.UserDeleteResponse;
+import kpl.fiml.user.dto.response.UserUpdateResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,21 +25,21 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/users/join")
-    public ResponseEntity<UserCreateResponse> createUser(@RequestBody UserCreateRequest request) {
+    public ResponseEntity<UserCreateResponse> createUser(@Valid @RequestBody UserCreateRequest request) {
         UserCreateResponse response = userService.createUser(request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PostMapping("/users/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
         LoginResponse response = userService.signIn(request);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @PatchMapping("/users/{id}")
-    public ResponseEntity<UserUpdateResponse> update(@PathVariable Long id, @RequestBody UserUpdateRequest request,
+    public ResponseEntity<UserUpdateResponse> update(@PathVariable Long id, @Valid @RequestBody UserUpdateRequest request,
                                                      @AuthenticationPrincipal User loginUser) {
         UserUpdateResponse response = userService.updateUser(id, loginUser.getId(), request);
 

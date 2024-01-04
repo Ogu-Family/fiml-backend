@@ -3,29 +3,35 @@ package kpl.fiml.notice.application;
 import kpl.fiml.notice.domain.Notice;
 import kpl.fiml.notice.domain.NoticeRepository;
 import kpl.fiml.notice.dto.*;
+import kpl.fiml.notice.dto.request.NoticeCreateRequest;
+import kpl.fiml.notice.dto.request.NoticeUpdateRequest;
+import kpl.fiml.notice.dto.response.NoticeCreateResponse;
+import kpl.fiml.notice.dto.response.NoticeDeleteResponse;
+import kpl.fiml.notice.dto.response.NoticeUpdateResponse;
+import kpl.fiml.project.application.ProjectService;
 import kpl.fiml.project.domain.Project;
-import kpl.fiml.project.domain.ProjectRepository;
+import kpl.fiml.user.application.UserService;
 import kpl.fiml.user.domain.User;
-import kpl.fiml.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class NoticeService {
 
+    private final UserService userService;
+    private final ProjectService projectService;
     private final NoticeRepository noticeRepository;
-    private final UserRepository userRepository;
-    private final ProjectRepository projectRepository;
 
     @Transactional
     public NoticeCreateResponse createNotice(Long userId, NoticeCreateRequest request) {
-        User user = getUserByUserId(userId);
-        Project project = getProjectByProjectId(request.getProjectId());
+        User user = userService.getById(userId);
+        Project project = projectService.getProjectById(request.getProjectId());
 
         if (!user.isSameUser(project.getUser())) {
             throw new IllegalArgumentException("프로젝트 생성자만 공지사항 작성이 가능합니다.");
@@ -38,12 +44,12 @@ public class NoticeService {
     @Transactional
     public NoticeUpdateResponse updateNotice(Long userId, Long noticeId, NoticeUpdateRequest request) {
         Notice notice = getById(noticeId);
-        User user = getUserByUserId(userId);
+        User user = userService.getById(userId);
 
         if (!user.isSameUser(notice.getUser())) {
             throw new IllegalArgumentException("프로젝트 생성자만 공지사항 수정이 가능합니다.");
         }
-        notice.updateContent(request.getContent());
+        notice.updateContent(Objects.requireNonNull(request.getContent(), "content가 null 입니다."));
 
         return NoticeUpdateResponse.of(noticeId, notice.getContent(), notice.getUser().getId());
     }
@@ -73,7 +79,7 @@ public class NoticeService {
     @Transactional
     public NoticeDeleteResponse deleteById(Long noticeId, Long userId) {
         Notice deleteNotice = getById(noticeId);
-        User user = getUserByUserId(userId);
+        User user = userService.getById(userId);
 
         if (!user.isSameUser(deleteNotice.getUser())) {
             throw new IllegalArgumentException("프로젝트 생성자만 공지사항 삭제가 가능합니다.");
@@ -83,19 +89,8 @@ public class NoticeService {
         return NoticeDeleteResponse.of(deleteNotice.getId(), userId, deleteNotice.getDeletedAt());
     }
 
-    private Notice getById(Long noticeId) {
+    public Notice getById(Long noticeId) {
         return noticeRepository.findByIdAndDeletedAtIsNull(noticeId)
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 공지사항이 존재하지 않습니다."));
-    }
-
-    private User getUserByUserId(Long userId) {
-        return userRepository.findByIdAndDeletedAtIsNull(userId)
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 사용자가 없습니다."));
-    }
-
-    private Project getProjectByProjectId(Long projectId) {
-        return projectRepository.findById(projectId)
-                .filter(project -> !project.isDeleted())
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 프로젝트가 존재하지 않습니다."));
     }
 }

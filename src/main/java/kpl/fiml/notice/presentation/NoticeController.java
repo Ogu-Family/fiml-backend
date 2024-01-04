@@ -1,7 +1,13 @@
 package kpl.fiml.notice.presentation;
 
+import jakarta.validation.Valid;
 import kpl.fiml.notice.application.NoticeService;
 import kpl.fiml.notice.dto.*;
+import kpl.fiml.notice.dto.request.NoticeCreateRequest;
+import kpl.fiml.notice.dto.request.NoticeUpdateRequest;
+import kpl.fiml.notice.dto.response.NoticeCreateResponse;
+import kpl.fiml.notice.dto.response.NoticeDeleteResponse;
+import kpl.fiml.notice.dto.response.NoticeUpdateResponse;
 import kpl.fiml.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,7 +25,7 @@ public class NoticeController {
     private final NoticeService noticeService;
 
     @PostMapping("/notices")
-    public ResponseEntity<NoticeCreateResponse> createNotice(@RequestBody NoticeCreateRequest request,
+    public ResponseEntity<NoticeCreateResponse> createNotice(@Valid @RequestBody NoticeCreateRequest request,
                                                              @AuthenticationPrincipal User user) {
         NoticeCreateResponse response = noticeService.createNotice(user.getId(), request);
 
@@ -27,7 +33,7 @@ public class NoticeController {
     }
 
     @PatchMapping("/notices/{id}")
-    public ResponseEntity<NoticeUpdateResponse> updateNotice(@PathVariable Long id, @RequestBody NoticeUpdateRequest request,
+    public ResponseEntity<NoticeUpdateResponse> updateNotice(@PathVariable Long id, @Valid @RequestBody NoticeUpdateRequest request,
                                                              @AuthenticationPrincipal User user) {
         NoticeUpdateResponse response = noticeService.updateNotice(user.getId(), id, request);
 

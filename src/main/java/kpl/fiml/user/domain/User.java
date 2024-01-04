@@ -37,7 +37,7 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "profile_image")
     private String profileImage;
 
-    @Column(name = "email", nullable = false, unique = true)
+    @Column(name = "email", nullable = false)
     private String email;
 
     @Column(name = "password", nullable = false)
@@ -51,9 +51,6 @@ public class User extends BaseEntity implements UserDetails {
 
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user")
-    private List<Notice> noticeList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
     private List<Project> projectList = new ArrayList<>();
@@ -91,12 +88,8 @@ public class User extends BaseEntity implements UserDetails {
         if (!name.isBlank()) {
             this.name = name;
         }
-        if (!bio.isBlank()) {
-            this.bio = bio;
-        }
-        if (!profileImage.isBlank()) {
-            this.profileImage = profileImage;
-        }
+        this.bio = bio;
+        this.profileImage = profileImage;
         if (!email.isBlank()) {
             this.email = new EmailVo(email).getEmail();
         }

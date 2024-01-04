@@ -1,4 +1,4 @@
-package kpl.fiml.notice.dto;
+package kpl.fiml.notice.dto.response;
 
 import lombok.AccessLevel;
 import lombok.Getter;

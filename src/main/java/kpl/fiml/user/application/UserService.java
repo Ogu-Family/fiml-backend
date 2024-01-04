@@ -6,6 +6,13 @@ import kpl.fiml.user.domain.FollowingRepository;
 import kpl.fiml.user.domain.User;
 import kpl.fiml.user.domain.UserRepository;
 import kpl.fiml.user.dto.*;
+import kpl.fiml.user.dto.request.LoginRequest;
+import kpl.fiml.user.dto.request.UserCreateRequest;
+import kpl.fiml.user.dto.request.UserUpdateRequest;
+import kpl.fiml.user.dto.response.LoginResponse;
+import kpl.fiml.user.dto.response.UserCreateResponse;
+import kpl.fiml.user.dto.response.UserDeleteResponse;
+import kpl.fiml.user.dto.response.UserUpdateResponse;
 import kpl.fiml.user.vo.PasswordVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,6 +31,11 @@ public class UserService {
 
     @Transactional
     public UserCreateResponse createUser(UserCreateRequest request) {
+        // email 중복 확인
+        if (userRepository.existsByEmailAndDeletedAtIsNull(request.getEmail())) {
+            throw new IllegalArgumentException("이미 가입된 이메일입니다.");
+        }
+
         String encryptPassword = validateAndEncryptPassword(request.getPassword());
         User savedUser = userRepository.save(request.toEntity(encryptPassword));
 
