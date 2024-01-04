@@ -1,13 +1,17 @@
 package kpl.fiml.sponsor.application;
 
 import kpl.fiml.payment.application.PaymentService;
-import kpl.fiml.payment.dto.PaymentCreateRequest;
+import kpl.fiml.payment.dto.request.PaymentCreateRequest;
 import kpl.fiml.project.domain.Project;
 import kpl.fiml.project.domain.Reward;
 import kpl.fiml.project.domain.RewardRepository;
 import kpl.fiml.sponsor.domain.Sponsor;
 import kpl.fiml.sponsor.domain.SponsorRepository;
-import kpl.fiml.sponsor.dto.*;
+import kpl.fiml.sponsor.dto.request.SponsorCreateRequest;
+import kpl.fiml.sponsor.dto.request.SponsorUpdateRequest;
+import kpl.fiml.sponsor.dto.response.SponsorCreateResponse;
+import kpl.fiml.sponsor.dto.response.SponsorDeleteResponse;
+import kpl.fiml.sponsor.dto.response.SponsorDto;
 import kpl.fiml.user.application.UserService;
 import kpl.fiml.user.domain.User;
 import lombok.RequiredArgsConstructor;

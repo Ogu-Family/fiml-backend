@@ -2,7 +2,11 @@ package kpl.fiml.sponsor.presentation;
 
 import jakarta.validation.Valid;
 import kpl.fiml.sponsor.application.SponsorService;
-import kpl.fiml.sponsor.dto.*;
+import kpl.fiml.sponsor.dto.request.SponsorCreateRequest;
+import kpl.fiml.sponsor.dto.request.SponsorUpdateRequest;
+import kpl.fiml.sponsor.dto.response.SponsorCreateResponse;
+import kpl.fiml.sponsor.dto.response.SponsorDeleteResponse;
+import kpl.fiml.sponsor.dto.response.SponsorDto;
 import kpl.fiml.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

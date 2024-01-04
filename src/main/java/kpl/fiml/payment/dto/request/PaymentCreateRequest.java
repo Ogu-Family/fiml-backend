@@ -1,4 +1,4 @@
-package kpl.fiml.payment.dto;
+package kpl.fiml.payment.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import kpl.fiml.payment.domain.Payment;

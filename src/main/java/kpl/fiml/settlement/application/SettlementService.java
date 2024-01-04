@@ -5,7 +5,7 @@ import kpl.fiml.project.domain.ProjectRepository;
 import kpl.fiml.project.domain.enums.ProjectStatus;
 import kpl.fiml.settlement.domain.Settlement;
 import kpl.fiml.settlement.domain.SettlementRepository;
-import kpl.fiml.settlement.dto.SettlementDto;
+import kpl.fiml.settlement.dto.response.SettlementDto;
 import kpl.fiml.user.application.UserService;
 import kpl.fiml.user.domain.User;
 import lombok.RequiredArgsConstructor;

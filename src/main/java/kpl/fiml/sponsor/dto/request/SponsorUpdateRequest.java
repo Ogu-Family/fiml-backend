@@ -1,4 +1,4 @@
-package kpl.fiml.sponsor.dto;
+package kpl.fiml.sponsor.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import kpl.fiml.project.domain.Reward;
