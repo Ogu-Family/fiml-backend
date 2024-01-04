@@ -1,4 +1,4 @@
-package kpl.fiml.payment.dto;
+package kpl.fiml.payment.dto.response;
 
 import lombok.AccessLevel;
 import lombok.Getter;

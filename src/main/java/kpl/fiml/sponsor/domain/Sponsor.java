@@ -69,6 +69,10 @@ public class Sponsor extends BaseEntity {
         this.reward.getProject().updateSponsorDeleteInfo(this.totalAmount);
     }
 
+    public void deleteSponsor() {
+        delete();
+    }
+
     private void validateTotalAmount(Reward reward, Long totalAmount) {
         if (reward.checkUnderflowPrice(totalAmount)) {
             throw new IllegalArgumentException("후원 금액이 리워드 가격보다 적습니다.");

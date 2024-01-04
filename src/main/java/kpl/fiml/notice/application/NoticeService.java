@@ -78,7 +78,7 @@ public class NoticeService {
         if (!user.isSameUser(deleteNotice.getUser())) {
             throw new IllegalArgumentException("프로젝트 생성자만 공지사항 삭제가 가능합니다.");
         }
-        deleteNotice.delete();
+        deleteNotice.deleteNotice();
 
         return NoticeDeleteResponse.of(deleteNotice.getId(), userId, deleteNotice.getDeletedAt());
     }

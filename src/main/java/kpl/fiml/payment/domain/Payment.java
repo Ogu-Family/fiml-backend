@@ -50,4 +50,8 @@ public class Payment extends BaseEntity {
     public void failPayed() {
         this.status = PaymentStatus.FAIL;
     }
+
+    public void deletePayment() {
+        delete();
+    }
 }

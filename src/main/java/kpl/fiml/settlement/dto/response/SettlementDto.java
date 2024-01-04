@@ -1,4 +1,4 @@
-package kpl.fiml.settlement.dto;
+package kpl.fiml.settlement.dto.response;
 
 import lombok.AccessLevel;
 import lombok.Getter;

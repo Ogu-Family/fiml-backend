@@ -1,7 +1,7 @@
 package kpl.fiml.payment.presentation;
 
 import kpl.fiml.payment.application.PaymentService;
-import kpl.fiml.payment.dto.PaymentDto;
+import kpl.fiml.payment.dto.response.PaymentDto;
 import kpl.fiml.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +22,7 @@ public class PaymentController {
 
     @GetMapping("/payments/{sponsorId}")
     public ResponseEntity<List<PaymentDto>> getPaymentsOfSuccessAndFail(@PathVariable Long sponsorId, @AuthenticationPrincipal User user) {
-        List<PaymentDto> responses = paymentService.getPaymentsOfSuccessAndFail(sponsorId, user);
+        List<PaymentDto> responses = paymentService.getPaymentsOfSuccessAndFail(sponsorId, user.getId());
 
         return ResponseEntity.ok(responses);
     }

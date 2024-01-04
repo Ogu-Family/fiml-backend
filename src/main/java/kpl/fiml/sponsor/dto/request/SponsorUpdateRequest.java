@@ -1,5 +1,6 @@
-package kpl.fiml.sponsor.dto;
+package kpl.fiml.sponsor.dto.request;
 
+import jakarta.validation.constraints.NotBlank;
 import kpl.fiml.project.domain.Reward;
 import kpl.fiml.sponsor.domain.Sponsor;
 import kpl.fiml.user.domain.User;
@@ -8,7 +9,10 @@ import lombok.Getter;
 @Getter
 public class SponsorUpdateRequest {
 
+    @NotBlank
     private Long rewardId;
+
+    @NotBlank
     private Long totalAmount;
 
     public Sponsor toEntity(User user, Reward reward) {

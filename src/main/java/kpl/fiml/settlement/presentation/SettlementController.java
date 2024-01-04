@@ -1,7 +1,7 @@
 package kpl.fiml.settlement.presentation;
 
 import kpl.fiml.settlement.application.SettlementService;
-import kpl.fiml.settlement.dto.SettlementDto;
+import kpl.fiml.settlement.dto.response.SettlementDto;
 import kpl.fiml.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +19,8 @@ public class SettlementController {
     private final SettlementService settlementService;
 
     @GetMapping("/settlements/{projectId}")
-    public ResponseEntity<SettlementDto> getSettlement(@PathVariable Long projectId, @AuthenticationPrincipal User user) {
-        SettlementDto response = settlementService.getSettlement(projectId, user);
+    public ResponseEntity<SettlementDto> getSettlementByProject(@PathVariable Long projectId, @AuthenticationPrincipal User user) {
+        SettlementDto response = settlementService.getSettlementByProject(projectId, user.getId());
 
         return ResponseEntity.ok(response);
     }
