@@ -79,7 +79,7 @@ public class UserService {
         if (!user.isSameUser(loginUser)) {
             throw new IllegalArgumentException("사용자 삭제 권한이 없습니다.");
         }
-        user.delete();
+        user.deleteUser();
 
         return UserDeleteResponse.of(user.getId());
     }

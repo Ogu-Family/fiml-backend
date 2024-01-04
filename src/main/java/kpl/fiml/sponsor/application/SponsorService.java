@@ -86,7 +86,7 @@ public class SponsorService {
             throw new IllegalArgumentException("펀딩이 종료된 후에는 후원 취소가 불가합니다.");
         }
 
-        sponsor.delete();
+        sponsor.deleteSponsor();
 
         return SponsorDeleteResponse.of(sponsor.getId(), sponsor.getDeletedAt());
     }
@@ -101,7 +101,7 @@ public class SponsorService {
             for (Sponsor sponsor : sponsors) {
                 paymentService.deletePayments(sponsor);
                 sponsor.updateStatusToFundingFail();
-                sponsor.delete();
+                sponsor.deleteSponsor();
             }
         }
     }

@@ -61,7 +61,7 @@ public class CommentService {
         if (!user.isSameUser(findComment.getUser())) {
             throw new IllegalArgumentException("댓글 작성자만 댓글 삭제가 가능합니다.");
         }
-        findComment.delete();
+        findComment.deleteComment();
 
         return CommentDeleteResponse.of(findComment.getId());
     }

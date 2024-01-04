@@ -61,7 +61,7 @@ public class PaymentService {
         List<Payment> payments = paymentRepository.findAllBySponsor(sponsor);
 
         for (Payment payment : payments) {
-            payment.delete();
+            payment.deletePayment();
         }
     }
 

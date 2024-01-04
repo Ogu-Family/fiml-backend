@@ -108,6 +108,10 @@ public class User extends BaseEntity implements UserDetails {
         }
     }
 
+    public void deleteUser() {
+        delete();
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.roles.stream()
