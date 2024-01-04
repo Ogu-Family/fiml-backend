@@ -42,11 +42,21 @@ public class Notice extends BaseEntity {
         this.project = project;
     }
 
-    public void updateContent(String content) {
+    public void updateContent(String content, User loginUser) {
+        validateLoginUser(loginUser);
+
         this.content = Objects.requireNonNull(content, "content 가 null 입니다");
     }
 
-    public void deleteNotice() {
+    public void deleteNotice(User loginUser) {
+        validateLoginUser(loginUser);
+
         delete();
+    }
+
+    private void validateLoginUser(User loginUser) {
+        if(!loginUser.isSameUser(this.user)) {
+            throw new IllegalArgumentException("Notice 접근 권한이 없습니다.");
+        }
     }
 }
