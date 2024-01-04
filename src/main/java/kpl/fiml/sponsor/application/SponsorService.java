@@ -45,6 +45,15 @@ public class SponsorService {
         return SponsorCreateResponse.of(sponsor.getId());
     }
 
+    public List<SponsorDto> getSponsorsByUser(Long userId) {
+        User user = userService.getById(userId);
+
+        return sponsorRepository.findAllByUserAndDeletedAtIsNull(user)
+                .stream()
+                .map(sponsor -> SponsorDto.of(sponsor.getUser().getId(), sponsor.getReward().getId(), sponsor.getTotalAmount(), sponsor.getStatus().getDisplayName()))
+                .toList();
+    }
+
     public SponsorDto getSponsor(Long sponsorId, Long userId) {
         User user = userService.getById(userId);
         Sponsor sponsor = getSponsorById(sponsorId);
