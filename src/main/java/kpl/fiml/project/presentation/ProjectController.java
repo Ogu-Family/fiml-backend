@@ -1,5 +1,6 @@
 package kpl.fiml.project.presentation;
 
+import jakarta.validation.Valid;
 import kpl.fiml.global.dto.PageResponse;
 import kpl.fiml.project.application.ProjectService;
 import kpl.fiml.project.domain.Project;
@@ -9,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,7 +20,7 @@ public class ProjectController {
     private final ProjectService projectService;
 
     @PostMapping("/projects")
-    public ResponseEntity<ProjectInitResponse> initProject(@RequestBody @Validated ProjectInitRequest request, @AuthenticationPrincipal User user) {
+    public ResponseEntity<ProjectInitResponse> initProject(@RequestBody @Valid ProjectInitRequest request, @AuthenticationPrincipal User user) {
         ProjectInitResponse response = this.projectService.initProject(request, user.getId());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -28,7 +28,7 @@ public class ProjectController {
 
     @PatchMapping("/projects/{projectId}/basic-info")
     public ResponseEntity<Void> updateBasicInfo(@PathVariable("projectId") Long projectId,
-                                                @RequestBody ProjectBasicInfoUpdateRequest request,
+                                                @RequestBody @Valid ProjectBasicInfoUpdateRequest request,
                                                 @AuthenticationPrincipal User user) {
         this.projectService.updateBasicInfo(projectId, request, user.getId());
 
@@ -55,7 +55,7 @@ public class ProjectController {
 
     @PatchMapping("/projects/{projectId}/rewards")
     public ResponseEntity<Void> updateRewards(@PathVariable("projectId") Long projectId,
-                                              @RequestBody ProjectRewardUpdateRequest request,
+                                              @RequestBody @Valid ProjectRewardUpdateRequest request,
                                               @AuthenticationPrincipal User user) {
         this.projectService.updateRewards(projectId, request, user.getId());
 
