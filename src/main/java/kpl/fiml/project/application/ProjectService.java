@@ -87,6 +87,10 @@ public class ProjectService {
         );
     }
 
+    public ProjectDetailResponse findProjectDetail(Long projectId) {
+        return ProjectDetailResponse.of(this.getProjectWithRelatedEntitiesById(projectId));
+    }
+
     @Transactional
     public void likeProject(Long projectId, Long userId) {
         Project project = getProjectById(projectId);
@@ -125,6 +129,11 @@ public class ProjectService {
 
     public Project getProjectById(Long projectId) {
         return projectRepository.findByIdAndDeletedAtIsNull(projectId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 프로젝트입니다."));
+    }
+
+    private Project getProjectWithRelatedEntitiesById(Long projectId) {
+        return projectRepository.findByIdAndIsNotWritingStatusWithUser(projectId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 프로젝트입니다."));
     }
 }

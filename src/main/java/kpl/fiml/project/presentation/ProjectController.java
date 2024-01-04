@@ -89,4 +89,11 @@ public class ProjectController {
 
         return ResponseEntity.ok(projectsBySearchConditions);
     }
+
+    @GetMapping("/projects/{projectId}")
+    public ResponseEntity<ProjectDetailResponse> findProjectDetail(@PathVariable("projectId") Long projectId) {
+        ProjectDetailResponse projectDetail = this.projectService.findProjectDetail(projectId);
+
+        return ResponseEntity.ok(projectDetail);
+    }
 }
