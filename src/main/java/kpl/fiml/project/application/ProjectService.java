@@ -36,7 +36,7 @@ public class ProjectService {
     public void updateBasicInfo(Long projectId, ProjectBasicInfoUpdateRequest request, Long userId) {
         User user = userService.getById(userId);
 
-        this.getProjectById(projectId)
+        this.getProjectByIdWithUser(projectId)
                 .updateBasicInfo(
                         request.getSummary(),
                         request.getCategory(),
@@ -50,7 +50,7 @@ public class ProjectService {
     public void updateIntroduction(Long projectId, ProjectDetailIntroductionUpdateRequest request, Long userId) {
         User user = userService.getById(userId);
 
-        this.getProjectById(projectId)
+        this.getProjectByIdWithUser(projectId)
                 .updateIntroduction(request.getIntroduction(), user);
     }
 
@@ -58,7 +58,7 @@ public class ProjectService {
     public void updateFundingPlan(Long projectId, ProjectFundingPlanUpdateRequest request, Long userId) {
         User user = userService.getById(userId);
 
-        this.getProjectById(projectId)
+        this.getProjectByIdWithUser(projectId)
                 .updateFundingInfo(
                         request.getGoalAmount(),
                         request.getFundingStartDateTime(),
@@ -72,7 +72,7 @@ public class ProjectService {
     public void updateRewards(Long projectId, ProjectRewardUpdateRequest request, Long userId) {
         User user = userService.getById(userId);
 
-        this.getProjectById(projectId)
+        this.getProjectByIdWithUser(projectId)
                 .updateRewards(request.getRewardEntities(), user);
     }
 
@@ -80,7 +80,7 @@ public class ProjectService {
     public void submitProject(Long projectId, Long userId) {
         User user = userService.getById(userId);
 
-        this.getProjectById(projectId)
+        this.getProjectByIdWithUser(projectId)
                 .submit(user);
     }
 
@@ -91,12 +91,12 @@ public class ProjectService {
     }
 
     public ProjectDetailResponse findProjectDetail(Long projectId) {
-        return ProjectDetailResponse.of(this.getProjectWithRelatedEntitiesById(projectId));
+        return ProjectDetailResponse.of(this.getProjectByIdAndNotWritingStatusWithUser(projectId));
     }
 
     @Transactional
     public void likeProject(Long projectId, Long userId) {
-        Project project = getProjectById(projectId);
+        Project project = getProjectByIdWithUser(projectId);
         User user = userService.getById(userId);
 
         checkIfProjectAlreadyLiked(project, user);
@@ -117,7 +117,7 @@ public class ProjectService {
 
     @Transactional
     public void unlikeProject(Long projectId, Long id) {
-        Project project = getProjectById(projectId);
+        Project project = getProjectByIdWithUser(projectId);
         User user = userService.getById(id);
 
         ProjectLike projectLike = getProjectLikeByProjectAndUser(project, user);
@@ -130,19 +130,19 @@ public class ProjectService {
                 .orElseThrow(() -> new IllegalArgumentException("좋아요를 누르지 않은 프로젝트입니다."));
     }
 
-    public Project getProjectById(Long projectId) {
+    public Project getProjectByIdWithUser(Long projectId) {
         return projectRepository.findByIdWithUser(projectId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 프로젝트입니다."));
     }
 
-    private Project getProjectWithRelatedEntitiesById(Long projectId) {
+    private Project getProjectByIdAndNotWritingStatusWithUser(Long projectId) {
         return projectRepository.findByIdAndIsNotWritingStatusWithUser(projectId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 프로젝트입니다."));
     }
 
     @Transactional
     public void deleteProject(Long projectId, Long id) {
-        Project project = getProjectById(projectId);
+        Project project = getProjectByIdWithUser(projectId);
         User user = userService.getById(id);
 
         project.deleteProject(user);
