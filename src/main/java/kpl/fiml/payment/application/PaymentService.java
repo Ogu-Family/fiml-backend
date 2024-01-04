@@ -5,8 +5,8 @@ import kpl.fiml.payment.domain.PaymentRepository;
 import kpl.fiml.payment.domain.PaymentStatus;
 import kpl.fiml.payment.dto.request.PaymentCreateRequest;
 import kpl.fiml.payment.dto.response.PaymentDto;
-import kpl.fiml.sponsor.application.SponsorService;
 import kpl.fiml.sponsor.domain.Sponsor;
+import kpl.fiml.sponsor.domain.SponsorRepository;
 import kpl.fiml.user.application.UserService;
 import kpl.fiml.user.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -30,13 +30,14 @@ public class PaymentService {
     private static final int PAYMENT_PERIOD_MINUTE = 0;
 
     private final UserService userService;
-    private final SponsorService sponsorService;
 
     private final PaymentRepository paymentRepository;
+    private final SponsorRepository sponsorRepository;
 
     public List<PaymentDto> getPaymentsOfSuccessAndFail(Long sponsorId, Long userId) {
         User user = userService.getById(userId);
-        Sponsor sponsor = sponsorService.getSponsorById(sponsorId);
+        Sponsor sponsor = sponsorRepository.findByIdAndDeletedAtIsNull(sponsorId)
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 후원이 존재하지 않습니다."));
 
         if (!user.isSameUser(sponsor.getUser())) {
             throw new IllegalArgumentException("본인의 후원에 대한 결제 조회만 요청할 수 있습니다.");
