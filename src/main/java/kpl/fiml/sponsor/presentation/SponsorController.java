@@ -44,13 +44,6 @@ public class SponsorController {
         return ResponseEntity.ok(responses);
     }
 
-    @GetMapping("/sponsors/{sponsorId}")
-    public ResponseEntity<SponsorDto> getSponsor(@PathVariable Long sponsorId, @AuthenticationPrincipal User user) {
-        SponsorDto response = sponsorService.getSponsor(sponsorId, user.getId());
-
-        return ResponseEntity.ok(response);
-    }
-
     @PatchMapping("/sponsors/{sponsorId}")
     public ResponseEntity<SponsorDto> updateSponsor(@PathVariable Long sponsorId, @Valid @RequestBody SponsorUpdateRequest request, @AuthenticationPrincipal User user) {
         SponsorDto response = sponsorService.updateSponsor(sponsorId, request, user.getId());

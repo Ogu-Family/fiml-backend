@@ -77,17 +77,6 @@ public class SponsorService {
         return responses;
     }
 
-    public SponsorDto getSponsor(Long sponsorId, Long userId) {
-        User user = userService.getById(userId);
-        Sponsor sponsor = getSponsorById(sponsorId);
-
-        if (!user.isSameUser(sponsor.getUser())) {
-            throw new IllegalArgumentException("본인의 후원만 조회할 수 있습니다.");
-        }
-
-        return SponsorDto.of(sponsor.getUser().getId(), sponsor.getReward().getId(), sponsor.getTotalAmount(), sponsor.getStatus().getDisplayName());
-    }
-
     @Transactional
     public SponsorDto updateSponsor(Long sponsorId, SponsorUpdateRequest request, Long userId) {
         User user = userService.getById(userId);
