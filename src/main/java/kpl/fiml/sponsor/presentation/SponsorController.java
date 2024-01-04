@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
@@ -26,6 +28,13 @@ public class SponsorController {
         SponsorCreateResponse response = sponsorService.createSponsor(request, user.getId());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @GetMapping("/sponsors")
+    public ResponseEntity<List<SponsorDto>> getSponsorsByUser(@AuthenticationPrincipal User user) {
+        List<SponsorDto> responses = sponsorService.getSponsorsByUser(user.getId());
+
+        return ResponseEntity.ok(responses);
     }
 
     @GetMapping("/sponsors/{sponsorId}")
