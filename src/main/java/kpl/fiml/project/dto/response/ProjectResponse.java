@@ -1,4 +1,4 @@
-package kpl.fiml.project.dto;
+package kpl.fiml.project.dto.response;
 
 import kpl.fiml.project.domain.Project;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 @Getter
-public class ProjectDto {
+public class ProjectResponse {
 
     private final Long id;
     private final String title;
@@ -23,7 +23,7 @@ public class ProjectDto {
     private final Long currentAmount;
     private final Long remainDay;
 
-    private ProjectDto(Project project) {
+    private ProjectResponse(Project project) {
         this.id = project.getId();
         this.title = project.getTitle();
         this.summary = project.getSummary();
@@ -40,7 +40,7 @@ public class ProjectDto {
         this.remainDay = ChronoUnit.DAYS.between(LocalDateTime.now(), project.getEndAt());
     }
 
-    public static ProjectDto of(Project project) {
-        return new ProjectDto(project);
+    public static ProjectResponse of(Project project) {
+        return new ProjectResponse(project);
     }
 }

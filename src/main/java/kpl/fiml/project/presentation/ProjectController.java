@@ -4,7 +4,10 @@ import jakarta.validation.Valid;
 import kpl.fiml.global.dto.PageResponse;
 import kpl.fiml.project.application.ProjectService;
 import kpl.fiml.project.domain.Project;
-import kpl.fiml.project.dto.*;
+import kpl.fiml.project.dto.request.*;
+import kpl.fiml.project.dto.response.ProjectDetailResponse;
+import kpl.fiml.project.dto.response.ProjectInitResponse;
+import kpl.fiml.project.dto.response.ProjectResponse;
 import kpl.fiml.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -84,9 +87,23 @@ public class ProjectController {
     }
 
     @GetMapping("/projects")
-    public ResponseEntity<PageResponse<Project, ProjectDto>> findProjects(@ModelAttribute ProjectListFindRequest request) {
-        PageResponse<Project, ProjectDto> projectsBySearchConditions = this.projectService.findProjectsBySearchConditions(request);
+    public ResponseEntity<PageResponse<Project, ProjectResponse>> findProjects(@ModelAttribute ProjectListFindRequest request) {
+        PageResponse<Project, ProjectResponse> projectsBySearchConditions = this.projectService.findProjectsBySearchConditions(request);
 
         return ResponseEntity.ok(projectsBySearchConditions);
+    }
+
+    @GetMapping("/projects/{projectId}")
+    public ResponseEntity<ProjectDetailResponse> findProjectDetail(@PathVariable("projectId") Long projectId) {
+        ProjectDetailResponse projectDetail = this.projectService.findProjectDetail(projectId);
+
+        return ResponseEntity.ok(projectDetail);
+    }
+
+    @DeleteMapping("/projects/{projectId}")
+    public ResponseEntity<Void> deleteProject(@PathVariable("projectId") Long projectId, @AuthenticationPrincipal User user) {
+        this.projectService.deleteProject(projectId, user.getId());
+
+        return ResponseEntity.ok().build();
     }
 }

@@ -1,6 +1,6 @@
 package kpl.fiml.project.domain;
 
-import kpl.fiml.project.dto.ProjectListFindRequest;
+import kpl.fiml.project.dto.request.ProjectListFindRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

@@ -201,7 +201,24 @@ public class Project extends BaseEntity {
 
     private void validateUser(User user) {
         if (!this.user.isSameUser(user)) {
-            throw new IllegalArgumentException("프로젝트 작성자만 수정할 수 있습니다.");
+            throw new IllegalArgumentException("프로젝트 작성자만 접근할 수 있습니다.");
+        }
+    }
+
+    public void deleteProject(User user) {
+        validateUser(user);
+        checkDeletionConditions();
+
+        this.status = ProjectStatus.CANCEL;
+        this.delete();
+    }
+
+    private void checkDeletionConditions() {
+        if (this.status == ProjectStatus.PROCEEDING && this.sponsorCount > 0) {
+            throw new IllegalStateException("후원자가 있는 프로젝트는 삭제할 수 없습니다.");
+        }
+        if (this.status == ProjectStatus.FUNDING_COMPLETE || this.status == ProjectStatus.FUNDING_FAILURE || this.status == ProjectStatus.SETTLEMENT_COMPLETE) {
+            throw new IllegalStateException("펀딩 기간이 종료된 프로젝트는 삭제할 수 없습니다.");
         }
     }
 }

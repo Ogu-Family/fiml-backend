@@ -52,7 +52,7 @@ public class SettlementService {
 
     public SettlementDto getSettlementByProject(Long projectId, Long userId) {
         User user = userService.getById(userId);
-        Project project = projectRepository.findByIdAndDeletedAtIsNull(projectId)
+        Project project = projectRepository.findByIdWithUser(projectId)
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 프로젝트가 존재하지 않습니다."));
 
         if (!user.isSameUser(project.getUser())) {

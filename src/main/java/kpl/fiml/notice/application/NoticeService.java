@@ -31,7 +31,7 @@ public class NoticeService {
     @Transactional
     public NoticeCreateResponse createNotice(Long userId, NoticeCreateRequest request) {
         User user = userService.getById(userId);
-        Project project = projectService.getProjectById(request.getProjectId());
+        Project project = projectService.getProjectByIdWithUser(request.getProjectId());
 
         if (!user.isSameUser(project.getUser())) {
             throw new IllegalArgumentException("프로젝트 생성자만 공지사항 작성이 가능합니다.");
