@@ -114,4 +114,22 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.username").isString())
                 .andExpect(jsonPath("$.email").isString());
     }
+
+    @Test
+    @DisplayName("로그인 실패: 존재하지 않는 이메일")
+    void testLogin_Fail_EmailNotFound() throws Exception {
+        // Given
+        LoginRequest request = LoginRequest.builder()
+                .email("nonexistent@example.com")
+                .password("password123!")
+                .build();
+
+        // When Then
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(request)))
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized())
+                .andExpect(jsonPath("$.errorCode").value("EMAIL_NOT_FOUND"))
+                .andExpect(jsonPath("$.message").value("가입된 E-MAIL이 아닙니다."));
+    }
 }
