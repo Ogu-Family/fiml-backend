@@ -1,7 +1,9 @@
 package kpl.fiml.user.vo;
 
+import kpl.fiml.user.exception.InvalidEmailException;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
 
 @Getter
 public class EmailVo {
@@ -11,7 +13,7 @@ public class EmailVo {
 
     public EmailVo(String email) {
         if (!isValidEmail(email)) {
-            throw new IllegalArgumentException("유효하지 않은 이메일 주소입니다.");
+            throw new InvalidEmailException("유효하지 않은 이메일 주소입니다.", "INVALID_EMAIL");
         }
         this.email = email;
     }
