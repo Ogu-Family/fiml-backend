@@ -13,6 +13,7 @@ import kpl.fiml.user.dto.response.LoginResponse;
 import kpl.fiml.user.dto.response.UserCreateResponse;
 import kpl.fiml.user.dto.response.UserDeleteResponse;
 import kpl.fiml.user.dto.response.UserUpdateResponse;
+import kpl.fiml.user.exception.EmailNotFoundException;
 import kpl.fiml.user.vo.PasswordVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -45,7 +46,7 @@ public class UserService {
     @Transactional
     public LoginResponse signIn(LoginRequest request) {
         User user = userRepository.findByEmailAndDeletedAtIsNull(request.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("가입된 E-MAIL이 아닙니다."));
+                .orElseThrow(() -> new EmailNotFoundException("가입된 E-MAIL이 아닙니다.", "EMAIL_NOT_FOUND"));
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
