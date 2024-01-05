@@ -81,4 +81,26 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.message").value("유효하지 않은 이메일 주소입니다."));
     }
 
+    @Test
+    @DisplayName("회원가입 실패: 유효하지 않은 비밀번호")
+    public void testCreateUser_Fail_InvalidPassword() throws Exception {
+        // Given
+        UserCreateRequest request = UserCreateRequest.builder()
+                .bio("")
+                .contact("01012345678")
+                .email("test@example.com")
+                .name("Test Name")
+                .password("invalidpassword")  // 유효하지 않은 비밀번호
+                .profileImage("")
+                .build();
+
+        // When Then
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users/join")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(request)))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value("INVALID_PASSWORD"))
+                .andExpect(jsonPath("$.message").value("비밀번호는 8자 이상, 특수문자 1가지를 꼭 포함해야 합니다."));
+    }
+
 }
