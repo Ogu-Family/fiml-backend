@@ -2,6 +2,7 @@ package kpl.fiml.user.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kpl.fiml.user.domain.UserRepository;
+import kpl.fiml.user.dto.request.LoginRequest;
 import kpl.fiml.user.dto.request.UserCreateRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -27,14 +28,6 @@ public class UserControllerTest {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private UserController userController;
-
-    @BeforeEach
-    void init() {
-        userRepository.deleteAll();
-    }
 
     @Test
     @DisplayName("회원가입 성공")
@@ -103,4 +96,22 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.message").value("비밀번호는 8자 이상, 특수문자 1가지를 꼭 포함해야 합니다."));
     }
 
+    @Test
+    @DisplayName("로그인 성공")
+    void testLogin_Success() throws Exception {
+        // Given
+        LoginRequest request = LoginRequest.builder()
+                .email("test1@example.com")
+                .password("password123!")
+                .build();
+
+        // When Then
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(request)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(jsonPath("$.jwtToken").isString())
+                .andExpect(jsonPath("$.username").isString())
+                .andExpect(jsonPath("$.email").isString());
+    }
 }
