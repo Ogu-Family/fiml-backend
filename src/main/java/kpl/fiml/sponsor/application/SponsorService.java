@@ -59,7 +59,7 @@ public class SponsorService {
 
     public List<SponsorDto> getSponsorsByProject(Long projectId, Long userId) {
         User user = userService.getById(userId);
-        Project project = projectService.getProjectById(projectId);
+        Project project = projectService.getProjectByIdWithUser(projectId);
 
         if (!user.isSameUser(project.getUser())) {
             throw new IllegalArgumentException("프로젝트 창작자만 프로젝트 기준 후원 리스트 조회를 할 수 있습니다.");
@@ -86,6 +86,10 @@ public class SponsorService {
             throw new IllegalArgumentException("본인의 후원만 수정할 수 있습니다.");
         }
 
+        if (sponsor.getReward().getProject().getEndAt().isBefore(LocalDateTime.now())) {
+            throw new IllegalArgumentException("펀딩이 종료된 후에는 후원 수정이 불가합니다.");
+        }
+
         Reward reward = getRewardById(request.getRewardId());
 
         reward.getProject().updateCurrentAmount(sponsor.getTotalAmount() - request.getTotalAmount());
@@ -107,6 +111,7 @@ public class SponsorService {
             throw new IllegalArgumentException("펀딩이 종료된 후에는 후원 취소가 불가합니다.");
         }
 
+        paymentService.deletePayments(sponsor);
         sponsor.deleteSponsor();
 
         return SponsorDeleteResponse.of(sponsor.getId(), sponsor.getDeletedAt());
