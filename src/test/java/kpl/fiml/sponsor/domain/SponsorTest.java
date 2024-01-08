@@ -1,6 +1,7 @@
 package kpl.fiml.sponsor.domain;
 
 import kpl.fiml.project.domain.Reward;
+import kpl.fiml.sponsor.exception.InvalidTotalAmountException;
 import kpl.fiml.user.domain.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,7 +28,7 @@ public class SponsorTest {
 
         // when-then
         assertThatThrownBy(() -> Sponsor.builder().user(user).reward(reward).totalAmount(totalAmount).build())
-                .isInstanceOf(IllegalArgumentException.class) // TODO 커스텀 예외 생성 시 변경 필요
+                .isInstanceOf(InvalidTotalAmountException.class)
                 .hasMessageContaining("후원 금액이 리워드 가격보다 적습니다.");
     }
 
