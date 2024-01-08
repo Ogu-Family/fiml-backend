@@ -101,6 +101,7 @@ public class ProjectService {
 
         checkIfProjectAlreadyLiked(project, user);
 
+        projectRepository.increaseLikeCount(projectId);
         projectLikeRepository.save(
                 ProjectLike.builder()
                         .project(project)
