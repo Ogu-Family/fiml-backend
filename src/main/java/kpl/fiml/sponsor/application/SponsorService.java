@@ -59,7 +59,7 @@ public class SponsorService {
 
     public List<SponsorDto> getSponsorsByProject(Long projectId, Long userId) {
         User user = userService.getById(userId);
-        Project project = projectService.getProjectById(projectId);
+        Project project = projectService.getProjectByIdWithUser(projectId);
 
         if (!user.isSameUser(project.getUser())) {
             throw new IllegalArgumentException("프로젝트 창작자만 프로젝트 기준 후원 리스트 조회를 할 수 있습니다.");
