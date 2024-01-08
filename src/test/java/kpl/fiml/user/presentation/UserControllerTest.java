@@ -29,11 +29,8 @@ public class UserControllerTest {
     @Autowired
     private UserRepository userRepository;
 
-    @Test
-    @DisplayName("회원가입 성공")
-    public void testCreateUser_Success() throws Exception {
-        // Given
-        UserCreateRequest request = UserCreateRequest.builder()
+    private UserCreateRequest create_user() {
+        return UserCreateRequest.builder()
                 .bio("")
                 .contact("01012345678")
                 .email("test1@example.com")
@@ -41,6 +38,13 @@ public class UserControllerTest {
                 .password("password123!")
                 .profileImage("")
                 .build();
+    }
+
+    @Test
+    @DisplayName("회원가입 성공")
+    public void testCreateUser_Success() throws Exception {
+        // Given
+        UserCreateRequest request = create_user();
 
         // When Then
         mockMvc.perform(post("/api/v1/users/join")
