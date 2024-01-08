@@ -13,6 +13,7 @@ import kpl.fiml.user.dto.response.LoginResponse;
 import kpl.fiml.user.dto.response.UserCreateResponse;
 import kpl.fiml.user.dto.response.UserDeleteResponse;
 import kpl.fiml.user.dto.response.UserUpdateResponse;
+import kpl.fiml.user.exception.DuplicateEmailException;
 import kpl.fiml.user.exception.EmailNotFoundException;
 import kpl.fiml.user.exception.UserErrorCode;
 import kpl.fiml.user.vo.PasswordVo;
@@ -35,7 +36,7 @@ public class UserService {
     public UserCreateResponse createUser(UserCreateRequest request) {
         // email 중복 확인
         if (userRepository.existsByEmailAndDeletedAtIsNull(request.getEmail())) {
-            throw new IllegalArgumentException("이미 가입된 이메일입니다.");
+            throw new DuplicateEmailException();
         }
 
         String encryptPassword = validateAndEncryptPassword(request.getPassword());
