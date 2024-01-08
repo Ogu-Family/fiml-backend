@@ -41,7 +41,7 @@ public class ProjectService {
                         request.getSummary(),
                         request.getCategory(),
                         request.getTitle(),
-                        request.getProjectImageEntities(),
+                        request.convertProjectImageEntities(),
                         user
                 );
     }

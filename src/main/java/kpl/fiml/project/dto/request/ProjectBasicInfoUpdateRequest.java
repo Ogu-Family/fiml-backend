@@ -16,7 +16,7 @@ public class ProjectBasicInfoUpdateRequest {
     private String title;
     private List<ProjectImageRequest> projectImages;
 
-    public List<ProjectImage> getProjectImageEntities() {
+    public List<ProjectImage> convertProjectImageEntities() {
         return this.projectImages.stream()
                 .map(projectImageRequest ->
                         projectImageRequest.toEntity(this.projectImages.indexOf(projectImageRequest)))
