@@ -73,7 +73,7 @@ public class ProjectService {
         User user = userService.getById(userId);
 
         this.getProjectByIdWithUser(projectId)
-                .updateRewards(request.getRewardEntities(), user);
+                .updateRewards(request.convertRewardEntities(), user);
     }
 
     @Transactional

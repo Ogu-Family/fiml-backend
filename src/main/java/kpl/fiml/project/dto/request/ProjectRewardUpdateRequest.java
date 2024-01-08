@@ -12,7 +12,7 @@ public class ProjectRewardUpdateRequest {
 
     private List<ProjectRewardRequest> rewards;
 
-    public List<Reward> getRewardEntities() {
+    public List<Reward> convertRewardEntities() {
         return rewards.stream()
                 .map(projectRewardRequest ->
                         projectRewardRequest.toEntity(this.rewards.indexOf(projectRewardRequest)))
