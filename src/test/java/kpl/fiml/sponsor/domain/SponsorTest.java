@@ -2,6 +2,7 @@ package kpl.fiml.sponsor.domain;
 
 import kpl.fiml.project.domain.Reward;
 import kpl.fiml.sponsor.exception.InvalidTotalAmountException;
+import kpl.fiml.sponsor.exception.SponsorErrorCode;
 import kpl.fiml.user.domain.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,7 +30,7 @@ public class SponsorTest {
         // when-then
         assertThatThrownBy(() -> Sponsor.builder().user(user).reward(reward).totalAmount(totalAmount).build())
                 .isInstanceOf(InvalidTotalAmountException.class)
-                .hasMessageContaining("후원 금액이 리워드 가격보다 적습니다.");
+                .hasMessageContaining(SponsorErrorCode.INVALID_TOTAL_AMOUNT.getMessage());
     }
 
 }
