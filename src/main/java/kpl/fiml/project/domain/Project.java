@@ -186,11 +186,23 @@ public class Project extends BaseEntity {
     }
 
     public void updateSponsorAddInfo(Long paymentAddAmount) {
+        if (this.status != ProjectStatus.PROCEEDING) {
+            throw new IllegalStateException("진행 중인 프로젝트가 아닙니다.");
+        }
+
+        if (paymentAddAmount <= 0) {
+            throw new IllegalArgumentException("결제 금액은 1원 이상의 정수여야 합니다.");
+        }
+
         this.currentAmount += paymentAddAmount;
         this.sponsorCount++;
     }
 
     public void updateSponsorDeleteInfo(Long paymentFailAmount) {
+        if (paymentFailAmount <= 0) {
+            throw new IllegalArgumentException("결제 취소 금액은 1원 이상의 정수여야 합니다.");
+        }
+
         this.currentAmount -= paymentFailAmount;
         this.sponsorCount--;
     }
