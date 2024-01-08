@@ -15,6 +15,10 @@ import kpl.fiml.sponsor.dto.request.SponsorUpdateRequest;
 import kpl.fiml.sponsor.dto.response.SponsorCreateResponse;
 import kpl.fiml.sponsor.dto.response.SponsorDeleteResponse;
 import kpl.fiml.sponsor.dto.response.SponsorDto;
+import kpl.fiml.sponsor.exception.SponsorAccessDeniedException;
+import kpl.fiml.sponsor.exception.SponsorErrorCode;
+import kpl.fiml.sponsor.exception.SponsorModifyDeniedException;
+import kpl.fiml.sponsor.exception.SponsorNotFoundException;
 import kpl.fiml.user.application.UserService;
 import kpl.fiml.user.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -63,9 +67,7 @@ public class SponsorService {
         User user = userService.getById(userId);
         Project project = projectService.getProjectByIdWithUser(projectId);
 
-        if (!user.isSameUser(project.getUser())) {
-            throw new IllegalArgumentException("프로젝트 창작자만 프로젝트 기준 후원 리스트 조회를 할 수 있습니다.");
-        }
+        validateIsSameUser(user, project.getUser());
 
         List<Reward> rewards = rewardRepository.findAllByProjectAndDeletedAtIsNull(project);
         List<SponsorDto> responses = new ArrayList<>();
@@ -84,13 +86,8 @@ public class SponsorService {
         User user = userService.getById(userId);
         Sponsor sponsor = getSponsorById(sponsorId);
 
-        if (!user.isSameUser(sponsor.getUser())) {
-            throw new IllegalArgumentException("본인의 후원만 수정할 수 있습니다.");
-        }
-
-        if (sponsor.getReward().getProject().getEndAt().isBefore(LocalDateTime.now())) {
-            throw new IllegalArgumentException("펀딩이 종료된 후에는 후원 수정이 불가합니다.");
-        }
+        validateIsSameUser(user, sponsor.getUser());
+        validateCanModify(sponsor);
 
         Reward reward = getRewardById(request.getRewardId());
 
@@ -105,13 +102,8 @@ public class SponsorService {
         User user = userService.getById(userId);
         Sponsor sponsor = getSponsorById(sponsorId);
 
-        if (!user.isSameUser(sponsor.getUser())) {
-            throw new IllegalArgumentException("본인의 후원만 취소할 수 있습니다.");
-        }
-
-        if (sponsor.getReward().getProject().getEndAt().isBefore(LocalDateTime.now())) {
-            throw new IllegalArgumentException("펀딩이 종료된 후에는 후원 취소가 불가합니다.");
-        }
+        validateIsSameUser(user, sponsor.getUser());
+        validateCanModify(sponsor);
 
         paymentService.deletePayments(sponsor);
         sponsor.deleteSponsor();
@@ -134,13 +126,25 @@ public class SponsorService {
         }
     }
 
-    public Sponsor getSponsorById(Long sponsorId) {
+    private Sponsor getSponsorById(Long sponsorId) {
         return sponsorRepository.findByIdAndDeletedAtIsNull(sponsorId)
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 후원이 존재하지 않습니다."));
+                .orElseThrow(() -> new SponsorNotFoundException(SponsorErrorCode.SPONSOR_NOT_FOUND));
     }
 
     private Reward getRewardById(Long rewardId) {
         return rewardRepository.findByIdAndDeletedAtIsNull(rewardId)
                 .orElseThrow(() -> new RewardNotFoundException(RewardErrorCode.REWARD_NOT_FOUND));
+    }
+
+    private void validateIsSameUser(User user, User uncheckedUser) {
+        if (!user.isSameUser(uncheckedUser)) {
+            throw new SponsorAccessDeniedException(SponsorErrorCode.SPONSOR_ACCESS_DENIED);
+        }
+    }
+
+    private void validateCanModify(Sponsor sponsor) {
+        if (sponsor.getReward().getProject().getEndAt().isBefore(LocalDateTime.now())) {
+            throw new SponsorModifyDeniedException(SponsorErrorCode.SPONSOR_MODIFY_DENIED);
+        }
     }
 }
