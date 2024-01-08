@@ -23,4 +23,8 @@ public interface ProjectRepository extends JpaRepository<Project, Long>, Project
     @Modifying
     @Query("update Project p set p.likedCount = p.likedCount + 1 where p.id = :projectId")
     void increaseLikeCount(Long projectId);
+
+    @Modifying
+    @Query("update Project p set p.likedCount = p.likedCount - 1 where p.id = :projectId")
+    void decreaseLikeCount(Long projectId);
 }
