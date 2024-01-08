@@ -92,12 +92,12 @@ public class Project extends BaseEntity {
         this.rewards = new ArrayList<>();
     }
 
-    public void addProjectImage(ProjectImage projectImage) {
+    private void addProjectImage(ProjectImage projectImage) {
         this.projectImages.add(projectImage);
         projectImage.setProject(this);
     }
 
-    public void addReward(Reward reward) {
+    private void addReward(Reward reward) {
         this.rewards.add(reward);
         reward.setProject(this);
     }
