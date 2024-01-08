@@ -16,4 +16,10 @@ public class NoticeGlobalException {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(e.getErrorCode(), e.getMessage()));
     }
 
+    @ExceptionHandler(NoticePermissionException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ResponseEntity<ErrorResponse> handleNoticePermissionException(NoticePermissionException e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse(e.getErrorCode(), e.getMessage()));
+    }
+
 }

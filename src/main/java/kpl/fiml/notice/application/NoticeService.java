@@ -8,7 +8,9 @@ import kpl.fiml.notice.dto.request.NoticeUpdateRequest;
 import kpl.fiml.notice.dto.response.NoticeCreateResponse;
 import kpl.fiml.notice.dto.response.NoticeDeleteResponse;
 import kpl.fiml.notice.dto.response.NoticeUpdateResponse;
+import kpl.fiml.notice.exception.NoticeErrorCode;
 import kpl.fiml.notice.exception.NoticeNotFoundException;
+import kpl.fiml.notice.exception.NoticePermissionException;
 import kpl.fiml.project.application.ProjectService;
 import kpl.fiml.project.domain.Project;
 import kpl.fiml.user.application.UserService;
@@ -89,7 +91,7 @@ public class NoticeService {
 
     private void validateNoticeCreationPermission(User projectUser, User loginUser) {
         if (!loginUser.isSameUser(projectUser)) {
-            throw new IllegalArgumentException("Notice 접근 권한이 없습니다.");
+            throw new NoticePermissionException(NoticeErrorCode.ACCESS_DENIED);
         }
     }
 }
