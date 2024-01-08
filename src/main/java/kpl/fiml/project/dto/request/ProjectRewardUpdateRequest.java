@@ -1,5 +1,6 @@
 package kpl.fiml.project.dto.request;
 
+import jakarta.validation.Valid;
 import kpl.fiml.project.domain.Reward;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,7 +11,7 @@ import java.util.List;
 @Builder
 public class ProjectRewardUpdateRequest {
 
-    private List<ProjectRewardRequest> rewards;
+    private List<@Valid ProjectRewardRequest> rewards;
 
     public List<Reward> convertRewardEntities() {
         return rewards.stream()
