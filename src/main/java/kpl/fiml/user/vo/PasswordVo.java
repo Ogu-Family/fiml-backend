@@ -1,6 +1,7 @@
 package kpl.fiml.user.vo;
 
 import kpl.fiml.user.exception.InvalidPasswordException;
+import kpl.fiml.user.exception.UserErrorCode;
 import lombok.Getter;
 
 @Getter
@@ -12,7 +13,7 @@ public class PasswordVo {
 
     public PasswordVo(String password) {
         if (!isValidPassword(password)) {
-            throw new InvalidPasswordException("비밀번호는 8자 이상, 특수문자 1가지를 꼭 포함해야 합니다.", "INVALID_PASSWORD");
+            throw new InvalidPasswordException(UserErrorCode.INVALID_PASSWORD);
         }
         this.password = password;
     }

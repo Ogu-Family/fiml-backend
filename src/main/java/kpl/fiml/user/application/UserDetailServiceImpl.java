@@ -2,6 +2,7 @@ package kpl.fiml.user.application;
 
 import kpl.fiml.user.domain.UserRepository;
 import kpl.fiml.user.exception.EmailNotFoundException;
+import kpl.fiml.user.exception.UserErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -20,6 +21,6 @@ public class UserDetailServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return userRepository.findByEmailAndDeletedAtIsNull(email)
-                .orElseThrow(() -> new EmailNotFoundException("가입된 E-MAIL이 아닙니다.", "EMAIL_NOT_FOUND"));
+                .orElseThrow(() -> new EmailNotFoundException(UserErrorCode.EMAIL_NOT_FOUND));
     }
 }
