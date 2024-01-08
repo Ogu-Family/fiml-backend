@@ -84,7 +84,9 @@ public class User extends BaseEntity implements UserDetails {
         this.cash -= amount;
     }
 
-    public void updateUser(String name, String bio, String profileImage, String email, String encryptPassword, String contact) {
+    public void updateUser(User loginUser, String name, String bio, String profileImage, String email, String encryptPassword, String contact) {
+        validateLoginUser(loginUser);
+
         if (!name.isBlank()) {
             this.name = name;
         }
@@ -101,8 +103,20 @@ public class User extends BaseEntity implements UserDetails {
         }
     }
 
-    public void deleteUser() {
+    public void deleteUser(User loginUser) {
+        validateLoginUser(loginUser);
+
         delete();
+    }
+
+    public boolean isSameUser(User user) {
+        return this.id.equals(user.getId());
+    }
+
+    private void validateLoginUser(User loginUser) {
+        if(!loginUser.isSameUser(this)) {
+            throw new IllegalArgumentException("User 접근 권한이 없습니다.");
+        }
     }
 
     @Override
@@ -110,10 +124,6 @@ public class User extends BaseEntity implements UserDetails {
         return this.roles.stream()
                 .map(SimpleGrantedAuthority::new)
                 .toList();
-    }
-
-    public boolean isSameUser(User user) {
-        return this.id.equals(user.getId());
     }
 
     @Override

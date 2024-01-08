@@ -3,7 +3,7 @@ package kpl.fiml.user.presentation;
 import jakarta.validation.Valid;
 import kpl.fiml.user.application.UserService;
 import kpl.fiml.user.domain.User;
-import kpl.fiml.user.dto.*;
+import kpl.fiml.user.dto.UserDto;
 import kpl.fiml.user.dto.request.LoginRequest;
 import kpl.fiml.user.dto.request.UserCreateRequest;
 import kpl.fiml.user.dto.request.UserUpdateRequest;

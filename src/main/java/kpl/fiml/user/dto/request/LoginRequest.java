@@ -1,9 +1,11 @@
 package kpl.fiml.user.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
 public class LoginRequest {
     @NotBlank(message = "이메일은 필수 입력값 입니다.")
     private String email;

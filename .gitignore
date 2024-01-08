@@ -252,3 +252,6 @@ src/main/resources/application.yaml
 
 # Querydsl
 src/main/generated
+
+# Test
+src/test/resources/application.yml

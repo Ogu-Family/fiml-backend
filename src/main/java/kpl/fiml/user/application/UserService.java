@@ -13,6 +13,8 @@ import kpl.fiml.user.dto.response.LoginResponse;
 import kpl.fiml.user.dto.response.UserCreateResponse;
 import kpl.fiml.user.dto.response.UserDeleteResponse;
 import kpl.fiml.user.dto.response.UserUpdateResponse;
+import kpl.fiml.user.exception.EmailNotFoundException;
+import kpl.fiml.user.exception.UserErrorCode;
 import kpl.fiml.user.vo.PasswordVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -45,7 +47,7 @@ public class UserService {
     @Transactional
     public LoginResponse signIn(LoginRequest request) {
         User user = userRepository.findByEmailAndDeletedAtIsNull(request.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("가입된 E-MAIL이 아닙니다."));
+                .orElseThrow(() -> new EmailNotFoundException(UserErrorCode.EMAIL_NOT_FOUND));
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
@@ -59,15 +61,11 @@ public class UserService {
         User user = getById(id);
         User loginUser = getById(loginUserId);
 
-        if (!user.isSameUser(loginUser)) {
-            throw new IllegalArgumentException("사용자 수정 권한이 없습니다.");
-        }
-
         String encryptPassword = request.getPassword();
         if (!encryptPassword.isBlank()) {
             encryptPassword = validateAndEncryptPassword(request.getPassword());
         }
-        user.updateUser(request.getName(), request.getBio(), request.getProfileImage(), request.getEmail(), encryptPassword, request.getContact());
+        user.updateUser(loginUser, request.getName(), request.getBio(), request.getProfileImage(), request.getEmail(), encryptPassword, request.getContact());
 
         return UserUpdateResponse.of(user.getId(), user.getName(), user.getBio(), user.getProfileImage(), user.getEmail(), user.getPassword(), user.getContact());
     }
@@ -76,9 +74,7 @@ public class UserService {
         User findUser = getById(userId);
         User loginUser = getById(loginUserId);
 
-        if (!findUser.isSameUser(loginUser)) {
-            throw new IllegalArgumentException("마이페이지 접근 권한이 없습니다.");
-        }
+        validateUserAccess(loginUser, findUser);
 
         return UserDto.of(findUser.getId(), findUser.getName(), findUser.getBio(), findUser.getProfileImage(), findUser.getEmail(), findUser.getContact(), findUser.getCash(), findUser.getCreatedAt(), findUser.getUpdatedAt());
     }
@@ -88,22 +84,25 @@ public class UserService {
         User user = getById(userId);
         User loginUser = getById(loginUserId);
 
-        if (!user.isSameUser(loginUser)) {
-            throw new IllegalArgumentException("사용자 삭제 권한이 없습니다.");
-        }
-        user.deleteUser();
+        user.deleteUser(loginUser);
 
         return UserDeleteResponse.of(user.getId());
-    }
-
-    private String validateAndEncryptPassword(String password) {
-        String rawPassword = new PasswordVo(password).getPassword();
-        return passwordEncoder.encode(rawPassword);
     }
 
     public User getById(Long userId) {
         return userRepository.findByIdAndDeletedAtIsNull(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자 입니다."));
+    }
+
+    private void validateUserAccess(User loginUser, User targetUser) {
+        if(!targetUser.isSameUser(loginUser)) {
+            throw new IllegalArgumentException("User 정보 조회 권한이 없습니다.");
+        }
+    }
+
+    private String validateAndEncryptPassword(String password) {
+        String rawPassword = new PasswordVo(password).getPassword();
+        return passwordEncoder.encode(rawPassword);
     }
 
     @Transactional
