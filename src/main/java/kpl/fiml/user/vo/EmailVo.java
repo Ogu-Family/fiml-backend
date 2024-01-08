@@ -14,7 +14,7 @@ public class EmailVo {
 
     public EmailVo(String email) {
         if (!isValidEmail(email)) {
-            throw new InvalidEmailException(UserErrorCode.INVALID_EMAIL);
+            throw new InvalidEmailException();
         }
         this.email = email;
     }
