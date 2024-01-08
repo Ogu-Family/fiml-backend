@@ -4,13 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import kpl.fiml.user.domain.UserRepository;
 import kpl.fiml.user.dto.request.LoginRequest;
 import kpl.fiml.user.dto.request.UserCreateRequest;
-import org.junit.jupiter.api.BeforeEach;
+import kpl.fiml.user.exception.UserErrorCode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -29,13 +28,13 @@ public class UserControllerTest {
     @Autowired
     private UserRepository userRepository;
 
-    private UserCreateRequest create_user() {
+    private UserCreateRequest create_user(String email, String password) {
         return UserCreateRequest.builder()
                 .bio("")
                 .contact("01012345678")
-                .email("test1@example.com")
+                .email(email)
                 .name("Test Name")
-                .password("password123!")
+                .password(password)
                 .profileImage("")
                 .build();
     }
@@ -44,7 +43,8 @@ public class UserControllerTest {
     @DisplayName("회원가입 성공")
     public void testCreateUser_Success() throws Exception {
         // Given
-        UserCreateRequest request = create_user();
+        userRepository.deleteAll();
+        UserCreateRequest request = create_user("test1@example.com", "password123!");
 
         // When Then
         mockMvc.perform(post("/api/v1/users/join")
@@ -60,44 +60,45 @@ public class UserControllerTest {
     @DisplayName("회원가입 실패: 유효하지 않은 이메일 주소")
     public void testCreateUser_Fail_InvalidEmail() throws Exception {
         // Given
-        UserCreateRequest request = UserCreateRequest.builder()
-                .bio("")
-                .contact("01012345678")
-                .email("invalid-email")
-                .name("Test Name")
-                .password("password123!")
-                .profileImage("")
-                .build();
+        UserCreateRequest request = create_user("invalid-email", "password123!");
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users/join")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(request)))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(jsonPath("$.errorCode").value("INVALID_EMAIL"))
-                .andExpect(jsonPath("$.message").value("유효하지 않은 이메일 주소입니다."));
+                .andExpect(jsonPath("$.errorCode").value(UserErrorCode.INVALID_EMAIL.getCode()))
+                .andExpect(jsonPath("$.message").value(UserErrorCode.INVALID_EMAIL.getMessage()));
     }
 
     @Test
     @DisplayName("회원가입 실패: 유효하지 않은 비밀번호")
     public void testCreateUser_Fail_InvalidPassword() throws Exception {
         // Given
-        UserCreateRequest request = UserCreateRequest.builder()
-                .bio("")
-                .contact("01012345678")
-                .email("test@example.com")
-                .name("Test Name")
-                .password("invalidpassword")  // 유효하지 않은 비밀번호
-                .profileImage("")
-                .build();
+        UserCreateRequest request = create_user("test2@example.com", "invalid-password");
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users/join")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(request)))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(jsonPath("$.errorCode").value("INVALID_PASSWORD"))
-                .andExpect(jsonPath("$.message").value("비밀번호는 8자 이상, 특수문자 1가지를 꼭 포함해야 합니다."));
+                .andExpect(jsonPath("$.errorCode").value(UserErrorCode.INVALID_PASSWORD.getCode()))
+                .andExpect(jsonPath("$.message").value(UserErrorCode.INVALID_PASSWORD.getMessage()));
+    }
+
+    @Test
+    @DisplayName("회원가입 실패: 중복 이메일")
+    public void testCreateUser_Fail_DuplicateEmail() throws Exception {
+        // Given
+        UserCreateRequest request = create_user("test1@example.com", "password123!");
+
+        // When Then
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users/join")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(request)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value(UserErrorCode.DUPLICATED_EMAIL.getCode()))
+                .andExpect(jsonPath("$.message").value(UserErrorCode.DUPLICATED_EMAIL.getMessage()));
     }
 
     @Test
@@ -133,7 +134,7 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(request)))
                 .andExpect(MockMvcResultMatchers.status().isUnauthorized())
-                .andExpect(jsonPath("$.errorCode").value("EMAIL_NOT_FOUND"))
-                .andExpect(jsonPath("$.message").value("가입된 E-MAIL이 아닙니다."));
+                .andExpect(jsonPath("$.errorCode").value(UserErrorCode.EMAIL_NOT_FOUND.getCode()))
+                .andExpect(jsonPath("$.message").value(UserErrorCode.EMAIL_NOT_FOUND.getMessage()));
     }
 }
