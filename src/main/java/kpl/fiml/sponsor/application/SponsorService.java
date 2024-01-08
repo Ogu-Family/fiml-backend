@@ -6,6 +6,8 @@ import kpl.fiml.project.application.ProjectService;
 import kpl.fiml.project.domain.Project;
 import kpl.fiml.project.domain.Reward;
 import kpl.fiml.project.domain.RewardRepository;
+import kpl.fiml.project.exception.RewardErrorCode;
+import kpl.fiml.project.exception.RewardNotFoundException;
 import kpl.fiml.sponsor.domain.Sponsor;
 import kpl.fiml.sponsor.domain.SponsorRepository;
 import kpl.fiml.sponsor.dto.request.SponsorCreateRequest;
@@ -139,6 +141,6 @@ public class SponsorService {
 
     private Reward getRewardById(Long rewardId) {
         return rewardRepository.findByIdAndDeletedAtIsNull(rewardId)
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 리워드가 존재하지 않습니다."));
+                .orElseThrow(() -> new RewardNotFoundException(RewardErrorCode.REWARD_NOT_FOUND));
     }
 }
