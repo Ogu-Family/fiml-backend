@@ -2,6 +2,7 @@ package kpl.fiml.sponsor.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kpl.fiml.customMockUser.WithCustomMockUser;
+import kpl.fiml.sponsor.domain.SponsorStatus;
 import kpl.fiml.sponsor.dto.request.SponsorCreateRequest;
 import kpl.fiml.sponsor.dto.request.SponsorUpdateRequest;
 import org.junit.jupiter.api.DisplayName;
@@ -57,7 +58,7 @@ public class SponsorControllerTest {
                 .andExpect(jsonPath("$.[0].userId").value(1))
                 .andExpect(jsonPath("$.[0].rewardId").value(1))
                 .andExpect(jsonPath("$.[0].totalAmount").value(60000))
-                .andExpect(jsonPath("$.[0].sponsorStatus").value("펀딩 진행 중"));
+                .andExpect(jsonPath("$.[0].sponsorStatus").value(SponsorStatus.FUNDING_PROCEEDING.getDisplayName()));
     }
 
     @Test
@@ -70,7 +71,7 @@ public class SponsorControllerTest {
                 .andExpect(jsonPath("$.[0].userId").value(1))
                 .andExpect(jsonPath("$.[0].rewardId").value(1))
                 .andExpect(jsonPath("$.[0].totalAmount").value(60000))
-                .andExpect(jsonPath("$.[0].sponsorStatus").value("펀딩 진행 중"));
+                .andExpect(jsonPath("$.[0].sponsorStatus").value(SponsorStatus.FUNDING_PROCEEDING.getDisplayName()));
     }
 
     @Test
@@ -95,7 +96,7 @@ public class SponsorControllerTest {
                 .andExpect(jsonPath("$.userId").value(1))
                 .andExpect(jsonPath("$.rewardId").value(1))
                 .andExpect(jsonPath("$.totalAmount").value(70000))
-                .andExpect(jsonPath("$.sponsorStatus").value("펀딩 진행 중"));
+                .andExpect(jsonPath("$.sponsorStatus").value(SponsorStatus.FUNDING_PROCEEDING.getDisplayName()));
     }
 
     @Test
