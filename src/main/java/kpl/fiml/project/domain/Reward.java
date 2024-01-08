@@ -64,6 +64,10 @@ public class Reward extends BaseEntity {
         this.deliveryDate = deliveryDate;
         this.maxPurchaseQuantity = maxPurchaseQuantity;
 
+        if (this.price < 0) {
+            throw new IllegalArgumentException("리워드 가격은 0원 이상의 정수여야 합니다.");
+        }
+
         if (Boolean.TRUE.equals(this.quantityLimited) && this.totalQuantity < 1) {
             throw new IllegalArgumentException("수량 제한이 있는 리워드는 최소 1개 이상이어야 합니다.");
         }
