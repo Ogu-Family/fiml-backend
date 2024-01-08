@@ -8,6 +8,7 @@ import kpl.fiml.notice.dto.request.NoticeUpdateRequest;
 import kpl.fiml.notice.dto.response.NoticeCreateResponse;
 import kpl.fiml.notice.dto.response.NoticeDeleteResponse;
 import kpl.fiml.notice.dto.response.NoticeUpdateResponse;
+import kpl.fiml.notice.exception.NoticeNotFoundException;
 import kpl.fiml.project.application.ProjectService;
 import kpl.fiml.project.domain.Project;
 import kpl.fiml.user.application.UserService;
@@ -83,7 +84,7 @@ public class NoticeService {
 
     public Notice getById(Long noticeId) {
         return noticeRepository.findByIdAndDeletedAtIsNull(noticeId)
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 공지사항이 존재하지 않습니다."));
+                .orElseThrow(NoticeNotFoundException::new);
     }
 
     private void validateNoticeCreationPermission(User projectUser, User loginUser) {
