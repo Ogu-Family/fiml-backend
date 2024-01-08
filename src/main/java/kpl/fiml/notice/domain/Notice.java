@@ -3,6 +3,8 @@ package kpl.fiml.notice.domain;
 import jakarta.persistence.*;
 import kpl.fiml.comment.domain.Comment;
 import kpl.fiml.global.common.BaseEntity;
+import kpl.fiml.notice.exception.NoticeErrorCode;
+import kpl.fiml.notice.exception.NoticePermissionException;
 import kpl.fiml.project.domain.Project;
 import kpl.fiml.user.domain.User;
 import lombok.AccessLevel;
@@ -56,7 +58,7 @@ public class Notice extends BaseEntity {
 
     private void validateLoginUser(User loginUser) {
         if(!loginUser.isSameUser(this.user)) {
-            throw new IllegalArgumentException("Notice 접근 권한이 없습니다.");
+            throw new NoticePermissionException(NoticeErrorCode.ACCESS_DENIED);
         }
     }
 }
