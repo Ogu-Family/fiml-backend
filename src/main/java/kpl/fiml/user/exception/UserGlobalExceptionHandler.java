@@ -30,4 +30,11 @@ public class UserGlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(e.getErrorCode(), e.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
+
+    @ExceptionHandler(DuplicateEmailException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ErrorResponse> handleDuplicateEmailException(DuplicateEmailException e) {
+        ErrorResponse errorResponse = new ErrorResponse(e.getErrorCode(), e.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
 }
