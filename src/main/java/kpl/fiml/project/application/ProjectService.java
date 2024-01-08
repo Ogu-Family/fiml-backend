@@ -123,6 +123,7 @@ public class ProjectService {
 
         ProjectLike projectLike = getProjectLikeByProjectAndUser(project, user);
 
+        projectRepository.decreaseLikeCount(projectId);
         projectLikeRepository.delete(projectLike);
     }
 
