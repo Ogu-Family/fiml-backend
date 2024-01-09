@@ -4,6 +4,7 @@ import kpl.fiml.global.jwt.JwtTokenProvider;
 import kpl.fiml.user.domain.UserRepository;
 import kpl.fiml.user.dto.request.UserCreateRequest;
 import kpl.fiml.user.dto.response.UserCreateResponse;
+import kpl.fiml.user.exception.DuplicateEmailException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,13 +35,12 @@ public class UserServiceTest {
     @Test
     @DisplayName("user 생성에 성공합니다.")
     public void testCreateUser_success() {
+        // Given
         UserCreateRequest request = UserCreateRequest.builder()
-                .bio("")
                 .contact("01012345678")
                 .email("test@example.com")
-                .name("Test Name")
+                .name("name")
                 .password("password123!")
-                .profileImage("")
                 .build();
 
         when(userRepository.existsByEmailAndDeletedAtIsNull("test@example.com")).thenReturn(false);
@@ -48,8 +48,10 @@ public class UserServiceTest {
         String dummyEncryptedPassword = "dummyEncryptedPassword";
         when(userRepository.save(any())).thenReturn(request.toEntity(dummyEncryptedPassword));
 
+        // When
         UserCreateResponse response = userService.createUser(request);
 
+        // Then
         assertNotNull(response);
         verify(userRepository, times(1)).save(any());
     }
@@ -67,6 +69,6 @@ public class UserServiceTest {
                 .build();
 
         when(userRepository.existsByEmailAndDeletedAtIsNull("test@example.com")).thenReturn(true);
-        assertThrows(IllegalArgumentException.class, () -> userService.createUser(request));
+        assertThrows(DuplicateEmailException.class, () -> userService.createUser(request));
     }
 }
