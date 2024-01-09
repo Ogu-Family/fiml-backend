@@ -334,4 +334,20 @@ class ProjectControllerTest {
                 .andExpect(jsonPath("$.content", Matchers.hasSize(size)))
                 .andExpect(jsonPath("$.content[0].id").value(firstProject.getId()));
     }
+
+    @Test
+    @DisplayName("프로젝트 상세 조회 테스트")
+    void testGetProjectDetail() throws Exception {
+        // Given
+        Project toSaveProject = generateFullParamsProject(1L);
+        ReflectionTestUtils.setField(toSaveProject, "status", ProjectStatus.PROCEEDING);
+        Project savedProject = projectRepository.save(toSaveProject);
+
+        // When
+        mockMvc.perform(get("/api/v1/projects/{projectId}", savedProject.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(savedProject.getId()))
+                .andExpect(jsonPath("$.title").value(savedProject.getTitle()))
+                .andExpect(jsonPath("$.summary").value(savedProject.getSummary()));
+    }
 }
