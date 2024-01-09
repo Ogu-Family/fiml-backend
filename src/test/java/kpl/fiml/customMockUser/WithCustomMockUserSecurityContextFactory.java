@@ -18,8 +18,10 @@ public class WithCustomMockUserSecurityContextFactory implements WithSecurityCon
         String contact = annotation.contact();
 
         User user = User.builder()
+                .name("name")
                 .email(email)
                 .contact(contact)
+                .encryptPassword("password123!")
                 .build();
         try {
             Field userId = user.getClass().getDeclaredField("id");
