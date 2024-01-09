@@ -8,6 +8,8 @@ import kpl.fiml.comment.dto.request.CommentUpdateRequest;
 import kpl.fiml.comment.dto.response.CommentCreateResponse;
 import kpl.fiml.comment.dto.response.CommentDeleteResponse;
 import kpl.fiml.comment.dto.response.CommentUpdateResponse;
+import kpl.fiml.comment.exception.CommentErrorCode;
+import kpl.fiml.comment.exception.CommentNotFoundException;
 import kpl.fiml.notice.application.NoticeService;
 import kpl.fiml.notice.domain.Notice;
 import kpl.fiml.user.application.UserService;
@@ -49,7 +51,7 @@ public class CommentService {
     public CommentUpdateResponse update(Long id, Long userId, CommentUpdateRequest request) {
         Comment findComment = getById(id);
         User user = userService.getById(userId);
-        
+
         findComment.updateContent(Objects.requireNonNull(request.getContent(), ""), user);
 
         return CommentUpdateResponse.of(findComment.getId(), userId, findComment.getContent(), findComment.getCreatedAt(), findComment.getUpdatedAt());
@@ -67,6 +69,6 @@ public class CommentService {
 
     private Comment getById(Long id) {
         return commentRepository.findByIdAndDeletedAtIsNull(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다."));
+                .orElseThrow(() -> new CommentNotFoundException(CommentErrorCode.COMMENT_NOT_FOUND));
     }
 }
