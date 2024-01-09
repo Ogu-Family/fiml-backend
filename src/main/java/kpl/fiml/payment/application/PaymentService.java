@@ -13,6 +13,7 @@ import kpl.fiml.sponsor.exception.SponsorErrorCode;
 import kpl.fiml.sponsor.exception.SponsorNotFoundException;
 import kpl.fiml.user.application.UserService;
 import kpl.fiml.user.domain.User;
+import kpl.fiml.user.exception.CashNotEnoughException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -83,7 +84,7 @@ public class PaymentService {
 
                 payment.successPayed();
                 sponsor.updateStatusToComplete();
-            } catch (IllegalArgumentException e) {
+            } catch (CashNotEnoughException e) {
                 payment.failPayed();
 
                 if (paymentRepository.countBySponsor(sponsor) == MAX_PAYMENT_TRIAL) {
