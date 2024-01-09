@@ -1,4 +1,4 @@
-package kpl.fiml.project.exception;
+package kpl.fiml.project.exception.reward;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

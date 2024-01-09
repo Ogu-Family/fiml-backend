@@ -1,4 +1,4 @@
-package kpl.fiml.project.exception;
+package kpl.fiml.project.exception.reward;
 
 import kpl.fiml.global.exception.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
