@@ -3,6 +3,8 @@ package kpl.fiml.sponsor.domain;
 import jakarta.persistence.*;
 import kpl.fiml.global.common.BaseEntity;
 import kpl.fiml.project.domain.Reward;
+import kpl.fiml.sponsor.exception.InvalidTotalAmountException;
+import kpl.fiml.sponsor.exception.SponsorErrorCode;
 import kpl.fiml.user.domain.User;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -75,7 +77,7 @@ public class Sponsor extends BaseEntity {
 
     private void validateTotalAmount(Reward reward, Long totalAmount) {
         if (reward.checkUnderflowPrice(totalAmount)) {
-            throw new IllegalArgumentException("후원 금액이 리워드 가격보다 적습니다.");
+            throw new InvalidTotalAmountException(SponsorErrorCode.INVALID_TOTAL_AMOUNT);
         }
     }
 }
