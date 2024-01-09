@@ -102,7 +102,6 @@ class CommentControllerTest {
     }
 
     @Test
-    @WithCustomMockUser
     @DisplayName("댓글 조회 : 공지사항 기준")
     void testFindAllCommentsByNoticeId_Success() throws Exception {
         // Given
@@ -124,6 +123,25 @@ class CommentControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].userId").value(user.getId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].noticeId").value(notice.getId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].content").value(comment2.getContent()));
+    }
+
+    @Test
+    @WithCustomMockUser
+    @DisplayName("댓글을 삭제 합니다.")
+    void testDeleteComment_Success() throws Exception {
+        // Given
+        User loginUser = create_loginUser();
+        User user = userRepository.save(TestDataFactory.generateUserWithId(0L));
+        Project project = projectRepository.save(TestDataFactory.generateDefaultProject(user.getId()));
+        Notice notice = noticeRepository.save(TestDataFactory.generateNotice(user, project));
+        Comment comment = commentRepository.save(TestDataFactory.generateComment(loginUser, notice));
+
+        // When, Then
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/comments/{id}", comment.getId())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(comment.getId()));
     }
 
     private User create_loginUser() {
