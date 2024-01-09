@@ -102,4 +102,25 @@ class NoticeControllerTest {
                 .andExpect(jsonPath("$.userId").value(savedUser.getId()));
     }
 
+    @Test
+    @WithCustomMockUser
+    @DisplayName("공지사항 조회 테스트")
+    void testNoticeRetrieve_Success() throws Exception {
+        // Given
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User loginUser = (User) authentication.getPrincipal();
+
+        User savedUser = userRepository.save(loginUser);
+        Project savedProject = projectRepository.save(TestDataFactory.generateDefaultProject(savedUser.getId()));
+        Notice savedNotice = noticeRepository.save(TestDataFactory.generateNotice(savedUser, savedProject));
+
+        // When, Then
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/notices/{id}", savedNotice.getId()))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.id").value(savedNotice.getId()))
+                .andExpect(jsonPath("$.content").value(savedNotice.getContent()));
+    }
+
+
 }
