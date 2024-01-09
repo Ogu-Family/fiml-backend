@@ -49,11 +49,8 @@ public class CommentService {
     public CommentUpdateResponse update(Long id, Long userId, CommentUpdateRequest request) {
         Comment findComment = getById(id);
         User user = userService.getById(userId);
-
-        if (!user.isSameUser(findComment.getUser())) {
-            throw new IllegalArgumentException("댓글 작성자만 댓글 수정이 가능합니다.");
-        }
-        findComment.updateContent(Objects.requireNonNull(request.getContent(), ""));
+        
+        findComment.updateContent(Objects.requireNonNull(request.getContent(), ""), user);
 
         return CommentUpdateResponse.of(findComment.getId(), userId, findComment.getContent(), findComment.getCreatedAt(), findComment.getUpdatedAt());
     }
@@ -63,10 +60,7 @@ public class CommentService {
         Comment findComment = getById(id);
         User user = userService.getById(userId);
 
-        if (!user.isSameUser(findComment.getUser())) {
-            throw new IllegalArgumentException("댓글 작성자만 댓글 삭제가 가능합니다.");
-        }
-        findComment.deleteComment();
+        findComment.deleteComment(user);
 
         return CommentDeleteResponse.of(findComment.getId());
     }
