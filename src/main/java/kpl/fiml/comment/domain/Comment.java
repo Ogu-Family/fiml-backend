@@ -54,7 +54,7 @@ public class Comment extends BaseEntity {
     }
 
     private void validateLoginUser(User loginUser) {
-        if(!loginUser.isSameUser(this.user)) {
+        if (!loginUser.isSameUser(this.user)) {
             throw new CommentPermissionException(CommentErrorCode.ACCESS_DENIED);
         }
     }
