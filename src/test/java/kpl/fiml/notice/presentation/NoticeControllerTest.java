@@ -23,6 +23,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -120,6 +123,33 @@ class NoticeControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.id").value(savedNotice.getId()))
                 .andExpect(jsonPath("$.content").value(savedNotice.getContent()));
+    }
+
+    @Test
+    @DisplayName("프로젝트 ID 기준 공지사항 조회 테스트")
+    void testNoticeRetrieveByProjectId_Success() throws Exception {
+        // Given
+        User savedUser = userRepository.save(TestDataFactory.generateUserWithId(0L));
+        Project savedProject = projectRepository.save(TestDataFactory.generateDefaultProject(savedUser.getId()));
+
+        List<Notice> savedNotices = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            savedNotices.add(noticeRepository.save(TestDataFactory.generateNotice(savedUser, savedProject)));
+        }
+
+        // When, Then
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/projects/{projectId}/notices", savedProject.getId()))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isNotEmpty())
+                .andExpect(jsonPath("$.length()").value(savedNotices.size()))
+                .andExpect(jsonPath("$[0].id").value(savedNotices.get(0).getId()))
+                .andExpect(jsonPath("$[0].content").value(savedNotices.get(0).getContent()))
+                .andExpect(jsonPath("$[1].id").value(savedNotices.get(1).getId()))
+                .andExpect(jsonPath("$[1].content").value(savedNotices.get(1).getContent()))
+                .andExpect(jsonPath("$[2].id").value(savedNotices.get(2).getId()))
+                .andExpect(jsonPath("$[2].content").value(savedNotices.get(2).getContent()));
     }
 
 
