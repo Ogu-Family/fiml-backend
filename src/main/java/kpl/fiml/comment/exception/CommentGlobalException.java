@@ -15,4 +15,10 @@ public class CommentGlobalException {
     public ResponseEntity<ErrorResponse> handleCommentNotFoundException(CommentNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(e.getErrorCode(), e.getMessage()));
     }
+
+    @ExceptionHandler(CommentPermissionException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ResponseEntity<ErrorResponse> handleCommentPermissionException(CommentPermissionException e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse(e.getErrorCode(), e.getMessage()));
+    }
 }

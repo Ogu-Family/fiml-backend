@@ -1,6 +1,8 @@
 package kpl.fiml.comment.domain;
 
 import jakarta.persistence.*;
+import kpl.fiml.comment.exception.CommentErrorCode;
+import kpl.fiml.comment.exception.CommentPermissionException;
 import kpl.fiml.global.common.BaseEntity;
 import kpl.fiml.notice.domain.Notice;
 import kpl.fiml.user.domain.User;
@@ -53,7 +55,7 @@ public class Comment extends BaseEntity {
 
     private void validateLoginUser(User loginUser) {
         if(!loginUser.isSameUser(this.user)) {
-            throw new IllegalArgumentException("댓글 접근 권한이 없습니다.");
+            throw new CommentPermissionException(CommentErrorCode.ACCESS_DENIED);
         }
     }
 }
