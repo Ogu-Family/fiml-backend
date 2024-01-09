@@ -4,9 +4,15 @@ import jakarta.validation.constraints.NotBlank;
 import kpl.fiml.comment.domain.Comment;
 import kpl.fiml.notice.domain.Notice;
 import kpl.fiml.user.domain.User;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class CommentCreateRequest {
     @NotBlank(message = "댓글 내용은 필수 입력값 입니다.")
     private String content;
