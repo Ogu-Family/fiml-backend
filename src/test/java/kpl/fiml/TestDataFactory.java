@@ -1,5 +1,6 @@
 package kpl.fiml;
 
+import kpl.fiml.notice.domain.Notice;
 import kpl.fiml.project.domain.Project;
 import kpl.fiml.project.domain.ProjectImage;
 import kpl.fiml.project.domain.Reward;
@@ -115,5 +116,13 @@ public class TestDataFactory {
                         .maxPurchaseQuantity(2)
                         .build()
         );
+    }
+
+    public static Notice generateNotice(User user, Project project) {
+        return Notice.builder()
+                .content("sample notice content")
+                .user(user)
+                .project(project)
+                .build();
     }
 }
