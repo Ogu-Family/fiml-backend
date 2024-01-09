@@ -17,6 +17,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.support.PageableExecutionUtils;
 
 import java.util.List;
+import java.util.Objects;
 
 import static kpl.fiml.project.domain.QProject.project;
 
@@ -50,7 +51,7 @@ public class ProjectRepositoryQueryImpl implements ProjectRepositoryQuery {
     }
 
     private BooleanExpression titleContainsIgnoreCase(String keyword) {
-        return project.title.containsIgnoreCase(keyword);
+        return project.title.containsIgnoreCase(Objects.requireNonNullElse(keyword, ""));
     }
 
     private OrderSpecifier<?> getOrderSpecifier(SortField sortField, Direction sortDirection) {
@@ -66,9 +67,9 @@ public class ProjectRepositoryQueryImpl implements ProjectRepositoryQuery {
             return sortDirection == Direction.ASC
                     ? project.endAt.asc()
                     : project.endAt.desc();
+        } else {
+            return project.id.desc();
         }
-
-        return null;
     }
 
     private BooleanExpression projectStatusEq(ProjectListFindRequest.Status status) {
@@ -81,17 +82,16 @@ public class ProjectRepositoryQueryImpl implements ProjectRepositoryQuery {
                     .or(project.status.eq(ProjectStatus.SETTLEMENT_COMPLETE));
         } else if (status == ProjectListFindRequest.Status.CANCEL) {
             return project.status.eq(ProjectStatus.CANCEL);
+        } else {
+            return project.status.isNotNull();
         }
-
-        return null;
     }
 
     private BooleanExpression projectCategoryEq(ProjectCategory category) {
         if (category != null) {
             return project.category.eq(category);
         }
-
-        return null;
+        return project.category.isNotNull();
     }
 
     private BooleanExpression achieveRateBetween(Integer minAchieveRate, Integer maxAchieveRate) {
@@ -103,9 +103,9 @@ public class ProjectRepositoryQueryImpl implements ProjectRepositoryQuery {
             return project.currentAmount.divide(project.goalAmount).goe(minAchieveRate);
         } else if (maxAchieveRate != null) {
             return project.currentAmount.divide(project.goalAmount).loe(maxAchieveRate);
+        } else {
+            return project.currentAmount.divide(project.goalAmount).goe(0);
         }
-
-        return null;
     }
 
     private static void validateAchieveRateRange(Integer minAchieveRate, Integer maxAchieveRate) {
