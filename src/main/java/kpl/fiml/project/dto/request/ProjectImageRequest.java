@@ -2,15 +2,12 @@ package kpl.fiml.project.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 import kpl.fiml.project.domain.ProjectImage;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ProjectImageRequest {
 
     @NotNull
