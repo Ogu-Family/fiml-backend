@@ -114,7 +114,7 @@ class ProjectTest {
     void testUpdateIntroduction_Success() {
         final Long userId = 1L;
         // Given
-        Project project = generateDefaultProject(1L);
+        Project project = generateDefaultProject(userId);
         User user = project.getUser();
 
         String newIntroduction = "Updated introduction";
