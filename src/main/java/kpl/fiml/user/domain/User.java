@@ -2,8 +2,9 @@ package kpl.fiml.user.domain;
 
 import jakarta.persistence.*;
 import kpl.fiml.global.common.BaseEntity;
-import kpl.fiml.notice.domain.Notice;
 import kpl.fiml.project.domain.Project;
+import kpl.fiml.user.exception.CashNotEnoughException;
+import kpl.fiml.user.exception.InvalidAmountException;
 import kpl.fiml.user.vo.ContactVo;
 import kpl.fiml.user.vo.EmailVo;
 import lombok.AccessLevel;
@@ -69,17 +70,17 @@ public class User extends BaseEntity implements UserDetails {
 
     public void increaseCash(Long amount) {
         if (amount < 0) {
-            throw new IllegalArgumentException("금액은 음수가 될 수 없습니다.");
+            throw new InvalidAmountException();
         }
         this.cash += amount;
     }
 
     public void decreaseCash(Long amount) {
         if (amount < 0) {
-            throw new IllegalArgumentException("금액은 음수가 될 수 없습니다.");
+            throw new InvalidAmountException();
         }
         if (this.cash < amount) {
-            throw new IllegalArgumentException("보유 현금이 부족합니다.");
+            throw new CashNotEnoughException();
         }
         this.cash -= amount;
     }
