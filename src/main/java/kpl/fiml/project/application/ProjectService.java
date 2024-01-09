@@ -19,6 +19,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -89,7 +91,11 @@ public class ProjectService {
 
     public PageResponse<Project, ProjectResponse> findProjectsBySearchConditions(ProjectListFindRequest request) {
         return PageResponse.of(
-                projectRepository.findWithSearchKeyword(request, PageRequest.of(request.getPage(), request.getSize())), ProjectResponse::of
+                projectRepository.findWithSearchKeyword(
+                        request,
+                        PageRequest.of(Optional.ofNullable(request.getPage()).orElse(0), Optional.ofNullable(request.getSize()).orElse(10))
+                ),
+                ProjectResponse::of
         );
     }
 
