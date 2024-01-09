@@ -2,8 +2,10 @@ package kpl.fiml.comment.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kpl.fiml.TestDataFactory;
+import kpl.fiml.comment.domain.Comment;
 import kpl.fiml.comment.domain.CommentRepository;
 import kpl.fiml.comment.dto.request.CommentCreateRequest;
+import kpl.fiml.comment.dto.request.CommentUpdateRequest;
 import kpl.fiml.customMockUser.WithCustomMockUser;
 import kpl.fiml.notice.domain.Notice;
 import kpl.fiml.notice.domain.NoticeRepository;
@@ -72,6 +74,30 @@ class CommentControllerTest {
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.userId").value(loginUser.getId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.noticeId").value(notice.getId()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content").value(request.getContent()));
+    }
+
+    @Test
+    @WithCustomMockUser
+    @DisplayName("댓글을 수정 합니다.")
+    void testUpdateComment_Success() throws Exception {
+        // Given
+        User loginUser = create_loginUser();
+        User user = userRepository.save(TestDataFactory.generateUserWithId(0L));
+        Project project = projectRepository.save(TestDataFactory.generateDefaultProject(user.getId()));
+        Notice notice = noticeRepository.save(TestDataFactory.generateNotice(user, project));
+        Comment comment = commentRepository.save(TestDataFactory.generateComment(loginUser, notice));
+
+        CommentUpdateRequest request = CommentUpdateRequest.builder()
+                .content("Updated Comment Content").build();
+
+        // When, Then
+        mockMvc.perform(MockMvcRequestBuilders.patch("/api/v1/comments/{commentId}", comment.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(request)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.userId").value(loginUser.getId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content").value(request.getContent()));
     }
 
