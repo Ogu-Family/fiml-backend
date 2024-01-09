@@ -2,11 +2,13 @@ package kpl.fiml.project.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 import kpl.fiml.project.domain.Reward;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDate;
 
 @Getter
+@Builder
 public class ProjectRewardRequest {
 
     @NotNull

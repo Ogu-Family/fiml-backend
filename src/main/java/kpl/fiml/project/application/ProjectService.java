@@ -41,7 +41,7 @@ public class ProjectService {
                         request.getSummary(),
                         request.getCategory(),
                         request.getTitle(),
-                        request.getProjectImageEntities(),
+                        request.convertProjectImageEntities(),
                         user
                 );
     }
@@ -73,7 +73,7 @@ public class ProjectService {
         User user = userService.getById(userId);
 
         this.getProjectByIdWithUser(projectId)
-                .updateRewards(request.getRewardEntities(), user);
+                .updateRewards(request.convertRewardEntities(), user);
     }
 
     @Transactional
@@ -101,6 +101,7 @@ public class ProjectService {
 
         checkIfProjectAlreadyLiked(project, user);
 
+        projectRepository.increaseLikeCount(projectId);
         projectLikeRepository.save(
                 ProjectLike.builder()
                         .project(project)
@@ -122,6 +123,7 @@ public class ProjectService {
 
         ProjectLike projectLike = getProjectLikeByProjectAndUser(project, user);
 
+        projectRepository.decreaseLikeCount(projectId);
         projectLikeRepository.delete(projectLike);
     }
 

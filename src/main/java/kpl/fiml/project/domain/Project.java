@@ -92,12 +92,12 @@ public class Project extends BaseEntity {
         this.rewards = new ArrayList<>();
     }
 
-    public void addProjectImage(ProjectImage projectImage) {
+    private void addProjectImage(ProjectImage projectImage) {
         this.projectImages.add(projectImage);
         projectImage.setProject(this);
     }
 
-    public void addReward(Reward reward) {
+    private void addReward(Reward reward) {
         this.rewards.add(reward);
         reward.setProject(this);
     }
@@ -135,6 +135,10 @@ public class Project extends BaseEntity {
         this.startAt = startDateTime;
         this.endAt = endDateTime;
         this.commissionRate = commissionRate;
+
+        if (this.goalAmount < 0) {
+            throw new IllegalArgumentException("목표 금액은 0 이상의 정수여야 합니다.");
+        }
 
         if (this.commissionRate < 0 || this.commissionRate > 100) {
             throw new IllegalArgumentException("수수료율은 0-100 사이의 실수여야 합니다.");
@@ -182,11 +186,23 @@ public class Project extends BaseEntity {
     }
 
     public void updateSponsorAddInfo(Long paymentAddAmount) {
+        if (this.status != ProjectStatus.PROCEEDING) {
+            throw new IllegalStateException("진행 중인 프로젝트가 아닙니다.");
+        }
+
+        if (paymentAddAmount <= 0) {
+            throw new IllegalArgumentException("결제 금액은 1원 이상의 정수여야 합니다.");
+        }
+
         this.currentAmount += paymentAddAmount;
         this.sponsorCount++;
     }
 
     public void updateSponsorDeleteInfo(Long paymentFailAmount) {
+        if (paymentFailAmount <= 0) {
+            throw new IllegalArgumentException("결제 취소 금액은 1원 이상의 정수여야 합니다.");
+        }
+
         this.currentAmount -= paymentFailAmount;
         this.sponsorCount--;
     }

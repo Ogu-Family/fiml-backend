@@ -4,9 +4,11 @@ import jakarta.validation.constraints.NotNull;
 import kpl.fiml.project.domain.Project;
 import kpl.fiml.project.domain.enums.ProjectCategory;
 import kpl.fiml.user.domain.User;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
 public class ProjectInitRequest {
 
     @NotNull
