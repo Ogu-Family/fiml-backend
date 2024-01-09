@@ -101,6 +101,31 @@ class CommentControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content").value(request.getContent()));
     }
 
+    @Test
+    @WithCustomMockUser
+    @DisplayName("댓글 조회 : 공지사항 기준")
+    void testFindAllCommentsByNoticeId_Success() throws Exception {
+        // Given
+        User user = userRepository.save(TestDataFactory.generateUserWithId(0L));
+        Project project = projectRepository.save(TestDataFactory.generateDefaultProject(user.getId()));
+        Notice notice = noticeRepository.save(TestDataFactory.generateNotice(user, project));
+        Comment comment1 = commentRepository.save(TestDataFactory.generateComment(user, notice));
+        Comment comment2 = commentRepository.save(TestDataFactory.generateComment(user, notice));
+
+        // When, Then
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/notice/{noticeId}/comments", notice.getId())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(2))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].userId").value(user.getId()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].noticeId").value(notice.getId()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].content").value(comment1.getContent()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].userId").value(user.getId()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].noticeId").value(notice.getId()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].content").value(comment2.getContent()));
+    }
+
     private User create_loginUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User loginUser = (User) authentication.getPrincipal();
