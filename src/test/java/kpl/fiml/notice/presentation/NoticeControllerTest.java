@@ -20,9 +20,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -152,5 +155,26 @@ class NoticeControllerTest {
                 .andExpect(jsonPath("$[2].content").value(savedNotices.get(2).getContent()));
     }
 
+    @Test
+    @WithCustomMockUser
+    @DisplayName("공지사항 삭제")
+    void testDeleteNotice_Success() throws Exception {
+        // Given
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User loginUser = (User) authentication.getPrincipal();
 
+        User savedUser = userRepository.save(loginUser);
+        Project savedProject = projectRepository.save(TestDataFactory.generateDefaultProject(savedUser.getId()));
+        Notice savedNotice = noticeRepository.save(TestDataFactory.generateNotice(savedUser, savedProject));
+
+
+        // When, Then
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/notices/{id}", savedNotice.getId())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(savedNotice.getId()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.userId").value(savedUser.getId()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.deletedAt").isNotEmpty());
+    }
 }
