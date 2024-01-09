@@ -8,20 +8,25 @@ import kpl.fiml.project.domain.*;
 import kpl.fiml.project.domain.enums.ProjectCategory;
 import kpl.fiml.project.domain.enums.ProjectStatus;
 import kpl.fiml.project.dto.request.*;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 
 import static kpl.fiml.TestDataFactory.generateDefaultProject;
@@ -295,5 +300,38 @@ class ProjectControllerTest {
 
         // Then
         assertThat(projectRepository.findByIdWithUser(savedProject.getId())).isEmpty();
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "0, 10",
+            "0, 30",
+            "1, 20",
+            "2, 10",
+            "3, 10",
+    })
+    @DisplayName("프로젝트 페이지네이션 조회 테스트")
+    void testPagination(int page, int size) throws Exception {
+        final Long userId = 1L;
+        // Given
+        List<Project> projectList = new ArrayList<>();
+        for (int i = 0; i < 100; i++) {
+            Project toSaveProject = generateFullParamsProject(userId);
+            ReflectionTestUtils.setField(toSaveProject, "status", ProjectStatus.PROCEEDING);
+            projectList.add(
+                    projectRepository.save(toSaveProject)
+            );
+        }
+
+        // When
+        projectList.sort((o1, o2) -> o2.getId().compareTo(o1.getId())); // 리스트 조회 시 기본 정렬 값은 id 내림차순
+        final int index = page * size;
+        Project firstProject = projectList.get(index);
+        mockMvc.perform(get("/api/v1/projects")
+                        .param("page", String.valueOf(page))
+                        .param("size", String.valueOf(size)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content", Matchers.hasSize(size)))
+                .andExpect(jsonPath("$.content[0].id").value(firstProject.getId()));
     }
 }
