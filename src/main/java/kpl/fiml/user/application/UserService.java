@@ -15,6 +15,7 @@ import kpl.fiml.user.dto.response.UserDeleteResponse;
 import kpl.fiml.user.dto.response.UserUpdateResponse;
 import kpl.fiml.user.exception.DuplicateEmailException;
 import kpl.fiml.user.exception.EmailNotFoundException;
+import kpl.fiml.user.exception.PasswordMismatchException;
 import kpl.fiml.user.exception.UserErrorCode;
 import kpl.fiml.user.vo.PasswordVo;
 import lombok.RequiredArgsConstructor;
@@ -50,7 +51,7 @@ public class UserService {
         User user = userRepository.findByEmailAndDeletedAtIsNull(request.getEmail())
                 .orElseThrow(EmailNotFoundException::new);
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            throw new PasswordMismatchException(UserErrorCode.PASSWORD_MISMATCH);
         }
         String jwtToken = jwtTokenProvider.generateToken(user.getUsername(), user.getRoles());
 
