@@ -8,6 +8,7 @@ import kpl.fiml.project.domain.enums.ProjectCategory;
 import kpl.fiml.project.domain.enums.ProjectStatus;
 import kpl.fiml.project.dto.request.*;
 import kpl.fiml.project.dto.response.ProjectInitResponse;
+import kpl.fiml.project.exception.project.ProjectLikeException;
 import kpl.fiml.user.application.UserService;
 import kpl.fiml.user.domain.User;
 import org.junit.jupiter.api.BeforeEach;
@@ -269,7 +270,7 @@ class ProjectServiceTest {
 
         // When, Then
         assertThatThrownBy(() -> projectService.likeProject(projectId, userId))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(ProjectLikeException.class);
     }
 
     @Test
@@ -315,7 +316,7 @@ class ProjectServiceTest {
 
         // When, Then
         assertThatThrownBy(() -> projectService.unlikeProject(projectId, userId))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(ProjectLikeException.class);
     }
 
     @Test

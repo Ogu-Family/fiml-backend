@@ -2,6 +2,7 @@ package kpl.fiml.project.domain;
 
 import kpl.fiml.project.domain.enums.ProjectCategory;
 import kpl.fiml.project.domain.enums.ProjectStatus;
+import kpl.fiml.project.exception.project.*;
 import kpl.fiml.user.domain.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -160,7 +161,7 @@ class ProjectTest {
 
         // When, Then
         assertThatThrownBy(() -> project.updateFundingInfo(goalAmount, startDateTime, endDate, negativeCommissionRate, user))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(ProjectFieldValueException.class);
     }
 
     @ParameterizedTest
@@ -178,7 +179,7 @@ class ProjectTest {
 
         // When, Then
         assertThatThrownBy(() -> project.updateFundingInfo(negativeGoalAmount, startDateTime, endDate, commissionRate, user))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(ProjectFieldValueException.class);
     }
 
     @ParameterizedTest
@@ -195,7 +196,7 @@ class ProjectTest {
 
         // When, Then
         assertThatThrownBy(() -> project.updateFundingInfo(goalAmount, invalidStartDateTime, invalidEndDate, commissionRate, user))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(ProjectFieldValueException.class);
     }
 
     @Test
@@ -244,7 +245,7 @@ class ProjectTest {
 
         // Then
         assertThatThrownBy(() -> project.submit(user))
-                .isInstanceOf(IllegalStateException.class);
+                .isInstanceOf(ProjectSubmitException.class);
     }
 
     @Test
@@ -257,7 +258,7 @@ class ProjectTest {
 
         // When, Then
         assertThatThrownBy(() -> project.submit(user))
-                .isInstanceOf(IllegalStateException.class);
+                .isInstanceOf(ProjectSubmitException.class);
     }
 
     @Test
@@ -282,17 +283,17 @@ class ProjectTest {
 
         // When, Then
         assertThatThrownBy(() -> project.updateBasicInfo(newSummary, newCategory, newTitle, newProjectImages, invalidUser))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(ProjectAccessException.class);
         assertThatThrownBy(() -> project.updateIntroduction(newIntroduction, invalidUser))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(ProjectAccessException.class);
         assertThatThrownBy(() -> project.updateFundingInfo(goalAmount, startDateTime, endDate, commissionRate, invalidUser))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(ProjectAccessException.class);
         assertThatThrownBy(() -> project.updateRewards(newRewards, invalidUser))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(ProjectAccessException.class);
         assertThatThrownBy(() -> project.submit(invalidUser))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(ProjectAccessException.class);
         assertThatThrownBy(() -> project.deleteProject(invalidUser))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(ProjectAccessException.class);
     }
 
     @Test
@@ -325,7 +326,7 @@ class ProjectTest {
 
         // When, Then
         assertThatThrownBy(() -> project.updateSponsorAddInfo(invalidSponsorAmount))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(ProjectFieldValueException.class);
     }
 
     @Test
@@ -338,7 +339,7 @@ class ProjectTest {
 
         // When, Then
         assertThatThrownBy(() -> project.updateSponsorAddInfo(1L))
-                .isInstanceOf(IllegalStateException.class);
+                .isInstanceOf(ProjectFundingException.class);
     }
 
     @Test
@@ -371,7 +372,7 @@ class ProjectTest {
 
         // When, Then
         assertThatThrownBy(() -> project.updateSponsorDeleteInfo(invalidSponsorAmount))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(ProjectFieldValueException.class);
     }
 
     @Test
@@ -403,7 +404,7 @@ class ProjectTest {
 
         // When, Then
         assertThatThrownBy(() -> project.deleteProject(user))
-                .isInstanceOf(IllegalStateException.class);
+                .isInstanceOf(ProjectDeleteException.class);
     }
 
     @ParameterizedTest
@@ -419,6 +420,6 @@ class ProjectTest {
 
         // When, Then
         assertThatThrownBy(() -> project.deleteProject(user))
-                .isInstanceOf(IllegalStateException.class);
+                .isInstanceOf(ProjectDeleteException.class);
     }
 }

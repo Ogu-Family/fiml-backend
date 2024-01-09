@@ -2,6 +2,8 @@ package kpl.fiml.project.domain;
 
 import jakarta.persistence.*;
 import kpl.fiml.global.common.BaseEntity;
+import kpl.fiml.project.exception.reward.RewardErrorCode;
+import kpl.fiml.project.exception.reward.RewardFieldValueException;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -65,15 +67,15 @@ public class Reward extends BaseEntity {
         this.maxPurchaseQuantity = maxPurchaseQuantity;
 
         if (this.price < 0) {
-            throw new IllegalArgumentException("리워드 가격은 0원 이상의 정수여야 합니다.");
+            throw new RewardFieldValueException(RewardErrorCode.INVALID_PRICE);
         }
 
         if (Boolean.TRUE.equals(this.quantityLimited) && this.totalQuantity < 1) {
-            throw new IllegalArgumentException("수량 제한이 있는 리워드는 최소 1개 이상이어야 합니다.");
+            throw new RewardFieldValueException(RewardErrorCode.INVALID_QUANTITY_LIMIT);
         }
 
         if (this.maxPurchaseQuantity < 1) {
-            throw new IllegalArgumentException("최소 구매 수량은 1개 이상이어야 합니다.");
+            throw new RewardFieldValueException(RewardErrorCode.INVALID_QUANTITY);
         }
     }
 

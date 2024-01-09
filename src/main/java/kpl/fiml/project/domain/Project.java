@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import kpl.fiml.global.common.BaseEntity;
 import kpl.fiml.project.domain.enums.ProjectCategory;
 import kpl.fiml.project.domain.enums.ProjectStatus;
+import kpl.fiml.project.exception.project.*;
 import kpl.fiml.user.domain.User;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -137,22 +138,22 @@ public class Project extends BaseEntity {
         this.commissionRate = commissionRate;
 
         if (this.goalAmount < 0) {
-            throw new IllegalArgumentException("목표 금액은 0 이상의 정수여야 합니다.");
+            throw new ProjectFieldValueException(ProjectErrorCode.INVALID_PROJECT_TARGET_AMOUNT);
         }
 
         if (this.commissionRate < 0 || this.commissionRate > 100) {
-            throw new IllegalArgumentException("수수료율은 0-100 사이의 실수여야 합니다.");
+            throw new ProjectFieldValueException(ProjectErrorCode.INVALID_PROJECT_COMMISSION_RATE);
         }
     }
 
     private void validateFundingDateTime(LocalDateTime startDateTime, LocalDateTime endDateTime) {
         LocalDateTime currentLocalDateTime = LocalDateTime.now();
         if (startDateTime.isAfter(endDateTime)) {
-            throw new IllegalArgumentException("펀딩 시작일은 종료일보다 빠를 수 없습니다.");
+            throw new ProjectFieldValueException(ProjectErrorCode.PROJECT_FUNDING_START_DATE_EARLIER_THAN_END_DATE);
         }
         if (startDateTime.isBefore(currentLocalDateTime) ||
             endDateTime.isBefore(currentLocalDateTime)) {
-            throw new IllegalArgumentException("펀딩 시작일과 종료일은 현재 시간보다 빠를 수 없습니다.");
+            throw new ProjectFieldValueException(ProjectErrorCode.PROJECT_FUNDING_DATE_EARLIER_THAN_NOW);
         }
     }
 
@@ -170,7 +171,7 @@ public class Project extends BaseEntity {
         validateRequiredFields();
         validateFundingDateTime(this.startAt, this.endAt);
         if (this.status != ProjectStatus.WRITING) {
-            throw new IllegalStateException("작성 중인 프로젝트만 승인할 수 있습니다.");
+            throw new ProjectSubmitException(ProjectErrorCode.ONLY_WRITING_PROJECT_CAN_SUBMIT);
         }
 
         this.status = ProjectStatus.PREPARING;
@@ -181,17 +182,17 @@ public class Project extends BaseEntity {
             this.goalAmount == null || this.currentAmount == null || this.startAt == null || this.endAt == null ||
             this.commissionRate == null || this.status == null || this.sharedCount == null || this.likedCount == null ||
             this.sponsorCount == null || this.projectImages.isEmpty() || this.rewards.isEmpty()) {
-            throw new IllegalStateException("프로젝트 정보를 모두 입력해야 합니다.");
+            throw new ProjectSubmitException(ProjectErrorCode.PROJECT_INFO_NOT_FILLED);
         }
     }
 
     public void updateSponsorAddInfo(Long paymentAddAmount) {
         if (this.status != ProjectStatus.PROCEEDING) {
-            throw new IllegalStateException("진행 중인 프로젝트가 아닙니다.");
+            throw new ProjectFundingException(ProjectErrorCode.NOT_PROCEEDING_PROJECT);
         }
 
         if (paymentAddAmount <= 0) {
-            throw new IllegalArgumentException("결제 금액은 1원 이상의 정수여야 합니다.");
+            throw new ProjectFieldValueException(ProjectErrorCode.INVALID_PAYMENT_AMOUNT);
         }
 
         this.currentAmount += paymentAddAmount;
@@ -200,7 +201,7 @@ public class Project extends BaseEntity {
 
     public void updateSponsorDeleteInfo(Long paymentFailAmount) {
         if (paymentFailAmount <= 0) {
-            throw new IllegalArgumentException("결제 취소 금액은 1원 이상의 정수여야 합니다.");
+            throw new ProjectFieldValueException(ProjectErrorCode.INVALID_CANCEL_AMOUNT);
         }
 
         this.currentAmount -= paymentFailAmount;
@@ -217,7 +218,7 @@ public class Project extends BaseEntity {
 
     private void validateUser(User user) {
         if (!this.user.isSameUser(user)) {
-            throw new IllegalArgumentException("프로젝트 작성자만 접근할 수 있습니다.");
+            throw new ProjectAccessException(ProjectErrorCode.ONLY_PROJECT_OWNER_CAN_ACCESS);
         }
     }
 
@@ -231,10 +232,10 @@ public class Project extends BaseEntity {
 
     private void checkDeletionConditions() {
         if (this.status == ProjectStatus.PROCEEDING && this.sponsorCount > 0) {
-            throw new IllegalStateException("후원자가 있는 프로젝트는 삭제할 수 없습니다.");
+            throw new ProjectDeleteException(ProjectErrorCode.CANNOT_DELETE_PROJECT_WITH_SPONSORS);
         }
         if (this.status == ProjectStatus.FUNDING_COMPLETE || this.status == ProjectStatus.FUNDING_FAILURE || this.status == ProjectStatus.SETTLEMENT_COMPLETE) {
-            throw new IllegalStateException("펀딩 기간이 종료된 프로젝트는 삭제할 수 없습니다.");
+            throw new ProjectDeleteException(ProjectErrorCode.CANNOT_DELETE_PROJECT_AFTER_END_DATE);
         }
     }
 }

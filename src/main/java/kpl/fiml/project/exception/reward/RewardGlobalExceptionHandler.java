@@ -1,4 +1,4 @@
-package kpl.fiml.project.exception;
+package kpl.fiml.project.exception.reward;
 
 import kpl.fiml.global.exception.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +15,13 @@ public class RewardGlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> catchRewardNotFoundException(RewardNotFoundException e) {
         log.error(e.getMessage(), e);
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new ErrorResponse(e.getErrorCode(), e.getMessage()));
+    }
+
+    @ExceptionHandler(RewardFieldValueException.class)
+    public ResponseEntity<ErrorResponse> catchRewardFieldValueException(RewardFieldValueException e) {
+        log.error(e.getMessage(), e);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorResponse(e.getErrorCode(), e.getMessage()));
     }
 }
