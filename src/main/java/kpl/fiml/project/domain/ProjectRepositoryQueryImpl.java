@@ -108,7 +108,7 @@ public class ProjectRepositoryQueryImpl implements ProjectRepositoryQuery {
         }
     }
 
-    private static void validateAchieveRateRange(Integer minAchieveRate, Integer maxAchieveRate) {
+    private void validateAchieveRateRange(Integer minAchieveRate, Integer maxAchieveRate) {
         if (minAchieveRate != null && (minAchieveRate < 0 || minAchieveRate > 100)) {
             throw new ProjectFindConditionException(ProjectErrorCode.INVALID_PROJECT_ACHIEVE_RATE);
         }
