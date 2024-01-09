@@ -8,6 +8,8 @@ import kpl.fiml.project.domain.enums.ProjectCategory;
 import kpl.fiml.project.domain.enums.ProjectStatus;
 import kpl.fiml.project.dto.request.ProjectListFindRequest;
 import kpl.fiml.project.dto.request.ProjectListFindRequest.SortField;
+import kpl.fiml.project.exception.project.ProjectErrorCode;
+import kpl.fiml.project.exception.project.ProjectFindConditionException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -108,13 +110,13 @@ public class ProjectRepositoryQueryImpl implements ProjectRepositoryQuery {
 
     private static void validateAchieveRateRange(Integer minAchieveRate, Integer maxAchieveRate) {
         if (minAchieveRate != null && (minAchieveRate < 0 || minAchieveRate > 100)) {
-            throw new IllegalArgumentException("minAchieveRate는 0 - 100 사이의 정수만 가능합니다.");
+            throw new ProjectFindConditionException(ProjectErrorCode.INVALID_PROJECT_ACHIEVE_RATE);
         }
         if (maxAchieveRate != null && (maxAchieveRate < 0 || maxAchieveRate > 100)) {
-            throw new IllegalArgumentException("maxAchieveRate는 0 - 100 사이의 정수만 가능합니다.");
+            throw new ProjectFindConditionException(ProjectErrorCode.INVALID_PROJECT_ACHIEVE_RATE);
         }
         if (minAchieveRate != null && maxAchieveRate != null && (minAchieveRate > maxAchieveRate)) {
-            throw new IllegalArgumentException("minAchieveRate는 maxAchieveRate보다 작거나 같아야 합니다.");
+            throw new ProjectFindConditionException(ProjectErrorCode.INVALID_PROJECT_ACHIEVE_RATE_RANGE);
         }
     }
 }
