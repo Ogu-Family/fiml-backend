@@ -72,17 +72,17 @@ public class User extends BaseEntity implements UserDetails {
 
     public void increaseCash(Long amount) {
         if (amount < 0) {
-            throw new InvalidAmountException();
+            throw new InvalidAmountException(UserErrorCode.INVALID_AMOUNT);
         }
         this.cash += amount;
     }
 
     public void decreaseCash(Long amount) {
         if (amount < 0) {
-            throw new InvalidAmountException();
+            throw new InvalidAmountException(UserErrorCode.INVALID_AMOUNT);
         }
         if (this.cash < amount) {
-            throw new CashNotEnoughException();
+            throw new CashNotEnoughException(UserErrorCode.CASH_NOT_ENOUGH);
         }
         this.cash -= amount;
     }
