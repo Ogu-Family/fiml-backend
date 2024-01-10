@@ -1,10 +1,16 @@
 package kpl.fiml.user.application;
 
+import kpl.fiml.TestDataFactory;
 import kpl.fiml.global.jwt.JwtTokenProvider;
+import kpl.fiml.user.domain.User;
 import kpl.fiml.user.domain.UserRepository;
+import kpl.fiml.user.dto.request.LoginRequest;
 import kpl.fiml.user.dto.request.UserCreateRequest;
+import kpl.fiml.user.dto.response.LoginResponse;
 import kpl.fiml.user.dto.response.UserCreateResponse;
 import kpl.fiml.user.exception.DuplicateEmailException;
+import kpl.fiml.user.exception.EmailNotFoundException;
+import kpl.fiml.user.exception.PasswordMismatchException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,8 +19,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -70,5 +77,53 @@ public class UserServiceTest {
 
         when(userRepository.existsByEmailAndDeletedAtIsNull("test@example.com")).thenReturn(true);
         assertThrows(DuplicateEmailException.class, () -> userService.createUser(request));
+    }
+
+    @Test
+    @DisplayName("로그인 실패 : 가입되지 않은 이메일")
+    void testSignIn_Fail_UserNotFound() {
+        // Given
+        String userEmail = "nonexistent@email.com";
+        String userPassword = "password123!";
+
+        when(userRepository.findByEmailAndDeletedAtIsNull(userEmail)).thenReturn(Optional.empty());
+
+        // When
+        LoginRequest loginRequest = LoginRequest.builder()
+                .email(userEmail)
+                .password(userPassword)
+                .build();
+
+        // Then
+        assertThrows(EmailNotFoundException.class, () -> userService.signIn(loginRequest));
+
+        // verify
+        verify(userRepository, times(1)).findByEmailAndDeletedAtIsNull(userEmail);
+        verify(passwordEncoder, never()).matches(anyString(), anyString()); // 비밀번호 검사는 일어나지 않아야 함
+    }
+
+    @Test
+    @DisplayName("로그인 실패 : 잘못된 비밀번호")
+    void testSignIn_Fail_PasswordMismatch() {
+        // Given
+        String userEmail = "email@email.com";
+        String userPassword = "wrongPassword";
+        User fakeUser = TestDataFactory.generateUserWithId(1L);
+
+        when(userRepository.findByEmailAndDeletedAtIsNull(fakeUser.getEmail())).thenReturn(Optional.of(fakeUser));
+        when(passwordEncoder.matches(userPassword, fakeUser.getPassword())).thenReturn(false);
+
+        // When
+        LoginRequest loginRequest = LoginRequest.builder()
+                .email(userEmail)
+                .password(userPassword)
+                .build();
+
+        // Then
+        assertThrows(PasswordMismatchException.class, () -> userService.signIn(loginRequest));
+
+        // verify
+        verify(userRepository, times(1)).findByEmailAndDeletedAtIsNull(userEmail);
+        verify(passwordEncoder, times(1)).matches(userPassword, fakeUser.getPassword());
     }
 }
