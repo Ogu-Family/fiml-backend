@@ -16,12 +16,14 @@ public class WithCustomMockUserSecurityContextFactory implements WithSecurityCon
         Long id = 1L;
         String email = annotation.email();
         String contact = annotation.contact();
+        String name = annotation.name();
+        String password = annotation.password();
 
         User user = User.builder()
-                .name("name")
+                .name(name)
                 .email(email)
                 .contact(contact)
-                .encryptPassword("password123!")
+                .encryptPassword(password)
                 .build();
         try {
             Field userId = user.getClass().getDeclaredField("id");
