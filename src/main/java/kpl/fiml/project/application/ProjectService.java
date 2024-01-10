@@ -9,12 +9,17 @@ import kpl.fiml.project.dto.request.*;
 import kpl.fiml.project.dto.response.ProjectDetailResponse;
 import kpl.fiml.project.dto.response.ProjectInitResponse;
 import kpl.fiml.project.dto.response.ProjectResponse;
+import kpl.fiml.project.exception.project.ProjectErrorCode;
+import kpl.fiml.project.exception.project.ProjectLikeException;
+import kpl.fiml.project.exception.project.ProjectFoundException;
 import kpl.fiml.user.application.UserService;
 import kpl.fiml.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -86,7 +91,11 @@ public class ProjectService {
 
     public PageResponse<Project, ProjectResponse> findProjectsBySearchConditions(ProjectListFindRequest request) {
         return PageResponse.of(
-                projectRepository.findWithSearchKeyword(request, PageRequest.of(request.getPage(), request.getSize())), ProjectResponse::of
+                projectRepository.findWithSearchKeyword(
+                        request,
+                        PageRequest.of(Optional.ofNullable(request.getPage()).orElse(0), Optional.ofNullable(request.getSize()).orElse(10))
+                ),
+                ProjectResponse::of
         );
     }
 
@@ -112,7 +121,7 @@ public class ProjectService {
 
     private void checkIfProjectAlreadyLiked(Project project, User user) {
         if (projectLikeRepository.existsByProjectAndUser(project, user)) {
-            throw new IllegalArgumentException("이미 좋아요를 누른 프로젝트입니다.");
+            throw new ProjectLikeException(ProjectErrorCode.ALREADY_LIKED_PROJECT);
         }
     }
 
@@ -129,17 +138,17 @@ public class ProjectService {
 
     private ProjectLike getProjectLikeByProjectAndUser(Project project, User user) {
         return projectLikeRepository.findByProjectAndUser(project, user)
-                .orElseThrow(() -> new IllegalArgumentException("좋아요를 누르지 않은 프로젝트입니다."));
+                .orElseThrow(() -> new ProjectLikeException(ProjectErrorCode.NOT_LIKED_PROJECT));
     }
 
     public Project getProjectByIdWithUser(Long projectId) {
         return projectRepository.findByIdWithUser(projectId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 프로젝트입니다."));
+                .orElseThrow(() -> new ProjectFoundException(ProjectErrorCode.PROJECT_NOT_FOUND));
     }
 
     private Project getProjectByIdAndNotWritingStatusWithUser(Long projectId) {
         return projectRepository.findByIdAndIsNotWritingStatusWithUser(projectId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 프로젝트입니다."));
+                .orElseThrow(() -> new ProjectFoundException(ProjectErrorCode.PROJECT_NOT_FOUND));
     }
 
     @Transactional

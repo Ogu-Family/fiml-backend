@@ -27,7 +27,9 @@ public class ProjectResponse {
         this.id = project.getId();
         this.title = project.getTitle();
         this.summary = project.getSummary();
-        this.thumbnailImagePath = project.getProjectImages().get(0).getPath();
+        this.thumbnailImagePath = project.getProjectImages().isEmpty()
+                ? null
+                : project.getProjectImages().get(0).getPath();
         this.category = project.getCategory().getDisplayName();
         this.userName = project.getUser().getName();
         this.projectStatus = project.getStatus().getDisplayName();

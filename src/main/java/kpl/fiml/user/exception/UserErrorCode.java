@@ -12,7 +12,9 @@ public enum UserErrorCode {
     EMAIL_NOT_FOUND("가입된 E-MAIL이 아닙니다."),
     DUPLICATED_EMAIL("이미 등록된 이메일 주소 입니다."),
     PASSWORD_MISMATCH("비밀번호가 일치하지 않습니다."),
-    ACCESS_DENIED("User 접근 권한이 없습니다.");
+    ACCESS_DENIED("User 접근 권한이 없습니다."),
+    INVALID_AMOUNT("금액은 음수가 될 수 없습니다."),
+    CASH_NOT_ENOUGH("보유 현금이 부족합니다.");
 
     private final String message;
 

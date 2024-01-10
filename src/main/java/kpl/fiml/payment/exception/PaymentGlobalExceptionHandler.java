@@ -1,4 +1,4 @@
-package kpl.fiml.project.exception;
+package kpl.fiml.payment.exception;
 
 import kpl.fiml.global.exception.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 @Slf4j
-public class RewardGlobalExceptionHandler {
+public class PaymentGlobalExceptionHandler {
 
-    @ExceptionHandler(RewardNotFoundException.class)
-    public ResponseEntity<ErrorResponse> catchRewardNotFoundException(RewardNotFoundException e) {
+    @ExceptionHandler(PaymentAccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> catchPaymentAccessDeniedException(PaymentAccessDeniedException e) {
         log.error(e.getMessage(), e);
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(new ErrorResponse(e.getErrorCode(), e.getMessage()));
     }
 }
