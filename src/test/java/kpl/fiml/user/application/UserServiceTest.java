@@ -130,6 +130,7 @@ public class UserServiceTest {
     }
 
     @Test
+    @DisplayName("user update 실패 : 잘못된 비밀번호 형식")
     void testUpdateUser_Fail_PasswordValidation() {
         // Given
         Long userId = 1L;
