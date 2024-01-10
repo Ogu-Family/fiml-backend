@@ -19,7 +19,7 @@ public class TestDataFactory {
     public static User generateUserWithId(Long id) {
         User user = User.builder()
                 .email("email@email.com")
-                .encryptPassword("encryptPassword")
+                .encryptPassword("encryptPassword!")
                 .name("name")
                 .bio("bio")
                 .contact("01012345678")
