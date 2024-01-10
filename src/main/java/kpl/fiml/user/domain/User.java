@@ -52,10 +52,10 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "cash", nullable = false)
     private Long cash;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection(fetch = FetchType.LAZY)
     private List<String> roles = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Project> projectList = new ArrayList<>();
 
     @Builder
