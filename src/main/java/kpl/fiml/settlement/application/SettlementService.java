@@ -3,9 +3,14 @@ package kpl.fiml.settlement.application;
 import kpl.fiml.project.domain.Project;
 import kpl.fiml.project.domain.ProjectRepository;
 import kpl.fiml.project.domain.enums.ProjectStatus;
+import kpl.fiml.project.exception.project.ProjectErrorCode;
+import kpl.fiml.project.exception.project.ProjectFoundException;
 import kpl.fiml.settlement.domain.Settlement;
 import kpl.fiml.settlement.domain.SettlementRepository;
 import kpl.fiml.settlement.dto.response.SettlementDto;
+import kpl.fiml.settlement.exception.SettlementAccessDeniedException;
+import kpl.fiml.settlement.exception.SettlementErrorCode;
+import kpl.fiml.settlement.exception.SettlementNotFoundException;
 import kpl.fiml.user.application.UserService;
 import kpl.fiml.user.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -53,14 +58,14 @@ public class SettlementService {
     public SettlementDto getSettlementByProject(Long projectId, Long userId) {
         User user = userService.getById(userId);
         Project project = projectRepository.findByIdWithUser(projectId)
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 프로젝트가 존재하지 않습니다."));
+                .orElseThrow(() -> new ProjectFoundException(ProjectErrorCode.PROJECT_NOT_FOUND));
 
         if (!user.isSameUser(project.getUser())) {
-            throw new IllegalArgumentException("프로젝트 창작자만 정산 내역을 조회할 수 있습니다.");
+            throw new SettlementAccessDeniedException(SettlementErrorCode.SETTLEMENT_ACCESS_DENIED);
         }
 
         Settlement settlement = settlementRepository.findByProject(project)
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 정산 내역이 존재하지 않습니다."));
+                .orElseThrow(() -> new SettlementNotFoundException(SettlementErrorCode.SETTLEMENT_NOT_FOUND));
 
         return SettlementDto.of(settlement.getSettleAmount(), settlement.getSettledAt());
     }
