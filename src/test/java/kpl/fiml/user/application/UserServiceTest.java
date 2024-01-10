@@ -7,12 +7,8 @@ import kpl.fiml.user.domain.UserRepository;
 import kpl.fiml.user.dto.request.LoginRequest;
 import kpl.fiml.user.dto.request.UserCreateRequest;
 import kpl.fiml.user.dto.request.UserUpdateRequest;
-import kpl.fiml.user.dto.response.LoginResponse;
 import kpl.fiml.user.dto.response.UserCreateResponse;
-import kpl.fiml.user.exception.DuplicateEmailException;
-import kpl.fiml.user.exception.EmailNotFoundException;
-import kpl.fiml.user.exception.InvalidPasswordException;
-import kpl.fiml.user.exception.PasswordMismatchException;
+import kpl.fiml.user.exception.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,7 +19,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -156,5 +153,25 @@ public class UserServiceTest {
         verify(userRepository, times(1)).findByIdAndDeletedAtIsNull(userId);
         verify(userRepository, times(1)).findByIdAndDeletedAtIsNull(loginUserId);
         verify(passwordEncoder, never()).encode(anyString()); // 비밀번호 암호화 메소드는 호출되지 않아야 함
+    }
+
+    @Test
+    @DisplayName("사용자 마이페이지 조회 실패 : 접근 권한 없음")
+    void testFindById_Fail_AccessDenied() {
+        // Given
+        Long userId = 1L;
+        Long loginUserId = 2L;
+        User fakeUser = TestDataFactory.generateUserWithId(userId);
+        User loginUser = TestDataFactory.generateUserWithId(loginUserId);
+
+        when(userRepository.findByIdAndDeletedAtIsNull(userId)).thenReturn(Optional.ofNullable(fakeUser));
+        when(userRepository.findByIdAndDeletedAtIsNull(loginUserId)).thenReturn(Optional.ofNullable(loginUser));
+
+        // When/Then
+        assertThrows(UserPermissionException.class, () -> userService.findById(userId, loginUserId));
+
+        // verify
+        verify(userRepository, times(1)).findByIdAndDeletedAtIsNull(userId);
+        verify(userRepository, times(1)).findByIdAndDeletedAtIsNull(loginUserId);
     }
 }

@@ -13,10 +13,7 @@ import kpl.fiml.user.dto.response.LoginResponse;
 import kpl.fiml.user.dto.response.UserCreateResponse;
 import kpl.fiml.user.dto.response.UserDeleteResponse;
 import kpl.fiml.user.dto.response.UserUpdateResponse;
-import kpl.fiml.user.exception.DuplicateEmailException;
-import kpl.fiml.user.exception.EmailNotFoundException;
-import kpl.fiml.user.exception.PasswordMismatchException;
-import kpl.fiml.user.exception.UserErrorCode;
+import kpl.fiml.user.exception.*;
 import kpl.fiml.user.vo.PasswordVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -98,7 +95,7 @@ public class UserService {
 
     private void validateUserAccess(User loginUser, User targetUser) {
         if(!targetUser.isSameUser(loginUser)) {
-            throw new IllegalArgumentException("User 정보 조회 권한이 없습니다.");
+            throw new UserPermissionException(UserErrorCode.ACCESS_DENIED);
         }
     }
 
