@@ -6,10 +6,12 @@ import kpl.fiml.user.domain.User;
 import kpl.fiml.user.domain.UserRepository;
 import kpl.fiml.user.dto.request.LoginRequest;
 import kpl.fiml.user.dto.request.UserCreateRequest;
+import kpl.fiml.user.dto.request.UserUpdateRequest;
 import kpl.fiml.user.dto.response.LoginResponse;
 import kpl.fiml.user.dto.response.UserCreateResponse;
 import kpl.fiml.user.exception.DuplicateEmailException;
 import kpl.fiml.user.exception.EmailNotFoundException;
+import kpl.fiml.user.exception.InvalidPasswordException;
 import kpl.fiml.user.exception.PasswordMismatchException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -125,5 +127,33 @@ public class UserServiceTest {
         // verify
         verify(userRepository, times(1)).findByEmailAndDeletedAtIsNull(userEmail);
         verify(passwordEncoder, times(1)).matches(userPassword, fakeUser.getPassword());
+    }
+
+    @Test
+    void testUpdateUser_Fail_PasswordValidation() {
+        // Given
+        Long userId = 1L;
+        Long loginUserId = 2L;
+        UserUpdateRequest request = UserUpdateRequest.builder()
+                .name("name")
+                .profileImage("profile.jpg")
+                .email("example@example.com")
+                .password("password123")
+                .contact("1234567890")
+                .build();
+
+        User fakeUser = TestDataFactory.generateUserWithId(userId);
+        User fakeLoginUser = TestDataFactory.generateUserWithId(loginUserId);
+
+        when(userRepository.findByIdAndDeletedAtIsNull(userId)).thenReturn(Optional.ofNullable(fakeUser));
+        when(userRepository.findByIdAndDeletedAtIsNull(loginUserId)).thenReturn(Optional.ofNullable(fakeLoginUser));
+
+        // When/Then
+        assertThrows(InvalidPasswordException.class, () -> userService.updateUser(userId, loginUserId, request));
+
+        // verify
+        verify(userRepository, times(1)).findByIdAndDeletedAtIsNull(userId);
+        verify(userRepository, times(1)).findByIdAndDeletedAtIsNull(loginUserId);
+        verify(passwordEncoder, never()).encode(anyString()); // 비밀번호 암호화 메소드는 호출되지 않아야 함
     }
 }
