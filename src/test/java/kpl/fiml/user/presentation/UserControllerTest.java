@@ -67,7 +67,7 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(request)))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(jsonPath("$.errorCode").value(UserErrorCode.INVALID_EMAIL.getCode()))
+                .andExpect(jsonPath("$.errorCode").value(UserErrorCode.INVALID_EMAIL.name()))
                 .andExpect(jsonPath("$.message").value(UserErrorCode.INVALID_EMAIL.getMessage()));
     }
 
@@ -82,7 +82,7 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(request)))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(jsonPath("$.errorCode").value(UserErrorCode.INVALID_PASSWORD.getCode()))
+                .andExpect(jsonPath("$.errorCode").value(UserErrorCode.INVALID_PASSWORD.name()))
                 .andExpect(jsonPath("$.message").value(UserErrorCode.INVALID_PASSWORD.getMessage()));
     }
 
@@ -97,7 +97,7 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(request)))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errorCode").value(UserErrorCode.DUPLICATED_EMAIL.getCode()))
+                .andExpect(jsonPath("$.errorCode").value(UserErrorCode.DUPLICATED_EMAIL.name()))
                 .andExpect(jsonPath("$.message").value(UserErrorCode.DUPLICATED_EMAIL.getMessage()));
     }
 
@@ -134,7 +134,7 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(request)))
                 .andExpect(MockMvcResultMatchers.status().isUnauthorized())
-                .andExpect(jsonPath("$.errorCode").value(UserErrorCode.EMAIL_NOT_FOUND.getCode()))
+                .andExpect(jsonPath("$.errorCode").value(UserErrorCode.EMAIL_NOT_FOUND.name()))
                 .andExpect(jsonPath("$.message").value(UserErrorCode.EMAIL_NOT_FOUND.getMessage()));
     }
 }
