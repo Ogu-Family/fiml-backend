@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import kpl.fiml.global.common.BaseEntity;
 import kpl.fiml.notice.domain.Notice;
 import kpl.fiml.project.domain.Project;
+import kpl.fiml.user.exception.UserErrorCode;
+import kpl.fiml.user.exception.UserPermissionException;
 import kpl.fiml.user.vo.ContactVo;
 import kpl.fiml.user.vo.EmailVo;
 import lombok.AccessLevel;
@@ -115,7 +117,7 @@ public class User extends BaseEntity implements UserDetails {
 
     private void validateLoginUser(User loginUser) {
         if(!loginUser.isSameUser(this)) {
-            throw new IllegalArgumentException("User 접근 권한이 없습니다.");
+            throw new UserPermissionException(UserErrorCode.ACCESS_DENIED);
         }
     }
 
