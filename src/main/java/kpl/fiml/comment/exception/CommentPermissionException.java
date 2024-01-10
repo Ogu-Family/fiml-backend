@@ -9,6 +9,6 @@ public class CommentPermissionException extends RuntimeException {
 
     public CommentPermissionException(CommentErrorCode errorCode) {
         super(errorCode.getMessage());
-        this.errorCode = errorCode.getCode();
+        this.errorCode = errorCode.name();
     }
 }
