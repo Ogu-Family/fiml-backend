@@ -8,6 +8,8 @@ import kpl.fiml.comment.dto.request.CommentUpdateRequest;
 import kpl.fiml.comment.dto.response.CommentCreateResponse;
 import kpl.fiml.comment.dto.response.CommentDeleteResponse;
 import kpl.fiml.comment.dto.response.CommentUpdateResponse;
+import kpl.fiml.comment.exception.CommentErrorCode;
+import kpl.fiml.comment.exception.CommentNotFoundException;
 import kpl.fiml.notice.application.NoticeService;
 import kpl.fiml.notice.domain.Notice;
 import kpl.fiml.user.application.UserService;
@@ -50,10 +52,7 @@ public class CommentService {
         Comment findComment = getById(id);
         User user = userService.getById(userId);
 
-        if (!user.isSameUser(findComment.getUser())) {
-            throw new IllegalArgumentException("댓글 작성자만 댓글 수정이 가능합니다.");
-        }
-        findComment.updateContent(Objects.requireNonNull(request.getContent(), ""));
+        findComment.updateContent(Objects.requireNonNull(request.getContent(), ""), user);
 
         return CommentUpdateResponse.of(findComment.getId(), userId, findComment.getContent(), findComment.getCreatedAt(), findComment.getUpdatedAt());
     }
@@ -63,16 +62,13 @@ public class CommentService {
         Comment findComment = getById(id);
         User user = userService.getById(userId);
 
-        if (!user.isSameUser(findComment.getUser())) {
-            throw new IllegalArgumentException("댓글 작성자만 댓글 삭제가 가능합니다.");
-        }
-        findComment.deleteComment();
+        findComment.deleteComment(user);
 
         return CommentDeleteResponse.of(findComment.getId());
     }
 
     private Comment getById(Long id) {
         return commentRepository.findByIdAndDeletedAtIsNull(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다."));
+                .orElseThrow(() -> new CommentNotFoundException(CommentErrorCode.COMMENT_NOT_FOUND));
     }
 }

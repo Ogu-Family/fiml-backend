@@ -86,7 +86,7 @@ public class NoticeService {
 
     public Notice getById(Long noticeId) {
         return noticeRepository.findByIdAndDeletedAtIsNull(noticeId)
-                .orElseThrow(NoticeNotFoundException::new);
+                .orElseThrow(() -> new NoticeNotFoundException(NoticeErrorCode.NOTICE_NOT_FOUND));
     }
 
     private void validateNoticeCreationPermission(User projectUser, User loginUser) {

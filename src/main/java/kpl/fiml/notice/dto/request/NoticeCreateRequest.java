@@ -5,9 +5,11 @@ import jakarta.validation.constraints.NotNull;
 import kpl.fiml.notice.domain.Notice;
 import kpl.fiml.project.domain.Project;
 import kpl.fiml.user.domain.User;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
 public class NoticeCreateRequest {
 
     @NotBlank(message = "공지사항 내용은 필수 입력 값 입니다.")

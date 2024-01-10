@@ -7,8 +7,8 @@ public class CashNotEnoughException extends RuntimeException {
 
     private final String errorCode;
 
-    public CashNotEnoughException() {
-        super(UserErrorCode.CASH_NOT_ENOUGH.getMessage());
-        this.errorCode = UserErrorCode.CASH_NOT_ENOUGH.getCode();
+    public CashNotEnoughException(UserErrorCode errorCode) {
+        super(errorCode.getMessage());
+        this.errorCode = errorCode.name();
     }
 }

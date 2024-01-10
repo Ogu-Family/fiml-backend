@@ -3,9 +3,11 @@ package kpl.fiml.user.exception;
 import lombok.Getter;
 
 @Getter
-public class InvalidEmailException extends RuntimeException {
+public class UserPermissionException extends RuntimeException {
+
     private final String errorCode;
-    public InvalidEmailException(UserErrorCode errorCode) {
+
+    public UserPermissionException(UserErrorCode errorCode) {
         super(errorCode.getMessage());
         this.errorCode = errorCode.name();
     }

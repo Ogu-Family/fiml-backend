@@ -7,8 +7,8 @@ public class DuplicateEmailException extends RuntimeException {
 
     private final String errorCode;
 
-    public DuplicateEmailException() {
-        super(UserErrorCode.DUPLICATED_EMAIL.getMessage());
-        this.errorCode = UserErrorCode.DUPLICATED_EMAIL.getCode();
+    public DuplicateEmailException(UserErrorCode errorCode) {
+        super(errorCode.getMessage());
+        this.errorCode = errorCode.name();
     }
 }

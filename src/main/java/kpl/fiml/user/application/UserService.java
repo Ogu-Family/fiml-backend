@@ -15,6 +15,7 @@ import kpl.fiml.user.dto.response.UserDeleteResponse;
 import kpl.fiml.user.dto.response.UserUpdateResponse;
 import kpl.fiml.user.exception.DuplicateEmailException;
 import kpl.fiml.user.exception.EmailNotFoundException;
+import kpl.fiml.user.exception.PasswordMismatchException;
 import kpl.fiml.user.exception.UserErrorCode;
 import kpl.fiml.user.vo.PasswordVo;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +37,7 @@ public class UserService {
     public UserCreateResponse createUser(UserCreateRequest request) {
         // email 중복 확인
         if (userRepository.existsByEmailAndDeletedAtIsNull(request.getEmail())) {
-            throw new DuplicateEmailException();
+            throw new DuplicateEmailException(UserErrorCode.DUPLICATED_EMAIL);
         }
 
         String encryptPassword = validateAndEncryptPassword(request.getPassword());
@@ -48,9 +49,9 @@ public class UserService {
     @Transactional
     public LoginResponse signIn(LoginRequest request) {
         User user = userRepository.findByEmailAndDeletedAtIsNull(request.getEmail())
-                .orElseThrow(EmailNotFoundException::new);
+                .orElseThrow(() -> new EmailNotFoundException(UserErrorCode.EMAIL_NOT_FOUND));
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            throw new PasswordMismatchException(UserErrorCode.PASSWORD_MISMATCH);
         }
         String jwtToken = jwtTokenProvider.generateToken(user.getUsername(), user.getRoles());
 
@@ -92,7 +93,7 @@ public class UserService {
 
     public User getById(Long userId) {
         return userRepository.findByIdAndDeletedAtIsNull(userId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자 입니다."));
+                .orElseThrow(() -> new EmailNotFoundException(UserErrorCode.EMAIL_NOT_FOUND));
     }
 
     private void validateUserAccess(User loginUser, User targetUser) {

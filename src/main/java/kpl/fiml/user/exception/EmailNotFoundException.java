@@ -6,8 +6,8 @@ import lombok.Getter;
 public class EmailNotFoundException extends RuntimeException {
     private final String errorCode;
 
-    public EmailNotFoundException() {
-        super(UserErrorCode.EMAIL_NOT_FOUND.getMessage());
-        this.errorCode = UserErrorCode.EMAIL_NOT_FOUND.getCode();
+    public EmailNotFoundException(UserErrorCode errorCode) {
+        super(errorCode.getMessage());
+        this.errorCode = errorCode.name();
     }
 }

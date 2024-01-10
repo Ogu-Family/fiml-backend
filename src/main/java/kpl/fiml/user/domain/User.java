@@ -3,6 +3,8 @@ package kpl.fiml.user.domain;
 import jakarta.persistence.*;
 import kpl.fiml.global.common.BaseEntity;
 import kpl.fiml.project.domain.Project;
+import kpl.fiml.user.exception.UserErrorCode;
+import kpl.fiml.user.exception.UserPermissionException;
 import kpl.fiml.user.exception.CashNotEnoughException;
 import kpl.fiml.user.exception.InvalidAmountException;
 import kpl.fiml.user.vo.ContactVo;
@@ -70,17 +72,17 @@ public class User extends BaseEntity implements UserDetails {
 
     public void increaseCash(Long amount) {
         if (amount < 0) {
-            throw new InvalidAmountException();
+            throw new InvalidAmountException(UserErrorCode.INVALID_AMOUNT);
         }
         this.cash += amount;
     }
 
     public void decreaseCash(Long amount) {
         if (amount < 0) {
-            throw new InvalidAmountException();
+            throw new InvalidAmountException(UserErrorCode.INVALID_AMOUNT);
         }
         if (this.cash < amount) {
-            throw new CashNotEnoughException();
+            throw new CashNotEnoughException(UserErrorCode.CASH_NOT_ENOUGH);
         }
         this.cash -= amount;
     }
@@ -116,7 +118,7 @@ public class User extends BaseEntity implements UserDetails {
 
     private void validateLoginUser(User loginUser) {
         if(!loginUser.isSameUser(this)) {
-            throw new IllegalArgumentException("User 접근 권한이 없습니다.");
+            throw new UserPermissionException(UserErrorCode.ACCESS_DENIED);
         }
     }
 

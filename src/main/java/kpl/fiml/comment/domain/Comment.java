@@ -1,6 +1,8 @@
 package kpl.fiml.comment.domain;
 
 import jakarta.persistence.*;
+import kpl.fiml.comment.exception.CommentErrorCode;
+import kpl.fiml.comment.exception.CommentPermissionException;
 import kpl.fiml.global.common.BaseEntity;
 import kpl.fiml.notice.domain.Notice;
 import kpl.fiml.user.domain.User;
@@ -39,11 +41,21 @@ public class Comment extends BaseEntity {
         this.notice = notice;
     }
 
-    public void updateContent(String content) {
+    public void updateContent(String content, User loginUser) {
+        validateLoginUser(loginUser);
+
         this.content = Objects.requireNonNull(content, "content 가 null 입니다.");
     }
 
-    public void deleteComment() {
+    public void deleteComment(User loginUser) {
+        validateLoginUser(loginUser);
+
         delete();
+    }
+
+    private void validateLoginUser(User loginUser) {
+        if (!loginUser.isSameUser(this.user)) {
+            throw new CommentPermissionException(CommentErrorCode.ACCESS_DENIED);
+        }
     }
 }

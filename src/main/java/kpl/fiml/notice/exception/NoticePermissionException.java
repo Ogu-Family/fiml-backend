@@ -9,7 +9,7 @@ public class NoticePermissionException extends RuntimeException {
 
     public NoticePermissionException(NoticeErrorCode errorCode) {
         super(errorCode.getMessage());
-        this.errorCode = errorCode.getCode();
+        this.errorCode = errorCode.name();
     }
 
 }
