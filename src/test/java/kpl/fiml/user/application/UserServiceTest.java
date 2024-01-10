@@ -174,4 +174,26 @@ public class UserServiceTest {
         verify(userRepository, times(1)).findByIdAndDeletedAtIsNull(userId);
         verify(userRepository, times(1)).findByIdAndDeletedAtIsNull(loginUserId);
     }
+
+    @Test
+    @DisplayName("사용자 삭제 실패 : 접근 권한 없음")
+    void testDeleteById_Fail_AccessDenied() {
+        // Given
+        Long userId = 1L;
+        Long loginUserId = 2L;
+        User fakeUser = TestDataFactory.generateUserWithId(userId);
+        User loginUser = TestDataFactory.generateUserWithId(loginUserId);
+
+        when(userRepository.findByIdAndDeletedAtIsNull(userId)).thenReturn(Optional.ofNullable(fakeUser));
+        when(userRepository.findByIdAndDeletedAtIsNull(loginUserId)).thenReturn(Optional.ofNullable(loginUser));
+
+        // When/Then
+        assertThrows(UserPermissionException.class, () -> userService.deleteById(userId, loginUserId));
+
+        // verify
+        verify(userRepository, times(1)).findByIdAndDeletedAtIsNull(userId);
+        verify(userRepository, times(1)).findByIdAndDeletedAtIsNull(loginUserId);
+        assert fakeUser != null;
+        verify(userRepository, never()).delete(fakeUser);
+    }
 }
