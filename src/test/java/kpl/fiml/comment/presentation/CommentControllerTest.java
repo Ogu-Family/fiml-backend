@@ -13,6 +13,7 @@ import kpl.fiml.project.domain.Project;
 import kpl.fiml.project.domain.ProjectRepository;
 import kpl.fiml.user.domain.User;
 import kpl.fiml.user.domain.UserRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -47,6 +48,14 @@ class CommentControllerTest {
 
     @BeforeEach
     void setUp() {
+        commentRepository.deleteAll();
+        noticeRepository.deleteAll();
+        projectRepository.deleteAll();
+        userRepository.deleteAll();
+    }
+
+    @AfterEach
+    void cleanUp() {
         commentRepository.deleteAll();
         noticeRepository.deleteAll();
         projectRepository.deleteAll();
