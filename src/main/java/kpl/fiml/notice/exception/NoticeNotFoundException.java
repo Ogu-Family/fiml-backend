@@ -7,9 +7,9 @@ public class NoticeNotFoundException extends RuntimeException {
 
     private final String errorCode;
 
-    public NoticeNotFoundException() {
-        super(NoticeErrorCode.NOTICE_NOT_FOUND.getMessage());
-        this.errorCode = NoticeErrorCode.NOTICE_NOT_FOUND.getCode();
+    public NoticeNotFoundException(NoticeErrorCode errorCode) {
+        super(errorCode.getMessage());
+        this.errorCode = errorCode.name();
     }
 
 }
