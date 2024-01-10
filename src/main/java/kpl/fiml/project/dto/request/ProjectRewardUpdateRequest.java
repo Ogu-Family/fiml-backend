@@ -2,17 +2,14 @@ package kpl.fiml.project.dto.request;
 
 import jakarta.validation.Valid;
 import kpl.fiml.project.domain.Reward;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
 @Getter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ProjectRewardUpdateRequest {
 
     private List<@Valid ProjectRewardRequest> rewards;
