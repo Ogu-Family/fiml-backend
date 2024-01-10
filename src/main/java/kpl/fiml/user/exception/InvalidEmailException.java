@@ -5,8 +5,8 @@ import lombok.Getter;
 @Getter
 public class InvalidEmailException extends RuntimeException {
     private final String errorCode;
-    public InvalidEmailException() {
-        super(UserErrorCode.INVALID_EMAIL.getMessage());
-        this.errorCode = UserErrorCode.INVALID_EMAIL.getCode();
+    public InvalidEmailException(UserErrorCode errorCode) {
+        super(errorCode.getMessage());
+        this.errorCode = errorCode.name();
     }
 }

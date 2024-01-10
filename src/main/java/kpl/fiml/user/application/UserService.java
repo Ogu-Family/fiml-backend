@@ -37,7 +37,7 @@ public class UserService {
     public UserCreateResponse createUser(UserCreateRequest request) {
         // email 중복 확인
         if (userRepository.existsByEmailAndDeletedAtIsNull(request.getEmail())) {
-            throw new DuplicateEmailException();
+            throw new DuplicateEmailException(UserErrorCode.DUPLICATED_EMAIL);
         }
 
         String encryptPassword = validateAndEncryptPassword(request.getPassword());
@@ -49,7 +49,7 @@ public class UserService {
     @Transactional
     public LoginResponse signIn(LoginRequest request) {
         User user = userRepository.findByEmailAndDeletedAtIsNull(request.getEmail())
-                .orElseThrow(EmailNotFoundException::new);
+                .orElseThrow(() -> new EmailNotFoundException(UserErrorCode.EMAIL_NOT_FOUND));
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new PasswordMismatchException(UserErrorCode.PASSWORD_MISMATCH);
         }
@@ -93,7 +93,7 @@ public class UserService {
 
     public User getById(Long userId) {
         return userRepository.findByIdAndDeletedAtIsNull(userId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자 입니다."));
+                .orElseThrow(() -> new EmailNotFoundException(UserErrorCode.EMAIL_NOT_FOUND));
     }
 
     private void validateUserAccess(User loginUser, User targetUser) {

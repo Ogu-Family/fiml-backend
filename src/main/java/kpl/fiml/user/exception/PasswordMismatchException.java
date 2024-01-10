@@ -8,6 +8,6 @@ public class PasswordMismatchException extends RuntimeException {
 
     public PasswordMismatchException(UserErrorCode errorCode) {
         super(errorCode.getMessage());
-        this.errorCode = errorCode.getCode();
+        this.errorCode = errorCode.name();
     }
 }

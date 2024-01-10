@@ -13,7 +13,7 @@ public class PasswordVo {
 
     public PasswordVo(String password) {
         if (!isValidPassword(password)) {
-            throw new InvalidPasswordException();
+            throw new InvalidPasswordException(UserErrorCode.INVALID_PASSWORD);
         }
         this.password = password;
     }
