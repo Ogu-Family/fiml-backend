@@ -35,7 +35,7 @@ public class UserController {
     @Operation(summary = "회원 가입", description = "회원가입을 합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "회원가입 성공"),
-            @ApiResponse(responseCode = "400", description = "이미 가입된 이메일로 회원가입을 시도\n 올바르지 않은 이메일 또는 비밀번호 또는 연락처 형식")
+            @ApiResponse(responseCode = "400", description = "1. 이미 가입된 이메일로 회원가입을 시도\n2. 올바르지 않은 이메일 또는 비밀번호 또는 연락처 형식")
     })
     @PostMapping("/users/join")
     public ResponseEntity<UserCreateResponse> createUser(@Valid @RequestBody UserCreateRequest request) {
