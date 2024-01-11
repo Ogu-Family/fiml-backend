@@ -4,6 +4,7 @@ import kpl.fiml.global.jwt.JwtAuthenticationFilter;
 import kpl.fiml.global.jwt.JwtTokenProvider;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -26,12 +27,15 @@ public class WebSecurityConfig {
 
     private final JwtTokenProvider jwtTokenProvider;
 
+    @Value("${server.port}")
+    private String serverPort;
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
 
         config.setAllowCredentials(true);
-        config.setAllowedOrigins(List.of("http://localhost:8090"));  // 포트번호
+        config.setAllowedOrigins(List.of("http://localhost:" + serverPort));  // 포트번호
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setExposedHeaders(List.of("*"));
