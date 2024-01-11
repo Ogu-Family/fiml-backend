@@ -15,7 +15,9 @@ public enum UserErrorCode {
     ACCESS_DENIED("User 접근 권한이 없습니다."),
     INVALID_AMOUNT("금액은 음수가 될 수 없습니다."),
     CASH_NOT_ENOUGH("보유 현금이 부족합니다."),
-    INVALID_CONTACT("전화번호 형식이 유효하지 않습니다.");
+    INVALID_CONTACT("전화번호 형식이 유효하지 않습니다."),
+    ALREADY_FOLLOWED("이미 팔로우한 유저입니다."),
+    NOT_FOLLOWED("팔로우하지 않은 유저입니다.");
 
     private final String message;
 
