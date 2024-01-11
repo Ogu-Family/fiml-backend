@@ -1,10 +1,12 @@
 package kpl.fiml.user.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import kpl.fiml.user.application.UserService;
 import kpl.fiml.user.domain.UserRepository;
 import kpl.fiml.user.dto.request.LoginRequest;
 import kpl.fiml.user.dto.request.UserCreateRequest;
 import kpl.fiml.user.exception.UserErrorCode;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,22 +30,18 @@ public class UserControllerTest {
     @Autowired
     private UserRepository userRepository;
 
-    private UserCreateRequest create_user(String email, String password) {
-        return UserCreateRequest.builder()
-                .bio("")
-                .contact("01012345678")
-                .email(email)
-                .name("Test Name")
-                .password(password)
-                .profileImage("")
-                .build();
+    @Autowired
+    private UserService userService;
+
+    @BeforeEach
+    void setUp() {
+        userRepository.deleteAll();
     }
 
     @Test
     @DisplayName("회원가입 성공")
     public void testCreateUser_Success() throws Exception {
         // Given
-        userRepository.deleteAll();
         UserCreateRequest request = create_user("test1@example.com", "password123!");
 
         // When Then
@@ -90,6 +88,7 @@ public class UserControllerTest {
     @DisplayName("회원가입 실패: 중복 이메일")
     public void testCreateUser_Fail_DuplicateEmail() throws Exception {
         // Given
+        userService.createUser(create_user("test1@example.com", "password123!"));
         UserCreateRequest request = create_user("test1@example.com", "password123!");
 
         // When Then
@@ -105,6 +104,8 @@ public class UserControllerTest {
     @DisplayName("로그인 성공")
     void testLogin_Success() throws Exception {
         // Given
+        userService.createUser(create_user("test1@example.com", "password123!"));
+
         LoginRequest request = LoginRequest.builder()
                 .email("test1@example.com")
                 .password("password123!")
@@ -124,6 +125,8 @@ public class UserControllerTest {
     @DisplayName("로그인 실패: 존재하지 않는 이메일")
     void testLogin_Fail_EmailNotFound() throws Exception {
         // Given
+        userService.createUser(create_user("test1@example.com", "password123!"));
+
         LoginRequest request = LoginRequest.builder()
                 .email("nonexistent@example.com")
                 .password("password123!")
@@ -136,5 +139,16 @@ public class UserControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isUnauthorized())
                 .andExpect(jsonPath("$.errorCode").value(UserErrorCode.EMAIL_NOT_FOUND.name()))
                 .andExpect(jsonPath("$.message").value(UserErrorCode.EMAIL_NOT_FOUND.getMessage()));
+    }
+
+    private UserCreateRequest create_user(String email, String password) {
+        return UserCreateRequest.builder()
+                .bio("")
+                .contact("01012345678")
+                .email(email)
+                .name("Test Name")
+                .password(password)
+                .profileImage("")
+                .build();
     }
 }
