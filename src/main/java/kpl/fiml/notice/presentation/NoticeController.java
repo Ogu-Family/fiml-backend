@@ -77,6 +77,14 @@ public class NoticeController {
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
 
+    @Operation(summary = "공지사항 조회", description = "사용자 id 기준 작성한 전체 공지사항 조회")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "공지사항 사용자 기준 조회 성공"),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 사용자 아이디로 요청됨")
+    })
+    @Parameters({
+            @Parameter(name = "userId", description = "사용자 id")
+    })
     @GetMapping("/notices/user/{userId}")
     public ResponseEntity<List<NoticeDto>> findByUserId(@PathVariable Long userId) {
         List<NoticeDto> noticeDtoList = noticeService.findAllByUserId(userId);
@@ -84,6 +92,14 @@ public class NoticeController {
         return ResponseEntity.status(HttpStatus.OK).body(noticeDtoList);
     }
 
+    @Operation(summary = "공지사항 조회", description = "프로젝트 id 기준 전체 공지사항 조회")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "공지사항 프로젝트 기준 조회 성공"),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 프로젝트 아이디로 요청됨")
+    })
+    @Parameters({
+            @Parameter(name = "projectId", description = "프로젝트 id")
+    })
     @GetMapping("/projects/{projectId}/notices")
     public ResponseEntity<List<NoticeDto>> findAllByProjectId(@PathVariable Long projectId) {
         List<NoticeDto> response = noticeService.findAllByProjectId(projectId);
