@@ -10,4 +10,6 @@ import java.lang.annotation.RetentionPolicy;
 public @interface WithCustomMockUser {
     String email() default "aaa@gmail.com";
     String contact() default "01012345678";
+    String name() default "name";
+    String password() default "password123!";
 }
