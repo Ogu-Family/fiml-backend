@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class UserControllerTest {
+class UserControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -58,7 +58,7 @@ public class UserControllerTest {
 
     @Test
     @DisplayName("회원가입 성공")
-    public void testCreateUser_Success() throws Exception {
+    void testCreateUser_Success() throws Exception {
         // Given
         UserCreateRequest request = create_user("test1@example.com", "password123!");
 
@@ -74,7 +74,7 @@ public class UserControllerTest {
 
     @Test
     @DisplayName("회원가입 실패: 유효하지 않은 이메일 주소")
-    public void testCreateUser_Fail_InvalidEmail() throws Exception {
+    void testCreateUser_Fail_InvalidEmail() throws Exception {
         // Given
         UserCreateRequest request = create_user("invalid-email", "password123!");
 
@@ -89,7 +89,7 @@ public class UserControllerTest {
 
     @Test
     @DisplayName("회원가입 실패: 유효하지 않은 비밀번호")
-    public void testCreateUser_Fail_InvalidPassword() throws Exception {
+    void testCreateUser_Fail_InvalidPassword() throws Exception {
         // Given
         UserCreateRequest request = create_user("test2@example.com", "invalid-password");
 
@@ -104,7 +104,7 @@ public class UserControllerTest {
 
     @Test
     @DisplayName("회원가입 실패: 중복 이메일")
-    public void testCreateUser_Fail_DuplicateEmail() throws Exception {
+    void testCreateUser_Fail_DuplicateEmail() throws Exception {
         // Given
         userService.createUser(create_user("test1@example.com", "password123!"));
         UserCreateRequest request = create_user("test1@example.com", "password123!");
