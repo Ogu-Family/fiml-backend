@@ -62,6 +62,14 @@ public class NoticeController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @Operation(summary = "공지사항 단건 조회", description = "공지사항 id로 공지사항 단건 조회를 합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "공지사항 단일 조회 성공"),
+            @ApiResponse(responseCode = "404", description = "1. 존재하지 않는 공지사항 아이디로 요청됨")
+    })
+    @Parameters({
+            @Parameter(name = "id", description = "공지사항 id")
+    })
     @GetMapping("/notices/{id}")
     public ResponseEntity<NoticeDto> findById(@PathVariable Long id) {
         NoticeDto dto = noticeService.findById(id);
