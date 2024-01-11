@@ -21,7 +21,7 @@ public class ProjectGlobalExceptionHandler {
     @ExceptionHandler(ProjectAccessException.class)
     public ResponseEntity<ErrorResponse> catchProjectAccessException(ProjectAccessException e) {
         log.error(e.getMessage(), e);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(new ErrorResponse(e.getErrorCode(), e.getMessage()));
     }
 
