@@ -107,6 +107,14 @@ public class NoticeController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @Operation(summary = "공지사항 삭제", description = "공지사항 단건 삭제")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "공지사항 삭제 성공"),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 공지사항 아이디로 요청됨")
+    })
+    @Parameters({
+            @Parameter(name = "id", description = "공지사항 id")
+    })
     @DeleteMapping("/notices/{id}")
     public ResponseEntity<NoticeDeleteResponse> deleteById(@PathVariable Long id, @AuthenticationPrincipal User user) {
         NoticeDeleteResponse response = noticeService.deleteById(id, user.getId());
