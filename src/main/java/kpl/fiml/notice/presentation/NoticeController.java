@@ -45,6 +45,15 @@ public class NoticeController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @Operation(summary = "공지사항 수정", description = "특정 프로젝트에 대한 공지사항 수정")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "공지사항 수정 성공"),
+            @ApiResponse(responseCode = "403", description = "접근 권한이 없는 회원으로 요청됨"),
+            @ApiResponse(responseCode = "404", description = "1. 존재하지 않는 회원 아이디로 요청됨\n 2. 존재하지 않는 프로젝트 아이디로 요청됨")
+    })
+    @Parameters({
+            @Parameter(name = "id", description = "공지사항 id")
+    })
     @PatchMapping("/notices/{id}")
     public ResponseEntity<NoticeUpdateResponse> updateNotice(@PathVariable Long id, @Valid @RequestBody NoticeUpdateRequest request,
                                                              @AuthenticationPrincipal User user) {
