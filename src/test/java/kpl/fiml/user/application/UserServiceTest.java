@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class UserServiceTest {
+class UserServiceTest {
 
     @InjectMocks
     private UserService userService;
@@ -45,7 +45,7 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("user 생성에 성공합니다.")
-    public void testCreateUser_success() {
+    void testCreateUser_success() {
         // Given
         UserCreateRequest request = UserCreateRequest.builder()
                 .contact("01012345678")
@@ -69,7 +69,7 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("사용자 생성에 실패합니다.")
-    public void testCreateUser_DuplicateEmail() {
+    void testCreateUser_DuplicateEmail() {
         UserCreateRequest request = UserCreateRequest.builder()
                 .bio("")
                 .contact("01012345678")
