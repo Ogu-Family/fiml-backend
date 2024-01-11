@@ -1,10 +1,14 @@
 package kpl.fiml.user.application;
 
+import kpl.fiml.TestDataFactory;
 import kpl.fiml.global.jwt.JwtTokenProvider;
+import kpl.fiml.user.domain.User;
 import kpl.fiml.user.domain.UserRepository;
+import kpl.fiml.user.dto.request.LoginRequest;
 import kpl.fiml.user.dto.request.UserCreateRequest;
+import kpl.fiml.user.dto.request.UserUpdateRequest;
 import kpl.fiml.user.dto.response.UserCreateResponse;
-import kpl.fiml.user.exception.DuplicateEmailException;
+import kpl.fiml.user.exception.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,6 +16,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -70,5 +76,124 @@ public class UserServiceTest {
 
         when(userRepository.existsByEmailAndDeletedAtIsNull("test@example.com")).thenReturn(true);
         assertThrows(DuplicateEmailException.class, () -> userService.createUser(request));
+    }
+
+    @Test
+    @DisplayName("로그인 실패 : 가입되지 않은 이메일")
+    void testSignIn_Fail_UserNotFound() {
+        // Given
+        String userEmail = "nonexistent@email.com";
+        String userPassword = "password123!";
+
+        when(userRepository.findByEmailAndDeletedAtIsNull(userEmail)).thenReturn(Optional.empty());
+
+        // When
+        LoginRequest loginRequest = LoginRequest.builder()
+                .email(userEmail)
+                .password(userPassword)
+                .build();
+
+        // Then
+        assertThrows(EmailNotFoundException.class, () -> userService.signIn(loginRequest));
+
+        // verify
+        verify(userRepository, times(1)).findByEmailAndDeletedAtIsNull(userEmail);
+        verify(passwordEncoder, never()).matches(anyString(), anyString()); // 비밀번호 검사는 일어나지 않아야 함
+    }
+
+    @Test
+    @DisplayName("로그인 실패 : 잘못된 비밀번호")
+    void testSignIn_Fail_PasswordMismatch() {
+        // Given
+        String userEmail = "email@email.com";
+        String userPassword = "wrongPassword";
+        User fakeUser = TestDataFactory.generateUserWithId(1L);
+
+        when(userRepository.findByEmailAndDeletedAtIsNull(fakeUser.getEmail())).thenReturn(Optional.of(fakeUser));
+        when(passwordEncoder.matches(userPassword, fakeUser.getPassword())).thenReturn(false);
+
+        // When
+        LoginRequest loginRequest = LoginRequest.builder()
+                .email(userEmail)
+                .password(userPassword)
+                .build();
+
+        // Then
+        assertThrows(PasswordMismatchException.class, () -> userService.signIn(loginRequest));
+
+        // verify
+        verify(userRepository, times(1)).findByEmailAndDeletedAtIsNull(userEmail);
+        verify(passwordEncoder, times(1)).matches(userPassword, fakeUser.getPassword());
+    }
+
+    @Test
+    @DisplayName("user update 실패 : 잘못된 비밀번호 형식")
+    void testUpdateUser_Fail_PasswordValidation() {
+        // Given
+        Long userId = 1L;
+        Long loginUserId = 2L;
+        UserUpdateRequest request = UserUpdateRequest.builder()
+                .name("name")
+                .profileImage("profile.jpg")
+                .email("example@example.com")
+                .password("password123")
+                .contact("1234567890")
+                .build();
+
+        User fakeUser = TestDataFactory.generateUserWithId(userId);
+        User fakeLoginUser = TestDataFactory.generateUserWithId(loginUserId);
+
+        when(userRepository.findByIdAndDeletedAtIsNull(userId)).thenReturn(Optional.ofNullable(fakeUser));
+        when(userRepository.findByIdAndDeletedAtIsNull(loginUserId)).thenReturn(Optional.ofNullable(fakeLoginUser));
+
+        // When/Then
+        assertThrows(InvalidPasswordException.class, () -> userService.updateUser(userId, loginUserId, request));
+
+        // verify
+        verify(userRepository, times(1)).findByIdAndDeletedAtIsNull(userId);
+        verify(userRepository, times(1)).findByIdAndDeletedAtIsNull(loginUserId);
+        verify(passwordEncoder, never()).encode(anyString()); // 비밀번호 암호화 메소드는 호출되지 않아야 함
+    }
+
+    @Test
+    @DisplayName("사용자 마이페이지 조회 실패 : 접근 권한 없음")
+    void testFindById_Fail_AccessDenied() {
+        // Given
+        Long userId = 1L;
+        Long loginUserId = 2L;
+        User fakeUser = TestDataFactory.generateUserWithId(userId);
+        User loginUser = TestDataFactory.generateUserWithId(loginUserId);
+
+        when(userRepository.findByIdAndDeletedAtIsNull(userId)).thenReturn(Optional.ofNullable(fakeUser));
+        when(userRepository.findByIdAndDeletedAtIsNull(loginUserId)).thenReturn(Optional.ofNullable(loginUser));
+
+        // When/Then
+        assertThrows(UserPermissionException.class, () -> userService.findById(userId, loginUserId));
+
+        // verify
+        verify(userRepository, times(1)).findByIdAndDeletedAtIsNull(userId);
+        verify(userRepository, times(1)).findByIdAndDeletedAtIsNull(loginUserId);
+    }
+
+    @Test
+    @DisplayName("사용자 삭제 실패 : 접근 권한 없음")
+    void testDeleteById_Fail_AccessDenied() {
+        // Given
+        Long userId = 1L;
+        Long loginUserId = 2L;
+        User fakeUser = TestDataFactory.generateUserWithId(userId);
+        User loginUser = TestDataFactory.generateUserWithId(loginUserId);
+
+        when(userRepository.findByIdAndDeletedAtIsNull(userId)).thenReturn(Optional.ofNullable(fakeUser));
+        when(userRepository.findByIdAndDeletedAtIsNull(loginUserId)).thenReturn(Optional.ofNullable(loginUser));
+
+        // When/Then
+        assertThrows(UserPermissionException.class, () -> userService.deleteById(userId, loginUserId));
+
+        // verify
+        verify(userRepository, times(1)).findByIdAndDeletedAtIsNull(userId);
+        verify(userRepository, times(1)).findByIdAndDeletedAtIsNull(loginUserId);
+        assert fakeUser != null;
+        verify(userRepository, never()).delete(fakeUser);
     }
 }

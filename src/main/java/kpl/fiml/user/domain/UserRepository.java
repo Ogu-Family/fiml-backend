@@ -10,10 +10,10 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    @Query("SELECT u FROM User u LEFT JOIN FETCH u.projectList WHERE u.id = :userId AND u.deletedAt IS NULL")
-    Optional<User> findByIdAndDeletedAtIsNull(@Param("userId") Long id);
+    Optional<User> findByIdAndDeletedAtIsNull(Long id);
 
-    Optional<User> findByEmailAndDeletedAtIsNull(String email);
+    @Query("SELECT u FROM User u LEFT JOIN FETCH u.roles WHERE u.email = :email AND u.deletedAt IS NULL")
+    Optional<User> findByEmailAndDeletedAtIsNull(@Param("email") String email);
 
     boolean existsByEmailAndDeletedAtIsNull(String email);
 }

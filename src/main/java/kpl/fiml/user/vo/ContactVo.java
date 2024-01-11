@@ -1,5 +1,7 @@
 package kpl.fiml.user.vo;
 
+import kpl.fiml.user.exception.InvalidContactException;
+import kpl.fiml.user.exception.UserErrorCode;
 import lombok.Getter;
 
 @Getter
@@ -10,7 +12,7 @@ public class ContactVo {
 
     public ContactVo(String contact) {
         if (!isValidContact(contact)) {
-            throw new IllegalArgumentException("유효하지 않은 전화번호 형식입니다.");
+            throw new InvalidContactException(UserErrorCode.INVALID_CONTACT);
         }
         this.contact = contact;
     }
