@@ -6,6 +6,7 @@ import kpl.fiml.project.domain.Project;
 import kpl.fiml.project.domain.Reward;
 import kpl.fiml.project.domain.RewardRepository;
 import kpl.fiml.project.domain.enums.ProjectCategory;
+import kpl.fiml.project.domain.enums.ProjectStatus;
 import kpl.fiml.sponsor.domain.Sponsor;
 import kpl.fiml.sponsor.domain.SponsorRepository;
 import kpl.fiml.sponsor.dto.request.SponsorCreateRequest;
@@ -22,8 +23,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
-import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -56,31 +57,26 @@ public class SponsorServiceTest {
     private User user;
 
     @BeforeEach
-    void setUp() throws Exception {
+    void setUp() {
         user = User.builder()
                 .email("abc@gmail.com")
                 .contact("01012345678")
                 .build();
-        Field userId = user.getClass().getDeclaredField("id");
-        userId.setAccessible(true);
-        userId.set(user, 1L);
+        ReflectionTestUtils.setField(user, "id", 1L);
     }
 
     @Test
     @DisplayName("Sponsor를 생성할 수 있다.")
-    void testCreateSponsor() throws Exception {
+    void testCreateSponsor() {
         // given
         SponsorCreateRequest request = new SponsorCreateRequest();
-        Field rewardId = request.getClass().getDeclaredField("rewardId");
-        rewardId.setAccessible(true);
-        rewardId.set(request, 1L);
-        Field totalAmount = request.getClass().getDeclaredField("totalAmount");
-        totalAmount.setAccessible(true);
-        totalAmount.set(request, 60000L);
+        ReflectionTestUtils.setField(request, "rewardId", 1L);
+        ReflectionTestUtils.setField(request, "totalAmount", 60000L);
 
         when(userService.getById(any())).thenReturn(user);
 
         Project project = createProject(user);
+        ReflectionTestUtils.setField(project, "status", ProjectStatus.PROCEEDING);
         Reward reward = createReward(50000L, project);
         when(rewardRepository.findByIdAndDeletedAtIsNull(any())).thenReturn(Optional.of(reward));
 
@@ -96,7 +92,7 @@ public class SponsorServiceTest {
 
     @Test
     @DisplayName("특정 회원의 후원 리스트를 조회할 수 있다.")
-    void testGetSponsorsByUser() throws Exception {
+    void testGetSponsorsByUser() {
         // given
         when(userService.getById(any())).thenReturn(user);
 
@@ -119,7 +115,7 @@ public class SponsorServiceTest {
 
     @Test
     @DisplayName("특정 프로젝트에 대한 후원 리스트를 조회할 수 있다.")
-    void testGetSponsorsByProject() throws Exception {
+    void testGetSponsorsByProject() {
         // given
         when(userService.getById(any())).thenReturn(user);
 
@@ -147,15 +143,11 @@ public class SponsorServiceTest {
 
     @Test
     @DisplayName("후원자가 후원 정보를 수정할 수 있다.")
-    void testUpdateSponsor() throws Exception {
+    void testUpdateSponsor() {
         // given
         SponsorUpdateRequest request = new SponsorUpdateRequest();
-        Field rewardId = request.getClass().getDeclaredField("rewardId");
-        rewardId.setAccessible(true);
-        rewardId.set(request, 1L);
-        Field totalAmount = request.getClass().getDeclaredField("totalAmount");
-        totalAmount.setAccessible(true);
-        totalAmount.set(request, 60000L);
+        ReflectionTestUtils.setField(request, "rewardId", 1L);
+        ReflectionTestUtils.setField(request, "totalAmount", 60000L);
 
         when(userService.getById(any())).thenReturn(user);
 
@@ -175,7 +167,7 @@ public class SponsorServiceTest {
 
     @Test
     @DisplayName("후원자가 후원을 취소할 수 있다.")
-    void testDeleteSponsorByUser() throws Exception {
+    void testDeleteSponsorByUser() {
         // given
         when(userService.getById(any())).thenReturn(user);
 
@@ -193,7 +185,7 @@ public class SponsorServiceTest {
 
     @Test
     @DisplayName("특정 프로젝트에 대한 전체 후원을 취소할 수 있다.")
-    void testDeleteSponsorsByProject() throws Exception {
+    void testDeleteSponsorsByProject() {
         // given
         Project project = createProject(user);
         Reward reward1 = createReward(50000L, project);
@@ -215,16 +207,13 @@ public class SponsorServiceTest {
         assertThat(sponsor3.getDeletedAt()).isNotNull();
     }
 
-    Project createProject(User user) throws Exception {
+    Project createProject(User user) {
         Project project = Project.builder()
                 .summary("summary")
                 .category(ProjectCategory.ART)
                 .user(user)
                 .build();
-        Field endAt = project.getClass().getDeclaredField("endAt");
-        endAt.setAccessible(true);
-        endAt.set(project, LocalDateTime.now().plusDays(1L));
-
+        ReflectionTestUtils.setField(project, "endAt", LocalDateTime.now().plusDays(1L));
         return project;
     }
 
