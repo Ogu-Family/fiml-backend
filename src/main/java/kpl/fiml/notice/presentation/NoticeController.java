@@ -1,5 +1,11 @@
 package kpl.fiml.notice.presentation;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kpl.fiml.notice.application.NoticeService;
 import kpl.fiml.notice.dto.*;
@@ -17,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "Notice Controller", description = "공지사항 컨트롤러")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
@@ -24,6 +31,12 @@ public class NoticeController {
 
     private final NoticeService noticeService;
 
+    @Operation(summary = "공지사항 생성", description = "특정 프로젝트에 대한 공지사항 작성")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "공지사항 작성 성공"),
+            @ApiResponse(responseCode = "403", description = "접근 권한이 없는 회원으로 요청됨"),
+            @ApiResponse(responseCode = "404", description = "1. 존재하지 않는 회원 아이디로 요청됨\n 2. 존재하지 않는 프로젝트 아이디로 요청됨")
+    })
     @PostMapping("/notices")
     public ResponseEntity<NoticeCreateResponse> createNotice(@Valid @RequestBody NoticeCreateRequest request,
                                                              @AuthenticationPrincipal User user) {
