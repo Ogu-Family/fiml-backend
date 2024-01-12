@@ -9,6 +9,8 @@ import kpl.fiml.settlement.domain.Settlement;
 import kpl.fiml.settlement.domain.SettlementRepository;
 import kpl.fiml.user.domain.User;
 import kpl.fiml.user.domain.UserRepository;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +42,20 @@ public class SettlementControllerTest {
 
     @Autowired
     private SettlementRepository settlementRepository;
+
+    @BeforeEach
+    void setUp() {
+        settlementRepository.deleteAll();
+        projectRepository.deleteAll();
+        userRepository.deleteAll();
+    }
+
+    @AfterEach
+    void tearDown() {
+        settlementRepository.deleteAll();
+        projectRepository.deleteAll();
+        userRepository.deleteAll();
+    }
 
     @Test
     @WithCustomMockUser

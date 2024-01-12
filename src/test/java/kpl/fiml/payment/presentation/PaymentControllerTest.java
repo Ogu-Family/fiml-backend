@@ -14,6 +14,8 @@ import kpl.fiml.sponsor.domain.Sponsor;
 import kpl.fiml.sponsor.domain.SponsorRepository;
 import kpl.fiml.user.domain.User;
 import kpl.fiml.user.domain.UserRepository;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +54,24 @@ public class PaymentControllerTest {
 
     @Autowired
     private PaymentRepository paymentRepository;
+
+    @BeforeEach
+    void setUp() {
+        paymentRepository.deleteAll();
+        sponsorRepository.deleteAll();
+        rewardRepository.deleteAll();
+        projectRepository.deleteAll();
+        userRepository.deleteAll();
+    }
+
+    @AfterEach
+    void tearDown() {
+        paymentRepository.deleteAll();
+        sponsorRepository.deleteAll();
+        rewardRepository.deleteAll();
+        projectRepository.deleteAll();
+        userRepository.deleteAll();
+    }
 
     @Test
     @WithCustomMockUser

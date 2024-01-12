@@ -14,6 +14,7 @@ import kpl.fiml.sponsor.dto.request.SponsorCreateRequest;
 import kpl.fiml.sponsor.dto.request.SponsorUpdateRequest;
 import kpl.fiml.user.domain.User;
 import kpl.fiml.user.domain.UserRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -52,6 +53,14 @@ public class SponsorControllerTest {
 
     @BeforeEach
     void setUp() {
+        sponsorRepository.deleteAll();
+        rewardRepository.deleteAll();
+        projectRepository.deleteAll();
+        userRepository.deleteAll();
+    }
+
+    @AfterEach
+    void tearDown() {
         sponsorRepository.deleteAll();
         rewardRepository.deleteAll();
         projectRepository.deleteAll();
