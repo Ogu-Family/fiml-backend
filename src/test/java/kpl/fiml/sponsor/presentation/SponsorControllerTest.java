@@ -2,6 +2,7 @@ package kpl.fiml.sponsor.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kpl.fiml.customMockUser.WithCustomMockUser;
+import kpl.fiml.payment.domain.PaymentRepository;
 import kpl.fiml.project.domain.Project;
 import kpl.fiml.project.domain.ProjectRepository;
 import kpl.fiml.project.domain.Reward;
@@ -14,6 +15,7 @@ import kpl.fiml.sponsor.dto.request.SponsorCreateRequest;
 import kpl.fiml.sponsor.dto.request.SponsorUpdateRequest;
 import kpl.fiml.user.domain.User;
 import kpl.fiml.user.domain.UserRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -50,8 +52,21 @@ public class SponsorControllerTest {
     @Autowired
     private SponsorRepository sponsorRepository;
 
+    @Autowired
+    private PaymentRepository paymentRepository;
+
     @BeforeEach
     void setUp() {
+        paymentRepository.deleteAll();
+        sponsorRepository.deleteAll();
+        rewardRepository.deleteAll();
+        projectRepository.deleteAll();
+        userRepository.deleteAll();
+    }
+
+    @AfterEach
+    void tearDown() {
+        paymentRepository.deleteAll();
         sponsorRepository.deleteAll();
         rewardRepository.deleteAll();
         projectRepository.deleteAll();
