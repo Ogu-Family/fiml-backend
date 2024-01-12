@@ -2,6 +2,7 @@ package kpl.fiml.sponsor.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kpl.fiml.customMockUser.WithCustomMockUser;
+import kpl.fiml.payment.domain.PaymentRepository;
 import kpl.fiml.project.domain.Project;
 import kpl.fiml.project.domain.ProjectRepository;
 import kpl.fiml.project.domain.Reward;
@@ -51,8 +52,12 @@ public class SponsorControllerTest {
     @Autowired
     private SponsorRepository sponsorRepository;
 
+    @Autowired
+    private PaymentRepository paymentRepository;
+
     @BeforeEach
     void setUp() {
+        paymentRepository.deleteAll();
         sponsorRepository.deleteAll();
         rewardRepository.deleteAll();
         projectRepository.deleteAll();
@@ -61,6 +66,7 @@ public class SponsorControllerTest {
 
     @AfterEach
     void tearDown() {
+        paymentRepository.deleteAll();
         sponsorRepository.deleteAll();
         rewardRepository.deleteAll();
         projectRepository.deleteAll();

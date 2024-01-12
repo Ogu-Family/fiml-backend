@@ -67,7 +67,7 @@ public class SettlementControllerTest {
         Settlement settlement = settlementRepository.save(createSettlement(project));
 
         // when-then
-        mockMvc.perform(get("/api/v1/settlements/{projectId}", 1L))
+        mockMvc.perform(get("/api/v1/settlements/{projectId}", project.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.settleAmount").value(settlement.getSettleAmount()))
