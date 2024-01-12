@@ -82,7 +82,7 @@ class NoticeControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(request)))
                 .andExpect(status().isCreated())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").isNumber())
                 .andExpect(jsonPath("$.userId").value(savedProject.getUser().getId()))
                 .andExpect(jsonPath("$.projectId").value(savedProject.getId()));
@@ -108,7 +108,7 @@ class NoticeControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(request)))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").value(savedNotice.getId()))
                 .andExpect(jsonPath("$.content").value(updateContent))
                 .andExpect(jsonPath("$.userId").value(savedUser.getId()));
@@ -129,7 +129,7 @@ class NoticeControllerTest {
         // When, Then
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/notices/{id}", savedNotice.getId()))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").value(savedNotice.getId()))
                 .andExpect(jsonPath("$.content").value(savedNotice.getContent()));
     }
@@ -149,7 +149,7 @@ class NoticeControllerTest {
         // When, Then
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/projects/{projectId}/notices", savedProject.getId()))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$").isNotEmpty())
                 .andExpect(jsonPath("$.length()").value(savedNotices.size()))
@@ -178,7 +178,7 @@ class NoticeControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/notices/{id}", savedNotice.getId())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(savedNotice.getId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.userId").value(savedUser.getId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.deletedAt").isNotEmpty());

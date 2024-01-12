@@ -80,7 +80,7 @@ class CommentControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(request)))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.userId").value(loginUser.getId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.noticeId").value(notice.getId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content").value(request.getContent()));
@@ -105,7 +105,7 @@ class CommentControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(request)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.userId").value(loginUser.getId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content").value(request.getContent()));
     }
@@ -124,7 +124,7 @@ class CommentControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/notice/{noticeId}/comments", notice.getId())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(2))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].userId").value(user.getId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].noticeId").value(notice.getId()))
@@ -149,7 +149,7 @@ class CommentControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/comments/{id}", comment.getId())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(comment.getId()));
     }
 
