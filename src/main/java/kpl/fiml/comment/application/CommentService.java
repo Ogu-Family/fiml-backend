@@ -67,7 +67,7 @@ public class CommentService {
         return CommentDeleteResponse.of(findComment.getId());
     }
 
-    private Comment getById(Long id) {
+    public Comment getById(Long id) {
         return commentRepository.findByIdAndDeletedAtIsNull(id)
                 .orElseThrow(() -> new CommentNotFoundException(CommentErrorCode.COMMENT_NOT_FOUND));
     }
