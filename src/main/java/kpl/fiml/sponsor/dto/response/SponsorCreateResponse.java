@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class SponsorCreateResponse {
 
-    @Schema(description = "생성된 후원 아이디")
+    @Schema(description = "생성된 후원 아이디", example = "1")
     private final Long id;
 
     public static SponsorCreateResponse of(Long id) {

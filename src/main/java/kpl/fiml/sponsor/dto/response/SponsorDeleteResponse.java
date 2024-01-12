@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class SponsorDeleteResponse {
 
-    @Schema(description = "취소한 후원 아이디")
+    @Schema(description = "취소한 후원 아이디", example = "1")
     private final Long id;
 
     @Schema(description = "취소 일시")

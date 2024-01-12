@@ -10,11 +10,11 @@ import lombok.Getter;
 @Getter
 public class SponsorCreateRequest {
 
-    @Schema(description = "리워드 아이디")
+    @Schema(description = "리워드 아이디", example = "1")
     @NotNull
     private Long rewardId;
 
-    @Schema(description = "총 후원금", example = "40000L")
+    @Schema(description = "총 후원금", example = "40000")
     @NotNull
     private Long totalAmount;
 
