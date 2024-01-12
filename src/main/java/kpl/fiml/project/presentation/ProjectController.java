@@ -115,9 +115,11 @@ public class ProjectController {
     @Operation(summary = "프로젝트 최종 업로드", description = "프로젝트 정보 모두 입력 후 최종 업로드")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "프로젝트 최종 업로드 성공"),
-            @ApiResponse(responseCode = "400 - 1", description = "프로젝트 정보 모두 입력하지 않음"),
-            @ApiResponse(responseCode = "400 - 2", description = "프로젝트 업로드 가능 상태가 아님"),
-            @ApiResponse(responseCode = "400 - 3", description = "프로젝트 펀딩 기간이 올바르지 않음"),
+            @ApiResponse(responseCode = "400", description = """
+                    1. 프로젝트 정보 모두 입력하지 않음
+                    2. 프로젝트 업로드 가능 상태가 아님
+                    3. 프로젝트 펀딩 기간이 올바르지 않음
+                    """),
             @ApiResponse(responseCode = "404", description = "프로젝트를 찾을 수 없음")
     })
     @Parameters({
