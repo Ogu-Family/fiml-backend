@@ -8,6 +8,8 @@ import kpl.fiml.project.domain.*;
 import kpl.fiml.project.domain.enums.ProjectCategory;
 import kpl.fiml.project.domain.enums.ProjectStatus;
 import kpl.fiml.project.dto.request.*;
+import kpl.fiml.user.domain.User;
+import kpl.fiml.user.domain.UserRepository;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,8 +31,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
-import static kpl.fiml.TestDataFactory.generateDefaultProject;
-import static kpl.fiml.TestDataFactory.generateFullParamsProject;
+import static kpl.fiml.TestDataFactory.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -55,12 +56,16 @@ class ProjectControllerTest {
     @Autowired
     private RewardRepository rewardRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @BeforeEach
     void setUp() {
         projectImageRepository.deleteAll();
         projectLikeRepository.deleteAll();
         rewardRepository.deleteAll();
         projectRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @AfterEach
@@ -69,6 +74,7 @@ class ProjectControllerTest {
         projectLikeRepository.deleteAll();
         rewardRepository.deleteAll();
         projectRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test
@@ -76,6 +82,7 @@ class ProjectControllerTest {
     @DisplayName("프로젝트 초기화 테스트")
     void testInitProject() throws Exception {
         // Given
+        userRepository.save(generateLoginUser());
         ProjectInitRequest request = ProjectInitRequest.builder()
                 .summary("Project Summary")
                 .category(ProjectCategory.BOARD_GAME)
@@ -100,7 +107,8 @@ class ProjectControllerTest {
     @DisplayName("프로젝트 기본 정보 업데이트 테스트")
     void testUpdateBasicInfo() throws Exception {
         // Given
-        Project savedProject = projectRepository.save(TestDataFactory.generateDefaultProject(1L));
+        User loginUser = userRepository.save(generateLoginUser());
+        Project savedProject = projectRepository.save(TestDataFactory.generateDefaultProject(loginUser.getId()));
 
         ProjectBasicInfoUpdateRequest request = ProjectBasicInfoUpdateRequest.builder()
                 .summary("Updated Summary")
@@ -135,7 +143,8 @@ class ProjectControllerTest {
     @DisplayName("프로젝트 소개 정보 업데이트 테스트")
     void testUpdateIntroduction() throws Exception {
         // Given
-        Project savedProject = projectRepository.save(TestDataFactory.generateDefaultProject(1L));
+        User loginUser = userRepository.save(generateLoginUser());
+        Project savedProject = projectRepository.save(TestDataFactory.generateDefaultProject(loginUser.getId()));
 
         ProjectDetailIntroductionUpdateRequest request = ProjectDetailIntroductionUpdateRequest.builder()
                 .introduction("Updated Introduction")
@@ -157,7 +166,8 @@ class ProjectControllerTest {
     @DisplayName("프로젝트 펀딩 계획 업데이트 테스트")
     void testUpdateFundingPlan() throws Exception {
         // given
-        Project savedProject = projectRepository.save(TestDataFactory.generateDefaultProject(1L));
+        User loginUser = userRepository.save(generateLoginUser());
+        Project savedProject = projectRepository.save(TestDataFactory.generateDefaultProject(loginUser.getId()));
         ProjectFundingPlanUpdateRequest request = ProjectFundingPlanUpdateRequest.builder()
                 .goalAmount(50000L)
                 .fundingStartDateTime(LocalDateTime.now().plusDays(7))
@@ -187,7 +197,8 @@ class ProjectControllerTest {
     @DisplayName("프로젝트 리워드 업데이트 테스트")
     void testUpdateRewards() throws Exception {
         // Given
-        Project savedProject = projectRepository.save(TestDataFactory.generateDefaultProject(1L));
+        User loginUser = userRepository.save(generateLoginUser());
+        Project savedProject = projectRepository.save(TestDataFactory.generateDefaultProject(loginUser.getId()));
         ProjectRewardUpdateRequest request = ProjectRewardUpdateRequest.builder()
                 .rewards(List.of(
                         ProjectRewardRequest.builder()
@@ -238,7 +249,8 @@ class ProjectControllerTest {
     @DisplayName("프로젝트 제출 테스트")
     void testSubmitProject() throws Exception {
         // Given
-        Project savedProject = projectRepository.save(generateFullParamsProject(1L));
+        User loginUser = userRepository.save(generateLoginUser());
+        Project savedProject = projectRepository.save(generateFullParamsProject(loginUser.getId()));
 
         // When
         mockMvc.perform(post("/api/v1/projects/{projectId}/submit", savedProject.getId()))
@@ -254,7 +266,8 @@ class ProjectControllerTest {
     @DisplayName("프로젝트 좋아요 등록 테스트")
     void testLikeProject() throws Exception {
         // Given
-        Project savedProject = projectRepository.save(generateFullParamsProject(1L));
+        User loginUser = userRepository.save(generateLoginUser());
+        Project savedProject = projectRepository.save(generateFullParamsProject(loginUser.getId()));
 
         // When
         mockMvc.perform(post("/api/v1/projects/{projectId}/like", savedProject.getId()))
@@ -271,7 +284,8 @@ class ProjectControllerTest {
     @DisplayName("프로젝트 좋아요 해제 테스트")
     void testUnlikeProject() throws Exception {
         // Given
-        Project savedProject = projectRepository.save(generateFullParamsProject(1L));
+        User loginUser = userRepository.save(generateLoginUser());
+        Project savedProject = projectRepository.save(generateFullParamsProject(loginUser.getId()));
         projectLikeRepository.save(ProjectLike.builder()
                 .project(savedProject)
                 .user(savedProject.getUser())
@@ -292,7 +306,8 @@ class ProjectControllerTest {
     @DisplayName("프로젝트 삭제 테스트")
     void testDeleteProject() throws Exception {
         // Given
-        Project savedProject = projectRepository.save(generateDefaultProject(1L));
+        User loginUser = userRepository.save(generateLoginUser());
+        Project savedProject = projectRepository.save(generateDefaultProject(loginUser.getId()));
 
         // When
         mockMvc.perform(delete("/api/v1/projects/{projectId}", savedProject.getId()))
@@ -314,9 +329,10 @@ class ProjectControllerTest {
     void testPagination(int page, int size) throws Exception {
         final Long userId = 1L;
         // Given
+        User loginUser = userRepository.save(generateUserWithId(userId));
         List<Project> projectList = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
-            Project toSaveProject = generateFullParamsProject(userId);
+            Project toSaveProject = generateFullParamsProject(loginUser.getId());
             ReflectionTestUtils.setField(toSaveProject, "status", ProjectStatus.PROCEEDING);
             projectList.add(
                     projectRepository.save(toSaveProject)
@@ -338,8 +354,10 @@ class ProjectControllerTest {
     @Test
     @DisplayName("프로젝트 상세 조회 테스트")
     void testGetProjectDetail() throws Exception {
+        final Long userId = 1L;
         // Given
-        Project toSaveProject = generateFullParamsProject(1L);
+        User loginUser = userRepository.save(generateUserWithId(userId));
+        Project toSaveProject = generateFullParamsProject(loginUser.getId());
         ReflectionTestUtils.setField(toSaveProject, "status", ProjectStatus.PROCEEDING);
         Project savedProject = projectRepository.save(toSaveProject);
 

@@ -8,6 +8,7 @@ import kpl.fiml.project.domain.Reward;
 import kpl.fiml.project.domain.enums.ProjectCategory;
 import kpl.fiml.project.domain.enums.ProjectStatus;
 import kpl.fiml.user.domain.User;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDate;
@@ -132,5 +133,12 @@ public class TestDataFactory {
                 .user(user)
                 .notice(notice)
                 .content("Sample Comment Content").build();
+    }
+
+    public static User generateLoginUser() {
+        return (User) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
     }
 }
