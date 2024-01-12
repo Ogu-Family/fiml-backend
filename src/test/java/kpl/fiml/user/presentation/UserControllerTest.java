@@ -1,11 +1,17 @@
 package kpl.fiml.user.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import kpl.fiml.TestDataFactory;
+import kpl.fiml.customMockUser.WithCustomMockUser;
 import kpl.fiml.user.application.UserService;
+import kpl.fiml.user.domain.Following;
+import kpl.fiml.user.domain.FollowingRepository;
+import kpl.fiml.user.domain.User;
 import kpl.fiml.user.domain.UserRepository;
 import kpl.fiml.user.dto.request.LoginRequest;
 import kpl.fiml.user.dto.request.UserCreateRequest;
 import kpl.fiml.user.exception.UserErrorCode;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,12 +23,14 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import static kpl.fiml.TestDataFactory.generateLoginUser;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class UserControllerTest {
+class UserControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -31,16 +39,26 @@ public class UserControllerTest {
     private UserRepository userRepository;
 
     @Autowired
+    private FollowingRepository followingRepository;
+
+    @Autowired
     private UserService userService;
 
     @BeforeEach
     void setUp() {
+        followingRepository.deleteAll();
+        userRepository.deleteAll();
+    }
+
+    @AfterEach
+    void cleanUp() {
+        followingRepository.deleteAll();
         userRepository.deleteAll();
     }
 
     @Test
     @DisplayName("회원가입 성공")
-    public void testCreateUser_Success() throws Exception {
+    void testCreateUser_Success() throws Exception {
         // Given
         UserCreateRequest request = create_user("test1@example.com", "password123!");
 
@@ -56,7 +74,7 @@ public class UserControllerTest {
 
     @Test
     @DisplayName("회원가입 실패: 유효하지 않은 이메일 주소")
-    public void testCreateUser_Fail_InvalidEmail() throws Exception {
+    void testCreateUser_Fail_InvalidEmail() throws Exception {
         // Given
         UserCreateRequest request = create_user("invalid-email", "password123!");
 
@@ -71,7 +89,7 @@ public class UserControllerTest {
 
     @Test
     @DisplayName("회원가입 실패: 유효하지 않은 비밀번호")
-    public void testCreateUser_Fail_InvalidPassword() throws Exception {
+    void testCreateUser_Fail_InvalidPassword() throws Exception {
         // Given
         UserCreateRequest request = create_user("test2@example.com", "invalid-password");
 
@@ -86,7 +104,7 @@ public class UserControllerTest {
 
     @Test
     @DisplayName("회원가입 실패: 중복 이메일")
-    public void testCreateUser_Fail_DuplicateEmail() throws Exception {
+    void testCreateUser_Fail_DuplicateEmail() throws Exception {
         // Given
         userService.createUser(create_user("test1@example.com", "password123!"));
         UserCreateRequest request = create_user("test1@example.com", "password123!");
@@ -139,6 +157,44 @@ public class UserControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isUnauthorized())
                 .andExpect(jsonPath("$.errorCode").value(UserErrorCode.EMAIL_NOT_FOUND.name()))
                 .andExpect(jsonPath("$.message").value(UserErrorCode.EMAIL_NOT_FOUND.getMessage()));
+    }
+
+    @Test
+    @WithCustomMockUser
+    @DisplayName("팔로우 성공")
+    void testFollow_Success() throws Exception {
+        // Given
+        User loginUser = userRepository.save(generateLoginUser());
+        User followingUser = userRepository.save(TestDataFactory.generateUserWithId(590L));
+
+        // When Then
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users/{followingId}/follow", followingUser.getId())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        Following following = followingRepository.findByFollowingUserAndFollowerUser(followingUser, loginUser).orElseThrow();
+        assertThat(following.getFollowingUser().getId()).isEqualTo(followingUser.getId());
+        assertThat(following.getFollowerUser().getId()).isEqualTo(loginUser.getId());
+    }
+
+    @Test
+    @WithCustomMockUser
+    @DisplayName("언팔로우 성공")
+    void testUnfollow_Success() throws Exception {
+        // Given
+        User loginUser = userRepository.save(generateLoginUser());
+        User followingUser = userRepository.save(TestDataFactory.generateUserWithId(590L));
+        followingRepository.save(Following.builder()
+                .followingUser(followingUser)
+                .followerUser(loginUser)
+                .build());
+
+        // When Then
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users/{followingId}/unfollow", followingUser.getId())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        assertThat(followingRepository.existsByFollowingUserAndFollowerUser(followingUser, loginUser)).isFalse();
     }
 
     private UserCreateRequest create_user(String email, String password) {
