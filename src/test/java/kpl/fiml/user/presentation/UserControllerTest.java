@@ -67,7 +67,7 @@ class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(request)))
                 .andExpect(status().isCreated()) // 201 Created 상태 확인
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.userId").isNumber()) // 응답의 userId가 숫자인지 확인
                 .andExpect(jsonPath("$.userId").isNotEmpty()); // 응답의 userId가 비어있지 않은지 확인
     }
