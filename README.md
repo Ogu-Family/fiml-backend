@@ -68,7 +68,7 @@
 
 ## ERD
 
-사진 삽입
+![image](https://github.com/Ogu-Family/fiml-backend/assets/113650170/6141dde8-a6bc-4714-9d9f-2eca6cbd90fe)
 
 ## 팀원 소개
 
