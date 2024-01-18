@@ -110,22 +110,22 @@
 
 ## 기술 스택
 
-<img src="https://img.shields.io/badge/Java 17-008FC7?style=flat-square&logo=Java&logoColor=white"></img>
-<img src="https://img.shields.io/badge/JUnit5-25A162?style=flat-square&logo=JUnit5&logoColor=white"></img>
+<img src="https://img.shields.io/badge/Java 17-008FC7?style=for-the-badge&logo=Java&logoColor=white"></img>
+<img src="https://img.shields.io/badge/JUnit5-25A162?style=for-the-badge&logo=JUnit5&logoColor=white"></img>
 
-<img src="https://img.shields.io/badge/Spring 6.1.1-58CC02?style=flat-square&logo=Spring&logoColor=white"/></img>
-<img src="https://img.shields.io/badge/Spring Boot 3.2.0-6DB33F?style=flat-square&logo=Spring Boot&logoColor=white"/></img>
-<img src="https://img.shields.io/badge/Spring Data JPA-ECD53F?style=flat-square&logo=JPA&logoColor=white"/></img>
-<img src="https://img.shields.io/badge/Query DSL-669DF6?style=flat-square&logo=JPA&logoColor=white"/></img>
+<img src="https://img.shields.io/badge/Spring 6.1.1-58CC02?style=for-the-badge&logo=Spring&logoColor=white"/></img>
+<img src="https://img.shields.io/badge/Spring Boot 3.2.0-6DB33F?style=for-the-badge&logo=Spring Boot&logoColor=white"/></img>
+<img src="https://img.shields.io/badge/Spring Data JPA-ECD53F?style=for-the-badge&logo=JPA&logoColor=white"/></img>
+<img src="https://img.shields.io/badge/Query DSL-669DF6?style=for-the-badge&logo=JPA&logoColor=white"/></img>
 
-<img src="https://img.shields.io/badge/MySQL 8.0-4479A1?style=flat-square&logo=MySQL&logoColor=white"></img>
-<img src="https://img.shields.io/badge/Gradle-02303A?style=flat-square&logo=Gradle&logoColor=white"></img>
+<img src="https://img.shields.io/badge/MySQL 8.0-4479A1?style=for-the-badge&logo=MySQL&logoColor=white"></img>
+<img src="https://img.shields.io/badge/Gradle-02303A?style=for-the-badge&logo=Gradle&logoColor=white"></img>
 
 <br>
 
 ## 협업 도구
 
-<img src="https://img.shields.io/badge/Git-F05032.svg?style=flat-square&logo=Git&logoColor=white"></img>
-<img src="https://img.shields.io/badge/GitHub Project-181717.svg?style=flat-square&logo=GitHub&logoColor=white"></img>
-<img src="https://img.shields.io/badge/Notion-000000?style=flat-square&logo=Notion&logoColor=white"></img>
-<img src="https://img.shields.io/badge/Swagger-85EA2D?style=flat-square&logo=Swagger&logoColor=white"></img>
+<img src="https://img.shields.io/badge/Git-F05032.svg?style=for-the-badge&logo=Git&logoColor=white"></img>
+<img src="https://img.shields.io/badge/GitHub Project-181717.svg?style=for-the-badge&logo=GitHub&logoColor=white"></img>
+<img src="https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=Notion&logoColor=white"></img>
+<img src="https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=Swagger&logoColor=white"></img>
