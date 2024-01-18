@@ -81,7 +81,7 @@
 <img src="https://img.shields.io/badge/Java 17-008FC7?style=flat-square&logo=Java&logoColor=white"></img>
 <img src="https://img.shields.io/badge/JUnit5-25A162?style=flat-square&logo=JUnit5&logoColor=white"></img>
 
-<img src="https://img.shields.io/badge/Spring-58CC02?style=flat-square&logo=Spring&logoColor=white"/></img>
+<img src="https://img.shields.io/badge/Spring 6.1.1-58CC02?style=flat-square&logo=Spring&logoColor=white"/></img>
 <img src="https://img.shields.io/badge/Spring Boot 3.2.0-6DB33F?style=flat-square&logo=Spring Boot&logoColor=white"/></img>
 <img src="https://img.shields.io/badge/Spring Data JPA-ECD53F?style=flat-square&logo=JPA&logoColor=white"/></img>
 <img src="https://img.shields.io/badge/Query DSL-669DF6?style=flat-square&logo=JPA&logoColor=white"/></img>
@@ -93,8 +93,8 @@
 
 ## 협업 도구
 
-<img src="https://img.shields.io/badge/Git-F05032.svg?style=flat-square&logo=Git&logoColor=white" alt=""/>
-<img src="https://img.shields.io/badge/GitHub Project-181717.svg?style=flat-square&logo=GitHub&logoColor=white" alt=""/>
-<img src="https://img.shields.io/badge/Notion-000000?style=flat-square&logo=Notion&logoColor=white" alt=""/>
-<img src="https://img.shields.io/badge/Slack-4A154B?style=flat-square&logo=Slack&logoColor=white" alt=""/>
-<img src="https://img.shields.io/badge/Swagger-85EA2D?style=flat-square&logo=Swagger&logoColor=white" alt=""/>
+<img src="https://img.shields.io/badge/Git-F05032.svg?style=flat-square&logo=Git&logoColor=white"></img>
+<img src="https://img.shields.io/badge/GitHub Project-181717.svg?style=flat-square&logo=GitHub&logoColor=white"></img>
+<img src="https://img.shields.io/badge/Notion-000000?style=flat-square&logo=Notion&logoColor=white"></img>
+<img src="https://img.shields.io/badge/Slack-4A154B?style=flat-square&logo=Slack&logoColor=white"></img>
+<img src="https://img.shields.io/badge/Swagger-85EA2D?style=flat-square&logo=Swagger&logoColor=white"></img>
