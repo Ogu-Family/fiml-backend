@@ -78,16 +78,16 @@
 
 ## 기술 스택
 
-<img src="https://img.shields.io/badge/Java 17-008FC7?style=flat-square&logo=Java&logoColor=white" alt=""/>
-<img src="https://img.shields.io/badge/JUnit5-25A162?style=flat-square&logo=JUnit5&logoColor=white" alt=""/>
+<img src="https://img.shields.io/badge/Java 17-008FC7?style=flat-square&logo=Java&logoColor=white"></img>
+<img src="https://img.shields.io/badge/JUnit5-25A162?style=flat-square&logo=JUnit5&logoColor=white"></img>
 
 <img src="https://img.shields.io/badge/Spring-58CC02?style=flat-square&logo=Spring&logoColor=white"/></img>
 <img src="https://img.shields.io/badge/Spring Boot 3.2.0-6DB33F?style=flat-square&logo=Spring Boot&logoColor=white"/></img>
 <img src="https://img.shields.io/badge/Spring Data JPA-ECD53F?style=flat-square&logo=JPA&logoColor=white"/></img>
 <img src="https://img.shields.io/badge/Query DSL-669DF6?style=flat-square&logo=JPA&logoColor=white"/></img>
 
-<img src="https://img.shields.io/badge/MySQL 8.0-4479A1?style=flat-square&logo=MySQL&logoColor=white" alt=""/>
-<img src="https://img.shields.io/badge/Gradle-02303A?style=flat-square&logo=Gradle&logoColor=white" alt=""/>
+<img src="https://img.shields.io/badge/MySQL 8.0-4479A1?style=flat-square&logo=MySQL&logoColor=white"></img>
+<img src="https://img.shields.io/badge/Gradle-02303A?style=flat-square&logo=Gradle&logoColor=white"></img>
 
 <br>
 
